@@ -31,7 +31,7 @@ datasets = datasets.CIFAR10(root=settings.DCGAN_IMAGE_ROOT,
 
 dataloader = data.DataLoader(datasets, batch_size=settings.BATCH_SIZE, shuffle=True, num_workers=settings.WORKERS)
 
-
+device = torch.device("cuda:0" if (torch.cuda.is_available() and settings.NGPU > 0) else "cpu")
 # one_batch = next(iter(dataloader))
 # plt.figure(figsize=(8,8))
 # plt.axis("off")#关闭坐标轴
@@ -135,7 +135,7 @@ criterion = nn.BCELoss()
 
 # Create batch of latent vectors that we will use to visualize
 #  the progression of the generator
-fixed_noise = torch.randn(64, settings.NZ, 1, 1)
+fixed_noise = torch.randn(64, settings.NZ, 1, 1,  device=device)
 
 # Establish convention for real and fake labels during training
 real_label = 1
@@ -165,8 +165,9 @@ for epoch in range(5):
         ## Train with all-real batch
         netD.zero_grad()
         # Format batch
-        b_size = data[0].size(0)#batch_size
-        label = torch.full((b_size, ), real_label)#make real label
+        real_cpu = data[0].to(device)
+        b_size = real_cpu.size(0)#batch_size
+        label = torch.full((b_size, ), real_label, device=device)#make real label
         output = netD(data[0]).view(-1)
         # Calculate loss on all-real batch
         errD_real = criterion(output, label)
@@ -176,7 +177,7 @@ for epoch in range(5):
 
         ## Train with all-fake batch
         # Generate batch of latent vectors
-        noise = torch.randn(b_size, settings.NZ, 1, 1)
+        noise = torch.randn(b_size, settings.NZ, 1, 1, device=device)
         # Generate fake image batch with G
         fake = netG(noise)
         label.fill_(fake_label)
