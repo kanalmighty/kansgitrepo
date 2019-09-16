@@ -50,4 +50,4 @@ LR = 0.0002
 BETA1 = 0.5
 
 # Number of GPUs available. Use 0 for CPU mode.
-NGPU = 1
+NGPU = 0
