@@ -1,7 +1,6 @@
 import os
 import cv2
-import myimplemention.tools.settings as setting
-from enum import Enum
+import dcgan.settings as setting
 
 
 class ImageReader:

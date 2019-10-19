@@ -2,11 +2,8 @@ import random
 import torch
 import cv2
 from myimplemention.tools.utils import get_image_shape
-import myimplemention.tools.settings as settings
-from myimplemention.tools.Exception import Exception
-import matplotlib.pyplot as plt
-import numpy as np
-from myimplemention.tools.ImageReader import ImageReader
+import dcgan.settings as settings
+from myutils.ImageReader import ImageReader
 
 class ImagePixlAugmention:
 

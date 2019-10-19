@@ -1,5 +1,8 @@
 import numpy as np
 import mxnet as nd
+import gzip
+import os
+
 
 # 双线性插值函数，生成权重用与更新反卷积网络的参数
 def bilinear_kernel(in_channels, out_channels, kernel_size):
