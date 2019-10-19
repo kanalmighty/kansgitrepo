@@ -63,7 +63,7 @@ def test_visualize():
   visualize(simulator)
 
 
-def test_evolve():
+def test_evolve(benchmark):
     particles = [Particles(0.3, 0.5, +1), Particles(0.0, -0.5, -1), Particles(-0.1, -0.4, +3)]
 
     simulator = ParticleSimulator(particles)
