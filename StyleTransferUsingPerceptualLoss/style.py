@@ -10,9 +10,9 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision import transforms
 
-import StyleTransferUsingPerceptualLoss.utils as utils
-from StyleTransferUsingPerceptualLoss.network import ImageTransformNet
-from StyleTransferUsingPerceptualLoss.vgg import Vgg16
+import utils as utils
+from network import ImageTransformNet
+from vgg import Vgg16
 
 # Global Variables
 IMAGE_SIZE = 256
