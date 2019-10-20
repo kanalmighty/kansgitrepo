@@ -23,3 +23,6 @@ def becnmark():
     taylor_exp(500)
     taylor_sin(500)
 
+if __name__ == '__main__':
+    becnmark()
+
