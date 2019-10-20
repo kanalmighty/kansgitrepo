@@ -125,14 +125,14 @@ def train(args):
             recon = y_c_features[1]      
             recon_hat = y_hat_features[1]
             content_loss = CONTENT_WEIGHT*loss_mse(recon_hat, recon)
-            aggregate_content_loss += content_loss.data[0]
+            aggregate_content_loss += content_loss.item()
 
             # calculate total variation regularization (anisotropic version)
             # https://www.wikiwand.com/en/Total_variation_denoising
             diff_i = torch.sum(torch.abs(y_hat[:, :, :, 1:] - y_hat[:, :, :, :-1]))
             diff_j = torch.sum(torch.abs(y_hat[:, :, 1:, :] - y_hat[:, :, :-1, :]))
             tv_loss = TV_WEIGHT*(diff_i + diff_j)
-            aggregate_tv_loss += tv_loss.data[0]
+            aggregate_tv_loss += tv_loss.item()
 
             # total loss
             total_loss = style_loss + content_loss + tv_loss
@@ -146,7 +146,7 @@ def train(args):
                 status = "{}  Epoch {}:  [{}/{}]  Batch:[{}]  agg_style: {:.6f}  agg_content: {:.6f}  agg_tv: {:.6f}  style: {:.6f}  content: {:.6f}  tv: {:.6f} ".format(
                                 time.ctime(), e + 1, img_count, len(train_dataset), batch_num+1,
                                 aggregate_style_loss/(batch_num+1.0), aggregate_content_loss/(batch_num+1.0), aggregate_tv_loss/(batch_num+1.0),
-                                style_loss.data[0], content_loss.data[0], tv_loss.data[0]
+                                style_loss.item(), content_loss.item(), tv_loss.item()
                             )
                 print(status)
 
@@ -160,15 +160,15 @@ def train(args):
 
                 outputTestImage_amber = image_transformer(testImage_amber).cpu()
                 amber_path = "visualization/%s/amber_%d_%05d.jpg" %(style_name, e+1, batch_num+1)
-                utils.save_image(amber_path, outputTestImage_amber.data[0])
+                utils.save_image(amber_path, outputTestImage_amber.item())
 
                 outputTestImage_dan = image_transformer(testImage_dan).cpu()
                 dan_path = "visualization/%s/dan_%d_%05d.jpg" %(style_name, e+1, batch_num+1)
-                utils.save_image(dan_path, outputTestImage_dan.data[0])
+                utils.save_image(dan_path, outputTestImage_dan.item())
 
                 outputTestImage_maine = image_transformer(testImage_maine).cpu()
                 maine_path = "visualization/%s/maine_%d_%05d.jpg" %(style_name, e+1, batch_num+1)
-                utils.save_image(maine_path, outputTestImage_maine.data[0])
+                utils.save_image(maine_path, outputTestImage_maine.item())
 
                 print("images saved")
                 image_transformer.train()
@@ -214,7 +214,7 @@ def style_transfer(args):
 
     # process input image
     stylized = style_model(content).cpu()
-    utils.save_image(args.output, stylized.data[0])
+    utils.save_image(args.output, stylized.item())
 
 
 def main():
