@@ -119,7 +119,7 @@ def train(args):
             for j in range(4):#为什么j是4,j是loss_net的layer吗？
                 style_loss += loss_mse(y_hat_gram[j], style_gram[j][:img_batch_read])#这个形状看一下
             style_loss = STYLE_WEIGHT*style_loss
-            aggregate_style_loss += style_loss.data[0]
+            aggregate_style_loss += style_loss.item()
 
             # calculate content loss (h_relu_2_2)
             recon = y_c_features[1]      
