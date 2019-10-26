@@ -14,7 +14,7 @@ transforms = utils.get_trainsforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 isic = ISICDataset(args, transforms)
-ld = DataLoader(isic, batch_size=2, shuffle=True,)
+ld = DataLoader(isic, batch_size=2, shuffle=True,drop_last=True)
 optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
 loss_array = []
