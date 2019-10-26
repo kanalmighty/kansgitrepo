@@ -23,7 +23,7 @@ for EPOCH in range(5):
     for x, y in ld:
         x = x.to(device)
         y_hat = model(x.view(2, 3, 767, 1022).float())
-        loss = criteria(y_hat, y.long().to(device))
+        loss = criteria(y_hat, y.long().to(device).squeeze())
         loss_array.append(loss)
         optimizer.zero_grad()
         loss.backward()
