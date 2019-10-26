@@ -1,4 +1,5 @@
 import torch.utils.data as data
+import torchvision.transforms as transforms
 import cv2
 import os
 import pandas as pd
@@ -29,3 +30,13 @@ def get_images(image_paths):
         for image_path in image_paths:
             images.append(cv2.imread(image_path))
     return images
+
+
+def get_trainsforms(opt):
+    transform_list = []
+    if opt.Normalize:
+        transform_list.append(transforms.Normalize((0.5, 0.5, 0.5),
+                                                (0.5, 0.5, 0.5)))
+        transform_list.append(transforms.ToTensor)
+    return transforms.Compose(transform_list)
+
