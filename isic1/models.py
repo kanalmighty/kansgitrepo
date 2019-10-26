@@ -1,5 +1,6 @@
 import torchvision
 import torch
+import pdb
 import torch.nn as nn
 import utils
 from options.base_options import BaseOptions
@@ -16,9 +17,9 @@ isic = ISICDataset(args, transforms)
 ld = DataLoader(isic, batch_size=2, shuffle=True,)
 optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
-print("loss_array = ")
 loss_array = []
 for EPOCH in range(5):
+    pdb.set_trace()
     for x, y in ld:
         x = x.to(device)
         y_hat = model(x.view(2, 3, 767, 1022).float())
