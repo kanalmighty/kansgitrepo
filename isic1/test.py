@@ -35,6 +35,7 @@ if __name__ == '__main__':
     #
     criteria = nn.CrossEntropyLoss()
     y = torch.randn(2,)
+    y1 = torch.randn(2, 1)
     y_hat = torch.randn(2, 2)
     loss = criteria(y_hat, y.long())
     print(loss.item())
