@@ -19,11 +19,11 @@ optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
 loss_array = []
 for EPOCH in range(5):
-    pdb.set_trace()
     for x, y in ld:
         x = x.to(device)
+        y = torch.randn(2,)
         y_hat = model(x.view(2, 3, 767, 1022).float())
-        loss = criteria(y_hat, y.long().to(device).squeeze())
+        loss = criteria(y_hat, y.long().to(device))
         loss_array.append(loss)
         optimizer.zero_grad()
         loss.backward()
