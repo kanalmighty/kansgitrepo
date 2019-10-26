@@ -17,7 +17,7 @@ ld = DataLoader(isic, batch_size=2, shuffle=True,)
 optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
 loss_array = []
-for EPOCH in range(1):
+for EPOCH in range(5):
     for x, y in ld:
         x = x.to(device)
         y_hat = model(x.view(2, 3, 767, 1022).float())
