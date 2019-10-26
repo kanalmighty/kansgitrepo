@@ -5,7 +5,7 @@ import utils
 from options.base_options import BaseOptions
 from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
-model = torchvision.models.resnet18(pretrained=True)
+model = torchvision.models.resnet18(pretrained=True).cuda()
 options = BaseOptions()
 
 args = options.get_args()
