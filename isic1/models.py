@@ -16,6 +16,7 @@ isic = ISICDataset(args, transforms)
 ld = DataLoader(isic, batch_size=2, shuffle=True,)
 optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
+print("loss_array = ")
 loss_array = []
 for EPOCH in range(5):
     for x, y in ld:
