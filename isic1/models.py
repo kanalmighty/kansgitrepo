@@ -26,4 +26,4 @@ for EPOCH in range(5):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-print(loss_array)
+print("loss_array = %s" % loss_array)
