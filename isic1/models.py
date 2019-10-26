@@ -6,7 +6,7 @@ import utils
 from options.base_options import BaseOptions
 from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
-model = torchvision.models.resnet18(pretrained=True).cuda()
+model = torchvision.models.resnet18(pretrained=True)
 options = BaseOptions()
 
 args = options.get_args()
@@ -19,11 +19,11 @@ optimizer = torch.optim.Adam(model.parameters(), 0.003)
 criteria = nn.CrossEntropyLoss()
 loss_array = []
 for EPOCH in range(5):
-    pdb.set_trace()
+    # pdb.set_trace()
     for x, y in ld:
         x = x.to(device)
         y_hat = model(x.view(2, 3, 767, 1022).float())
-        loss = criteria(y_hat, torch.cuda.LongTensor(y))
+        loss = criteria(y_hat, y.long().to(device).unsqueeze(0))
         loss_array.append(loss)
         optimizer.zero_grad()
         loss.backward()
