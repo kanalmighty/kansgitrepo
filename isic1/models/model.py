@@ -26,7 +26,7 @@ class Model:
         if self.args.network == 'resnet18':
             nk = torchvision.models.resnet18(pretrained=True)
         if torch.cuda.is_available():
-            nk = self.network.cuda()
+            nk = nk.cuda()
         return nk
 
     def get_loss_function(self):
