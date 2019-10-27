@@ -26,19 +26,12 @@ def squarex(num):
 
 
 
-if __name__ == '__main__':
-    # executor = ProcessPoolExecutor(max_workers=4)
-    # fut1 = executor.submit(square, 2)
-    # fut2 = executor.submit(squarex, 3)
-    # # wait([fut1, fut2])
-    # print(fut1.result(),fut2.result())
-    #
-    criteria = nn.CrossEntropyLoss()
-    y = torch.randn(2,)
-    y1 = torch.randn(2, 1)
-    y_hat = torch.randn(2, 2)
-    loss = criteria(y_hat, y.long())
-    print(loss.item())
+
+
+    x = torch.rand(3, 4)
+    print(x)
+    print(torch.argmax(x, dim = 0))
+    print(torch.argmax(x, dim=0).size())
 
     # a = torch.rand(3, 3)
     # print(a)

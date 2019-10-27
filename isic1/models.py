@@ -22,7 +22,7 @@ for EPOCH in range(5):
     for x, y in ld:
         x = x.to(device)
         print(x.shape)
-        y = torch.rand(2,)
+        y = torch.argmax(y, dim = 1)
         y_hat = model(x.view(2, 3, 767, 1022).float())
         loss = criteria(y_hat, y.long().to(device))
         loss_array.append(loss)
