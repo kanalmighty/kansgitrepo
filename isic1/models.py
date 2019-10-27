@@ -25,7 +25,7 @@ for EPOCH in range(5):
         y = torch.argmax(y, dim = 1)
         y_hat = model(x.view(2, 3, 767, 1022).float())
         loss = criteria(y_hat, y.long().to(device))
-        loss_array.append(loss)
+        loss_array.append(loss.item())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
