@@ -15,6 +15,11 @@ class BaseOptions():
         self.argument_parser.add_argument('--datapath', type=str, default='./', help='where the images are stored')
         self.argument_parser.add_argument('--labelpath', type=str, default='./', help='where the labels are stored')
         self.argument_parser.add_argument('--Normalize', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
+        self.argument_parser.add_argument('--optimizer', type=str, help='choices including adam,sgd,mementum' , choices=['adam', 'sgd'])
+        self.argument_parser.add_argument('--lossfunction', type=str, help='choices including cross,softmax', choices=['cross', 'softmax'])
+        self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18', choices=['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18'])
+
+
         self.initialized = True
 
     def get_args(self):
