@@ -1,6 +1,7 @@
 import torchvision
 import torch
 import pdb
+import matplotlib
 import torch.nn as nn
 import utils
 from models.model import Model
@@ -13,7 +14,7 @@ options = BaseOptions()
 args = options.get_args()
 model = Model(args)
 
-transforms = utils.get_trainsforms(args)
+transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 isic = ISICDataset(args, transforms)
@@ -21,7 +22,7 @@ ld = DataLoader(isic, batch_size=2, shuffle=True,drop_last=True)
 optimizer = model.optimizer
 criteria = model.loss_function
 loss_array = []
-for EPOCH in range(5):
+for EPOCH in range(args.epoch):
     for x, y in ld:
         x = x.to(device)
         y = torch.argmax(y, dim = 1)
