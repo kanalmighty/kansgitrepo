@@ -2,6 +2,7 @@ import torch.utils.data as data
 import torchvision.transforms as transforms
 import cv2
 import os
+from pathlib import Path
 import requests
 import urllib.request
 import pandas as pd
@@ -45,11 +46,18 @@ def get_transforms(opt):
 
 def download_dataset(url):
     pwd = os.getcwd()
+    dataset_path = Path('./datasets')
+    if not dataset_path.exists():
+        os.mkdir(dataset_path)
     path_array = url.split('/')
     file_name = path_array[-1]
-    file_path = os.path.join(pwd, file_name)
-    urllib.request.urlretrieve(url, file_path, reporthook)
-    print('target file has been successfully downloaded in %s' % file_path)
+    file_path = os.path.join(pwd, dataset_path, file_name)
+    if Path(file_path).exists():
+        print('%s already exists %s' % file_path)
+        exit(0)
+    else:
+        urllib.request.urlretrieve(url, file_path, reporthook)
+        print('target file has been successfully downloaded in %s' % file_path)
 
 
 def reporthook(blocks_read, block_size, total_size):
