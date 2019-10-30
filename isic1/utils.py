@@ -69,7 +69,7 @@ def reporthook(blocks_read, block_size, total_size):
     if total_size < 0:
         print('Read %d blocks'  % blocks_read)
     else:
-        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 10 == 0):
+        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 100 == 0):
             current_time = datetime.datetime.now()
             time_elasped_minutes = (current_time - begin_time).total_seconds() / 60
             blocks_downloaded = blocks_read * block_size
