@@ -73,7 +73,22 @@ def reporthook(blocks_read, block_size, total_size):
             print('downloading: %d MB at %s, totalsize: %d MB' % (blocks_read*block_size/(1024.0 ** 2) ,time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()), total_size/(1024.0**2)))
 
 
+def record_data():
+    pwd = os.getcwd()
+    date_string = time.strftime("%Y%m%d", time.localtime())
+    time_sting = time.strftime("%H%M%S", time.localtime())
+    root_path = Path('/content/drive/My Drive/daily_report' + date_string)
+    if not root_path.exists():
+        try:
+            os.mkdir(root_path)
+        except IOError:
+            print("please lunch google drive first")
+            exit(0)
+    with open(root_path+time_sting+'.log') as log:
+        log.write('')
+
+
 
 if __name__ == '__main__':
-    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
-    # print(time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()))
+    # download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
+    print(time.strftime("%Y%m%d", time.localtime()))
