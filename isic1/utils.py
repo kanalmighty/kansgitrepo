@@ -20,14 +20,14 @@ IMG_EXTENSIONS = [
 def is_image_file(filename):
     return any(filename.endwith(extension) for extension in IMG_EXTENSIONS)
 
-#传入路径，返回图片数组
+#传入路径，返回图片路径的list
 def get_image_set(dir):
-    images = []
+    images_path_list = []
     for root,_,filenames in os.walk(dir):
         for filename in filenames:
-            image_file = os.path.join(root, filename)
-            images.append(image_file)
-    return images
+            image_file_path = os.path.join(root, filename)
+            images_path_list.append(image_file_path)
+    return images_path_list
 
 #传入图片路径数组，获取图片对象数组
 def get_images(image_paths):

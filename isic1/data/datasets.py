@@ -6,19 +6,23 @@ import torch
 from torchvision.transforms import transforms
 
 class ISICDataset(Dataset):
-    def __init__(self, args, transform):
+    def __init__(self, args, transforms):
         self.image_dir = args.datapath
         self.label_dir = args.labelpath
-        self.image_path_array = utils.get_image_set(self.image_dir)
-        self.image_array = utils.get_images(self.image_path_array)
-        self.image_array_trainsformed = transform(self.image_array)
+        self.image_path_list = utils.get_image_set(self.image_dir)
+        self.transforms = transforms
+        # self.image_array = utils.get_images(self.image_path_array)
+        # self.image_array_trainsformed = transform(self.image_array)
 
     def __getitem__(self, index):
         label_dataframe = pd.read_csv(self.label_dir)
         #把dataframe转换为ndarray
         label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
         self.label_tensor = torch.from_numpy(label_ndarray)
-        return (self.image_array_trainsformed[index], self.label_tensor[index])
+        image_path = self.image_path_list[index]
+        image = utils.get_images(image_path)
+        image_transformed = transforms(image)
+        return (image_transformed, self.label_tensor[index])
 
     def __len__(self):
         return len(self.image_array)
