@@ -21,7 +21,7 @@ class ISICDataset(Dataset):
         self.label_tensor = torch.from_numpy(label_ndarray)
         image_path = self.image_path_list[index]
         image = utils.get_image(image_path)
-        image_transformed = transforms(image)
+        image_transformed = self.transforms(image)
         return (image_transformed, self.label_tensor[index])
 
     def __len__(self):
