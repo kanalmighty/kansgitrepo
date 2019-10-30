@@ -29,6 +29,7 @@ loss_list_draw = []
 loss_dict_draw = {}
 for EPOCH in range(args.epoch):
     for x, y in ld:
+        print(x.size())
         loss_dict_print = {}
         x = x.to(device)
         y = torch.argmax(y, dim=1)
