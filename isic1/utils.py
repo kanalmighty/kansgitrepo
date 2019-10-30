@@ -58,7 +58,7 @@ def download_dataset(url):
     file_path = os.path.join(pwd, dataset_path, file_name)
     if Path(file_path).exists():
         os.remove(file_path)
-    print('downloading started at %str' % time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()))
+    print('downloading started at %str' % time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()))
     urllib.request.urlretrieve(url, file_path, reporthook)
     print('target file has been successfully downloaded in %s' % file_path)
 
@@ -70,7 +70,7 @@ def reporthook(blocks_read, block_size, total_size):
         print('Read %d blocks' % blocks_read)
     else:
         if (blocks_read*block_size/(1024.0**2) > 500) and (blocks_read*block_size/(1024.0**2) % 500 == 0):
-            print('downloading: %d MB at %s, totalsize: %d MB' % (blocks_read*block_size/(1024.0 ** 2) ,time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()), total_size/(1024.0**2)))
+            print('downloading: %d MB at %s, totalsize: %d MB' % (blocks_read*block_size/(1024.0 ** 2) ,time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()), total_size/(1024.0**2)))
 
 
 def record_data():
