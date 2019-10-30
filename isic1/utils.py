@@ -4,6 +4,7 @@ import time
 import torchvision.transforms as transforms
 import cv2
 import os
+from sys import exit
 from pathlib import Path
 import requests
 import urllib.request
@@ -69,7 +70,7 @@ def reporthook(blocks_read, block_size, total_size):
     if total_size < 0:
         print('Read %d blocks'  % blocks_read)
     else:
-        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 100 == 0):
+        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 10 == 0):
             current_time = datetime.datetime.now()
             time_elasped_minutes = (current_time - begin_time).total_seconds() / 60
             blocks_downloaded = blocks_read * block_size
@@ -80,9 +81,4 @@ def reporthook(blocks_read, block_size, total_size):
 
 
 if __name__ == '__main__':
-    begin_time = datetime.datetime.now()
-    time.sleep(5)
-    current_time = datetime.datetime.now()
-    time_elasped_minutes = (current_time - begin_time).total_seconds()
-    print(time_elasped_minutes)
-
+    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
