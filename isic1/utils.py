@@ -2,6 +2,7 @@ import torch.utils.data as data
 import datetime
 import time
 import pdb
+from PIL import Image
 import torchvision.transforms as transforms
 import cv2
 import os
@@ -33,7 +34,7 @@ def get_image_set(dir):
 def get_image(image_path):
     if not Path(image_path).exists():
         raise IOError('not such file of' + image_path)
-    return cv2.imread(image_path)
+    return Image.open(image_path)
 
 
 def get_transforms(opt):
