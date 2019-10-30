@@ -14,9 +14,9 @@ class ISICDataset(Dataset):
         self.image_array_trainsformed = transform(self.image_array)
 
     def __getitem__(self, index):
-        label_dataframe = pd.read_csv(self.label_dir).head(10)
+        label_dataframe = pd.read_csv(self.label_dir)
         #把dataframe转换为ndarray
-        label_ndarray = label_dataframe.head(9).iloc[:, 1:].as_matrix()
+        label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
         self.label_tensor = torch.from_numpy(label_ndarray)
         return (self.image_array_trainsformed[index], self.label_tensor[index])
 
