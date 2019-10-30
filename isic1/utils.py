@@ -1,6 +1,7 @@
 import torch.utils.data as data
 import datetime
 import time
+import pdb
 import torchvision.transforms as transforms
 import cv2
 import os
@@ -71,6 +72,7 @@ def reporthook(blocks_read, block_size, total_size):
         print('Read %d blocks'  % blocks_read)
     else:
         if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 10 == 0):
+            pdb.set_trace()
             current_time = datetime.datetime.now()
             time_elasped_minutes = (current_time - begin_time).total_seconds() / 60
             blocks_downloaded = blocks_read * block_size
@@ -81,4 +83,4 @@ def reporthook(blocks_read, block_size, total_size):
 
 
 if __name__ == '__main__':
-    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
+    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Metadata.csv')
