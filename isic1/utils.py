@@ -30,14 +30,10 @@ def get_image_set(dir):
     return images_path_list
 
 #传入图片路径数组，获取图片对象数组
-def get_images(image_paths):
-    if not isinstance(image_paths, list):
-        raise("the aurgument is not a list")
-    else:
-        images = []
-        for image_path in image_paths:
-            images.append(cv2.imread(image_path))
-    return images
+def get_image(image_path):
+    if not Path(image_path).exists():
+        raise IOError('not such file of' + image_path)
+    return cv2.imread(image_path)
 
 
 def get_transforms(opt):

@@ -20,7 +20,7 @@ class ISICDataset(Dataset):
         label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
         self.label_tensor = torch.from_numpy(label_ndarray)
         image_path = self.image_path_list[index]
-        image = utils.get_images(image_path)
+        image = utils.get_image(image_path)
         image_transformed = transforms(image)
         return (image_transformed, self.label_tensor[index])
 
