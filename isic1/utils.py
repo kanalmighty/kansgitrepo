@@ -1,4 +1,6 @@
 import torch.utils.data as data
+import datetime
+import time
 import torchvision.transforms as transforms
 import cv2
 import os
@@ -53,7 +55,7 @@ def download_dataset(url):
     file_name = path_array[-1]
     file_path = os.path.join(pwd, dataset_path, file_name)
     if Path(file_path).exists():
-        print('%s already exists %s' % file_path)
+        print('%s already exists' % file_path)
         exit(0)
     else:
         urllib.request.urlretrieve(url, file_path, reporthook)
@@ -61,15 +63,26 @@ def download_dataset(url):
 
 
 def reporthook(blocks_read, block_size, total_size):
+    begin_time = datetime.datetime.now()
     if not blocks_read:
         print("Connection opened")
     if total_size < 0:
         print('Read %d blocks'  % blocks_read)
     else:
-        print('downloading: %d MB, totalsize: %d MB' % (blocks_read*block_size/(1024.0**2), total_size/(1024.0**2)))
+        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 10 == 0):
+            current_time = datetime.datetime.now()
+            time_elasped_minutes = (current_time - begin_time).total_seconds() / 60
+            blocks_downloaded = blocks_read * block_size
+            blocks_download_per_second = blocks_downloaded / (begin_time - current_time).total_seconds()
+            minutes_remain = (total_size - blocks_downloaded) / (blocks_download_per_second * 60)
+            print('downloading: %d MB in %d minutes, totalsize: %d MB,%d minutes remain' % (blocks_read*block_size/(1024.0 ** 2), time_elasped_minutes, total_size/(1024.0**2), minutes_remain))
 
 
 
 if __name__ == '__main__':
-    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Training_GroundTruth.csv')
+    begin_time = datetime.datetime.now()
+    time.sleep(5)
+    current_time = datetime.datetime.now()
+    time_elasped_minutes = (current_time - begin_time).total_seconds()
+    print(time_elasped_minutes)
 
