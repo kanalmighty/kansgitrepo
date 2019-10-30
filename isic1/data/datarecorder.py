@@ -10,8 +10,8 @@ class DataRecorder:
         pwd = os.getcwd()
         date_string = time.strftime("%Y%m%d", time.localtime())
         time_string = time.strftime("%H%M%S", time.localtime())
-        # self.root_path = Path('/content/drive/My Drive/daily_report' + date_string)
-        self.root_path = Path('D:\\资料\\研究课题\\' + date_string)
+        self.root_path = Path('/content/drive/My Drive/daily_report' + date_string)
+        # self.root_path = Path('D:\\资料\\研究课题\\' + date_string)
         self.log_path = os.path.join(self.root_path, time_string + '.log')
         if not self.root_path.exists():
             try:

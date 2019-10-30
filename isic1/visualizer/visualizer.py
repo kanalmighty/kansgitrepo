@@ -14,7 +14,7 @@ class Visualizer:
     def draw_picture_block(self, loss_dict):
         icons = ['r--', 'g^', 'cs', 'k*', 'bs', 'yv', 'r+', 'b<', 'm8']
         plt.title("test")
-        plt.ylabel('loss')
+        plt.ylabel('losses')
         plt.xlabel('epoch')
         for idx, key in enumerate(loss_dict.keys()):
             if not isinstance(loss_dict[key], list):
