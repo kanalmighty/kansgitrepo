@@ -39,8 +39,7 @@ def get_image(image_path):
 def get_transforms(opt):
     transform_list = []
     if opt.Normalize:
-        transform_list.append(transforms.Normalize((0.5, 0.5, 0.5),
-                                                (0.5, 0.5, 0.5)))
+        transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
         transform_list.append(transforms.ToTensor)
     return transforms.Compose(transform_list)
 
