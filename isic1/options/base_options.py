@@ -19,6 +19,7 @@ class BaseOptions():
         self.argument_parser.add_argument('--lossfunction', type=str, help='choices including cross,softmax', choices=['cross', 'softmax'])
         self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18', choices=['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18'])
         self.argument_parser.add_argument('--epoch', type=int, default=10, help='number of epoch you want to iterate')
+        self.argument_parser.add_argument('--batch', type=int, help='batch size')
 
         self.initialized = True
 
