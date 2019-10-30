@@ -25,7 +25,7 @@ class ISICDataset(Dataset):
         return (image_transformed, self.label_tensor[index])
 
     def __len__(self):
-        return len(self.image_array)
+        return len(self.image_path_list)
 
     # def get_trainsforms(opt):
     #     transform_list = []
