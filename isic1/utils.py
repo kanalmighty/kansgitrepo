@@ -57,30 +57,23 @@ def download_dataset(url):
     file_name = path_array[-1]
     file_path = os.path.join(pwd, dataset_path, file_name)
     if Path(file_path).exists():
-        print('%s already exists' % file_path)
-        exit(0)
-    else:
-        urllib.request.urlretrieve(url, file_path, reporthook)
-        print('target file has been successfully downloaded in %s' % file_path)
+        os.remove(file_path)
+    print('downloading started at %str' % time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()))
+    urllib.request.urlretrieve(url, file_path, reporthook)
+    print('target file has been successfully downloaded in %s' % file_path)
 
-
+#urlretrieve的回调函数
 def reporthook(blocks_read, block_size, total_size):
-    begin_time = datetime.datetime.now()
     if not blocks_read:
         print("Connection opened")
     if total_size < 0:
-        print('Read %d blocks'  % blocks_read)
+        print('Read %d blocks' % blocks_read)
     else:
-        if (blocks_read*block_size/(1024.0**2) > 0) and (blocks_read*block_size/(1024.0**2) % 10 == 0):
-            pdb.set_trace()
-            current_time = datetime.datetime.now()
-            time_elasped_minutes = (current_time - begin_time).total_seconds() / 60
-            blocks_downloaded = blocks_read * block_size
-            blocks_download_per_second = blocks_downloaded / (begin_time - current_time).total_seconds()
-            minutes_remain = (total_size - blocks_downloaded) / (blocks_download_per_second * 60)
-            print('downloading: %d MB in %d minutes, totalsize: %d MB,%d minutes remain' % (blocks_read*block_size/(1024.0 ** 2), time_elasped_minutes, total_size/(1024.0**2), minutes_remain))
+        if (blocks_read*block_size/(1024.0**2) > 500) and (blocks_read*block_size/(1024.0**2) % 500 == 0):
+            print('downloading: %d MB at %s, totalsize: %d MB' % (blocks_read*block_size/(1024.0 ** 2) ,time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()), total_size/(1024.0**2)))
 
 
 
 if __name__ == '__main__':
-    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Metadata.csv')
+    download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
+    # print(time.strftime("%Y--%m--%d %H:%M:%S", time.localtime()))
