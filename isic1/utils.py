@@ -27,7 +27,8 @@ def get_image_set(dir):
     for root,_,filenames in os.walk(dir):
         for filename in filenames:
             image_file_path = os.path.join(root, filename)
-            images_path_list.append(image_file_path)
+            varifeid_image_path = is_image_file(image_file_path)
+            images_path_list.append(varifeid_image_path)
     return images_path_list
 
 #传入图片路径数组，获取图片对象数组
