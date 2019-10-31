@@ -2,6 +2,7 @@ import pandas
 from options.base_options import BaseOptions
 import utils
 import pdb
+import os
 
 
 class DataProber:
@@ -22,10 +23,21 @@ class DataProber:
                 image_size_dict['w' + str(width) + 'h' + str(height)] += 1
         print(image_size_dict)
 
+    def get_type_profile(self):
+        image_path_list = utils.get_image_set(self.image_root_path)
+        image_type_dict = {}
+        for image_path in image_path_list:
+            filename, extension = os.path.splitext(image_path)
+            if not extension in image_type_dict.keys():
+                image_type_dict[extension] = 1
+            else:
+                image_type_dict[extension] += 1
+        print(image_type_dict)
+
 
 if __name__ == '__main__':
     dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth.csv')
-    dp.get_size_profile()
+    dp.get_type_profile()
 
 
 
