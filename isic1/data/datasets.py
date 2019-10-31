@@ -29,6 +29,10 @@ class ISICDataset(Dataset):
     def __len__(self):
         return len(self.image_path_list)
 
+    def __assert_equality__(self):
+        print('assert equality %d ?= %d ' % (self.__len__(), self.label_tensor.size()[0]))
+        assert self.__len__() == self.label_tensor.size()[0]
+
     # def get_trainsforms(opt):
     #     transform_list = []
     #     if opt.Normalize:
