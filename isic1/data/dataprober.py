@@ -11,7 +11,6 @@ class DataProber:
 
     def get_size_profile(self):
         image_path_list = utils.get_image_set(self.image_root_path)
-        pdb.set_trace()
         image_size_dict = {}
         for image_path in image_path_list:
             image = utils.get_image(image_path)
