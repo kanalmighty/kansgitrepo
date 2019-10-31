@@ -18,8 +18,10 @@ IMG_EXTENSIONS = [
 ]
 
 #check if it's a file with a valid suffix
-def is_image_file(filename):
-    return any(filename.endwith(extension) for extension in IMG_EXTENSIONS)
+def filter_image_file(filename):
+    for extension in IMG_EXTENSIONS:
+        if filename.endswith(extension):
+            return filename
 
 #传入路径，返回图片路径的list
 def get_image_set(dir):
@@ -27,7 +29,7 @@ def get_image_set(dir):
     for root,_,filenames in os.walk(dir):
         for filename in filenames:
             image_file_path = os.path.join(root, filename)
-            varifeid_image_path = is_image_file(image_file_path)
+            varifeid_image_path = filter_image_file(image_file_path)
             images_path_list.append(varifeid_image_path)
     return images_path_list
 

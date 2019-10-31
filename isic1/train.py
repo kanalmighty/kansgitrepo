@@ -28,14 +28,15 @@ logger.start_record()
 loss_list_draw = []
 loss_dict_draw = {}
 for EPOCH in range(args.epoch):
-    for x, y in ld:
+    loss_total_per_epoch = 0#记录每个epoch,所有batch的loss总和
+    for idx, (x, y) in enumerate(ld):
         loss_dict_print = {}
         x = x.to(device)
         y = torch.argmax(y, dim=1)
         y_hat = model.network(x.view(args.batchsize, 3, 500, 500).float())
         loss = criteria(y_hat, y.long().to(device))
+        loss_total_per_epoch += loss.item()#获取所有batch的loss总和
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
-        loss_list_draw.append(loss.item())
         loss_dict_print['EPOCH'] = EPOCH
         loss_dict_print['cross_loss'] = loss.item()
         # loss_dict_print，没有epoch,都是损失函数名:值（值是list）
@@ -43,6 +44,8 @@ for EPOCH in range(args.epoch):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+    loss_avg_per_epoch = loss_total_per_epoch/(args.batchsize*idx)#获取这个epoch中一个平input的均loss
+    loss_list_draw.append(loss_avg_per_epoch)
 
-loss_dict_draw['cross_loss'] = loss_list_draw
+loss_dict_draw['cross_loss'] = loss_avg_per_epoch
 visualizer.draw_picture_block(loss_dict_draw)
