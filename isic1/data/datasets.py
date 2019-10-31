@@ -11,14 +11,15 @@ class ISICDataset(Dataset):
         self.label_dir = args.labelpath
         self.image_path_list = utils.get_image_set(self.image_dir)
         self.transforms = transforms
+        label_dataframe = pd.read_csv(self.label_dir)
+        # 把dataframe转换为ndarray
+        label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
+        self.label_tensor = torch.from_numpy(label_ndarray)
         # self.image_array = utils.get_images(self.image_path_array)
         # self.image_array_trainsformed = transform(self.image_array)
 
     def __getitem__(self, index):
-        label_dataframe = pd.read_csv(self.label_dir)
-        #把dataframe转换为ndarray
-        label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
-        self.label_tensor = torch.from_numpy(label_ndarray)
+
         image_path = self.image_path_list[index]
         image = utils.get_image(image_path)
         image = image.convert('RGB')

@@ -10,7 +10,7 @@ from sys import exit
 from pathlib import Path
 import requests
 import urllib.request
-import pandas as pd
+import configparser
 
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
