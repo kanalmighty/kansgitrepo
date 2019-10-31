@@ -21,7 +21,7 @@ transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 isic = ISICDataset(args, transforms)
-ld = DataLoader(isic, batch_size=args.batch_size, shuffle=True, drop_last=True)
+ld = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 optimizer = model.optimizer
 criteria = model.loss_function
 logger.start_record()
@@ -29,11 +29,10 @@ loss_list_draw = []
 loss_dict_draw = {}
 for EPOCH in range(args.epoch):
     for x, y in ld:
-        print(x.size())
         loss_dict_print = {}
         x = x.to(device)
         y = torch.argmax(y, dim=1)
-        y_hat = model.network(x.view(args.batch_size, 3, 767, 1022).float())
+        y_hat = model.network(x.view(args.batchsize, 3, 500, 500).float())
         loss = criteria(y_hat, y.long().to(device))
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
         loss_list_draw.append(loss.item())
