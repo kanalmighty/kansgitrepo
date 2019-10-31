@@ -4,6 +4,7 @@ import pdb
 import matplotlib
 import torch.nn as nn
 from data.datarecorder import DataRecorder
+from data.dataprober import DataProber
 import utils
 from models.model import Model
 from options.base_options import BaseOptions
@@ -16,7 +17,8 @@ logger = DataRecorder()
 visualizer = Visualizer()
 args = options.get_args()
 model = Model(args)
-
+dataprober = DataProber(args.datapath, args.labelpath)
+dataprober.get_size_profile()
 transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
