@@ -6,9 +6,11 @@ from PIL import Image
 import torchvision.transforms as transforms
 import cv2
 import os
+import torch
 from sys import exit
 from pathlib import Path
 import requests
+import pandas as pd
 import urllib.request
 import configparser
 
@@ -92,6 +94,13 @@ def record_data():
             exit(0)
     with open(root_path+time_sting+'.log') as log:
         log.write('')
+
+#把CSV转换为ndarray返回出去
+def read_csv(csv_dir):
+    label_dataframe = pd.read_csv(csv_dir)
+    # 把dataframe转换为ndarray
+    label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
+    return label_ndarray
 
 
 

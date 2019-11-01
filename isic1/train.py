@@ -24,7 +24,7 @@ transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 isic = ISICDataset(args, transforms)
-# isic.__assert_equality__()
+isic.__assert_equality__()
 ld = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 optimizer = model.optimizer
 criteria = model.loss_function
