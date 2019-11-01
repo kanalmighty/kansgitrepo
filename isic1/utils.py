@@ -31,13 +31,11 @@ def filter_image_file(filename):
 def get_image_set(dir):
     images_path_list = []
     for root,_,filenames in os.walk(dir):
-        print('file'+str(len(filenames)))
         for filename in filenames:
             image_file_path = os.path.join(root, filename)
             if filter_image_file(image_file_path):
                 varifeid_image_path = filter_image_file(image_file_path)
                 images_path_list.append(varifeid_image_path)
-    print('filtered' + str(len(images_path_list)))
     return images_path_list
 
 #传入图片路径数组，获取图片对象数组
