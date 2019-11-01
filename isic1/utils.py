@@ -31,7 +31,7 @@ def filter_image_file(filename):
 def get_image_set(dir):
     images_path_list = []
     for root,_,filenames in os.walk(dir):
-        print('file'+str(len(filename)))
+        print('file'+str(len(filenames)))
         for filename in filenames:
             image_file_path = os.path.join(root, filename)
             if filter_image_file(image_file_path):
