@@ -44,7 +44,7 @@ class DataProber:
             file_name = image_path.split("\\")[-1].split('.')[0]
             image_name_list_data.append(file_name)
         image_name_set_data = set(image_name_list_data)
-        print(image_name_set_label.difference(image_name_set_data))
+        print(len(image_name_set_label.difference(image_name_set_data)))
 
 
 
