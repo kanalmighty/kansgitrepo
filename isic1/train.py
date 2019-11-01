@@ -20,6 +20,7 @@ model = Model(args)
 dataprober = DataProber(args.datapath, args.labelpath)
 dataprober.get_size_profile()
 dataprober.get_type_profile()
+dataprober.get_data_difference()
 transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
