@@ -44,6 +44,8 @@ class DataProber:
             file_name = image_path.split("\\")[-1].split('.')[0]
             image_name_list_data.append(file_name)
         image_name_set_data = set(image_name_list_data)
+        print(sorted(image_name_set_data))
+        print(sorted(image_name_set_label))
         print(len(image_name_set_label.difference(image_name_set_data)))
 
 
@@ -55,6 +57,13 @@ class DataProber:
 if __name__ == '__main__':
     dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth.csv')
     dp.get_data_difference()
+
+    # list1 = ['a','b','c']
+    # list2 = ['c', 'a']
+    # set1 = set(list1)
+    # set2 = set(list2)
+    # print(set1.difference(set2))
+    #
 
 
 
