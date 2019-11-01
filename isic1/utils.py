@@ -97,7 +97,10 @@ def record_data():
 
 #把CSV转换为ndarray返回出去
 def read_csv(csv_dir):
-    label_ndarray = pd.read_csv(csv_dir, header=0, usecols=[0], skiprows=0).values
+    label_dataframe = pd.read_csv(csv_dir)
+    # 把dataframe转换为ndarray
+    label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
+    label_tensor = torch.from_numpy(label_ndarray)
     return label_ndarray
 
 
