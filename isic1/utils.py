@@ -36,7 +36,7 @@ def get_image_set(dir):
             image_file_path = os.path.join(root, filename)
             if filter_image_file(image_file_path):
                 varifeid_image_path = filter_image_file(image_file_path)
-            images_path_list.append(varifeid_image_path)
+                images_path_list.append(varifeid_image_path)
     print('filtered' + str(len(images_path_list)))
     return images_path_list
 
@@ -108,5 +108,4 @@ def read_csv(csv_dir):
 
 
 if __name__ == '__main__':
-    # download_dataset('https://s3.amazonaws.com/isic-challenge-2019/ISIC_2019_Test_Input.zip')
-    print(time.strftime("%Y%m%d", time.localtime()))
+    print(filter_image_file('aa/b.txt'))
