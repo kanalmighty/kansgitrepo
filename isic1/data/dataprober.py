@@ -41,7 +41,7 @@ class DataProber:
         image_name_set_label = set(image_name_list.squeeze().tolist())
         image_name_list_data = []
         for image_path in self.image_path_list:
-            file_name = image_path.split("\\")[-1].split('.')[0]
+            file_name = image_path.split(os.sep)[-1].split('.')[0]
             image_name_list_data.append(file_name)
         image_name_set_data = set(image_name_list_data)
         print(sorted(image_name_set_data))
@@ -56,8 +56,8 @@ class DataProber:
 
 if __name__ == '__main__':
     dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth.csv')
-    dp.get_data_difference()
-
+    # dp.get_data_difference()
+    print(os.sep)
     # list1 = ['a','b','c']
     # list2 = ['c', 'a']
     # set1 = set(list1)
