@@ -18,7 +18,7 @@ class Visualizer:
         plt.xlabel('epoch')
         for idx, key in enumerate(loss_dict.keys()):
             if not isinstance(loss_dict[key], list):
-                raise TypeError("the loss in the dict is not list")
+                raise TypeError("the loss: %s in the dict is not a list" % loss_dict[key] )
             plt.plot(range(0, len(loss_dict[key])), loss_dict[key], icons[idx], label=key)
         plt.legend(loc='upper right')
         plt.show()

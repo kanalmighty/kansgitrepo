@@ -52,5 +52,5 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_total_per_epoch/(args.batchsize*idx)#获取这个epoch中一个平input的均loss
     loss_list_draw.append(loss_avg_per_epoch)
 
-loss_dict_draw['cross_loss'] = loss_avg_per_epoch
+loss_dict_draw['cross_loss'] = loss_list_draw
 visualizer.draw_picture_block(loss_dict_draw)

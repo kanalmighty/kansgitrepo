@@ -103,6 +103,11 @@ def read_csv(csv_dir):
     label_tensor = torch.from_numpy(label_ndarray)
     return label_ndarray
 
+#输入文件名称,返回该文件的完整路径
+def get_file_path(filename):
+    file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)).split('filename')[0], filename)
+    return file_path
+
 
 
 if __name__ == '__main__':
