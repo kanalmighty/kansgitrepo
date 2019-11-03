@@ -40,7 +40,9 @@ class Model(nn.Module):
             if self.args.numclass:
                 fc_features = nk.fc.in_features
                 nk.fc = nn.Linear(fc_features, self.args.numclass)
-            return nk
+                if torch.cuda.is_available():
+                    nk = nk.cuda()
+                    return nk
         if torch.cuda.is_available():
             nk = nk.cuda()
         return nk
