@@ -9,7 +9,7 @@ class BaseOptions():
 
     def initialize(self):    
         # experiment specifics
-        self.argument_parser.add_argument('--name', type=str, default='label2city', help='name of the experiment. It decides where to store samples and models')
+        self.argument_parser.add_argument('--numclass', type=int, help='the number of classes of the input')
         self.argument_parser.add_argument('--device', type=str, help='device that you want you model to be trained on')
         self.argument_parser.add_argument('--resize', type=int, action='append', help='the size(w,h) of images if you want a resize')
         self.argument_parser.add_argument('--datapath', type=str, default='./', help='where the images are stored')

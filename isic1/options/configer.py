@@ -18,11 +18,4 @@ class Configer:
 
 
 if __name__ == '__main__':
-    # configer = Configer('config.ini')
-    # config_dict = configer.get_configer()
-    root = os.path.join(os.path.abspath(os.path.dirname(__file__)).split('config.ini')[0],'config.ini')
-    print('root=', root)
-    # config = configparser.ConfigParser()
-    # config.read(filenames='D:\pycharmspace\kansgitrepo\isic1\options\config.ini', encoding='UTF-8')
-    # print(config['Windows']['logpath'])
-
+    c = Configer.get_configer()

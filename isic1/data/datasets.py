@@ -20,8 +20,9 @@ class ISICDataset(Dataset):
         image_path = self.image_path_list[index]
         image = utils.get_image(image_path)
         image = image.convert('RGB')
-        image_transformed = self.transforms(image)
-        return (image_transformed, self.label_tensor[index])
+        if self.transforms:
+            image = self.transforms(image)
+        return (image, self.label_tensor[index])
 
     def __len__(self):
         return len(self.image_path_list)
