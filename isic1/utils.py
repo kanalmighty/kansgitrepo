@@ -118,6 +118,22 @@ def get_evaluation_metrics(tp, tn, fp ,fn):
     return metrics_dict
 
 
+#所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
+def split_training_data():
+    test_file_name = pd.read_csv('/content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth.csv',
+                                 usecols=['image'], header=0).values.squeeze(1)
+    des_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Test_Input')
+    src_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Training_Input')
+    if not des_file_root.exists():
+        os.mkdir(des_file_root)
+    for file_name in test_file_name:
+        src_file_path = os.path.join(src_file_root, file_name + '.jpg')
+        des_file_path = os.path.join(des_file_root, file_name + '.jpg')
+        try:
+            os.rename(src_file_path, des_file_path)
+        except IOError:
+            print('rename file error!')
+
 
 if __name__ == '__main__':
     print(filter_image_file('aa/b.txt'))
