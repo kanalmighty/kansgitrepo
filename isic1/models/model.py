@@ -78,10 +78,9 @@ class Model(nn.Module):
         model_path = os.path.join(self.configer['checkPointPath'], date_string, time_string + '.pkl')
         try:
             saved_model_parameter = torch.load(model_path)
-            print(saved_model_parameter)
             self.network.load_state_dict(saved_model_parameter)
         except IOError:
-            print('there is not such model %s' % saved_model_path)
+            print('there is not such model %s' % model_path)
 
 
 if __name__ == '__main__':
