@@ -73,9 +73,11 @@ class Model(nn.Module):
         torch.save(self.network.state_dict(), pkl_name)
         return pkl_name
 
-    def load_model(self, saved_model_path):
+#data and time represents the report of a trained model as well as the path where it saved
+    def load_model(self, date_string, time_string):
+        model_path = os.path.join(self.configer['checkPointPath'], date_string, time_string + '.pkl')
         try:
-            saved_model_parameter = torch.load(self.args.model_path)
+            saved_model_parameter = torch.load(model_path)
             print(saved_model_parameter)
             self.network.load_state_dict(saved_model_parameter)
         except IOError:

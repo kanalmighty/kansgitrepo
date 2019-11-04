@@ -55,7 +55,7 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_total_per_epoch/(args.batchsize*idx)#获取这个epoch中一个平input的均loss
     loss_list_draw.append(loss_avg_per_epoch)
 loss_dict_draw['cross_loss'] = loss_list_draw
-logger.log_data(loss_dict_draw)
+logger.log_training_data(loss_dict_draw)
 visualizer.draw_picture_block(loss_dict_draw)
 pkl_name = model.save_model(logger.date_string, logger.time_string)
 logger.record_checkpoint(pkl_name)

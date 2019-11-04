@@ -10,14 +10,14 @@ class DataRecorder:
     def __init__(self):
         pwd = os.getcwd()
         configer = Configer()
-        #get the file name being executed
-        execute_file = sys.argv[0].split('/')[-1].split('.')[0]
-        config_dict = configer.get_configer()
+        ##get the file name that currently being executed
+        # execute_file = sys.argv[0].split('/')[-1].split('.')[0]
+        self.config_dict = configer.get_configer()
         self.date_string = time.strftime("%Y%m%d", time.localtime())
         self.time_string = time.strftime("%H%M%S", time.localtime())
         # self.root_path = Path('/content/drive/My Drive/daily_report' + date_string)
-        self.root_path = Path(config_dict['logpath'] + self.date_string)
-        self.log_path = os.path.join(self.root_path, execute_file + self.time_string + '.log')
+        self.root_path = Path(self.config_dict['logpath'] + self.date_string)
+        self.log_path = os.path.join(self.root_path, self.time_string + '.log')
         if not self.root_path.exists():
             try:
                 os.mkdir(self.root_path)
@@ -36,7 +36,7 @@ class DataRecorder:
 
 
     #参数是字典
-    def log_data(self, data_dict):
+    def log_training_data(self, data_dict):
         with open(self.log_path, 'a') as log:
             log.writelines('\n')
             log.writelines('*********** data ***********'+'\n')
@@ -62,5 +62,17 @@ class DataRecorder:
             log.writelines('model saved in ' + checkpoint_path +'\n')
             log.writelines('\n')
         log.close()
+
+    def append_test_data(self, date_string, time_string, data_dict):
+        target_log = os.path.join(self.config_dict['logpath'], date_string, time_string + '.log')
+        with open(target_log, 'a') as log:
+            log.writelines('*********** data ***********' + '\n')
+            log.writelines('\n')
+            log.writelines('test data : ' + data_dict + '\n')
+            log.writelines('\n')
+            log.writelines('*********** End ***********' + '\n')
+        log.close()
+
+
 if __name__ == '__main__':
     dr = DataRecorder()

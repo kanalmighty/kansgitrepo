@@ -15,7 +15,7 @@ logger = DataRecorder()
 args = options.get_args()
 model = Model(args)
 #load model being trained previously
-model.load_model(args.model_path)
+model.load_model(args.date, args.time)
 dataprober = DataProber(args.datapath, args.labelpath)
 dataprober.get_size_profile()
 dataprober.get_type_profile()
@@ -35,24 +35,24 @@ true_positive = 0#检查出患病，真患病，true代表预测和实际都不�
 true_negative = 0#检查出没病，真没病
 false_positive = 0#检擦出没病，其实有病
 false_negative = 0#检查有病，其实没病
-
-for EPOCH in range(args.epoch):
-    loss_total_per_epoch = 0#记录每个epoch,所有batch的loss总和
-    for idx, (x, y) in enumerate(testdata_loader):
-        x = x.to(device)
-        y_scalar = torch.argmax(y, dim=1)
-        y_hat = model.network(x)
-        y_hat_scalar = torch.argmax(y_hat, dim=1)
-        #if groundtruth is positive
-        if y_scalar == 0:
-            if y_hat_scalar == 0:#prediction is positive
-                true_positive += 1# the it's true positive
-            else:
-                false_positive += 1#it's positive,not predition is negative
+for idx, (x, y) in enumerate(testdata_loader):
+    x = x.to(device)
+    y_scalar = torch.argmax(y, dim=1)
+    y_hat = model.network(x)
+    y_hat_scalar = torch.argmax(y_hat, dim=1)
+    #if groundtruth is positive
+    if y_scalar == 0:
+        if y_hat_scalar == 0:#prediction is positive
+            true_positive += 1# the it's true positive
         else:
-            # if groundtruth is negative
-            if y_hat_scalar == 0:#prediction is positive
-                false_negative += 1# false_positive
-            else:
-                true_positive += 1
-    print(utils.get_evaluation_metrics(true_positive, true_negative, false_positive, false_negative))
+            false_positive += 1#it's positive,not predition is negative
+    else:
+        # if groundtruth is negative
+        if y_hat_scalar == 0:#prediction is positive
+            false_negative += 1# false_positive
+        else:
+            true_positive += 1
+
+metrics_dict = utils.get_evaluation_metrics(true_positive, true_negative, false_positive, false_negative)
+print(metrics_dict)
+logger.append_test_data(args.date, args.time, metrics_dict)
