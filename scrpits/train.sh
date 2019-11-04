@@ -1,0 +1,1 @@
+python /content/cloned-repo/isic1/train.py --numclass 9 --network resnet18 --epoch 5 --optimizer adam --lossfunction cross --datapath /content/cloned-repo/isic1/ISIC_2019_Training_Input --labelpath /content/drive/My\ Drive/isic2019/labels/ISIC_2019_Training_GroundTruth.csv --batchsize 64 --resize 500 --resize 500

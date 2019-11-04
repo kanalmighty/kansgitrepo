@@ -1,0 +1,1 @@
+python /content/cloned-repo/isic1/train.py --numclass 9 --network resnet18 --epoch 1 --datapath /content/cloned-repo/isic1/ISIC_2019_Test_Input --labelpath /content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth.csv
