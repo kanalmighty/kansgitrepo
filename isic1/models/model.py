@@ -73,13 +73,16 @@ class Model(nn.Module):
         torch.save(self.network.state_dict(), pkl_name)
         return pkl_name
 
-    def load_model(self, saved_model_path):
+#time and date is the day and time when training starts and also the name of the saved model
+    def load_model(self, date, time):
+        checkpoint_path = os.path.join(self.configer['checkPointPath'], date)
+        pkl_name = os.path.join(checkpoint_path, time + '.pkl')
         try:
-            saved_model_parameter = torch.load(self.args.model_path)
+            saved_model_parameter = torch.load(pkl_name)
             print(saved_model_parameter)
             self.network.load_state_dict(saved_model_parameter)
         except IOError:
-            print('there is not such model %s' % saved_model_path)
+            print('there is not such model %s' % pkl_name)
 
 
 if __name__ == '__main__':
