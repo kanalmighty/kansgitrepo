@@ -30,7 +30,7 @@ trainingdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, 
 optimizer = model.optimizer
 criteria = model.loss_function
 logger.start_record()
-logger.log_data(vars(args))
+logger.log_training_data(vars(args))
 loss_list_draw = []
 loss_dict_draw = {}
 
