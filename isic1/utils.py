@@ -95,6 +95,7 @@ def record_data():
     with open(root_path+time_sting+'.log') as log:
         log.write('')
 
+
 #把CSV转换为ndarray返回出去
 def read_csv(csv_dir):
     label_dataframe = pd.read_csv(csv_dir)
@@ -102,19 +103,22 @@ def read_csv(csv_dir):
     label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
     return label_ndarray
 
+
+
 #输入文件名称,返回该文件的完整路径
 def get_file_path(filename):
     file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)).split('filename')[0], filename)
     return file_path
 
-#input 4 number ,out a dictionary of metrics
 
+#input 4 number ,output a dictionary of metrics
 def get_evaluation_metrics(tp, tn, fp ,fn):
     metrics_dict = {}
     metrics_dict['recall'] = tp/(tp + fp)
     metrics_dict['precision'] = tp/(tp + fn)
     metrics_dict['true_positive_rate'] = tp/(tp + fn)
-    metrics_dict['false_postive_rate'] = fp / (tn + fp)
+    if tn + fp == 0:
+        metrics_dict['false_postive_rate'] = None
     return metrics_dict
 
 

@@ -16,7 +16,7 @@ class DataRecorder:
         self.date_string = time.strftime("%Y%m%d", time.localtime())
         self.time_string = time.strftime("%H%M%S", time.localtime())
         # self.root_path = Path('/content/drive/My Drive/daily_report' + date_string)
-        self.root_path = Path(self.config_dict['logpath'] + self.date_string)
+        self.root_path = Path(os.path.join(self.config_dict['logpath'], self.date_string))
         self.log_path = os.path.join(self.root_path, self.time_string + '.log')
         if not self.root_path.exists():
             try:
@@ -68,7 +68,7 @@ class DataRecorder:
         with open(target_log, 'a') as log:
             log.writelines('*********** data ***********' + '\n')
             log.writelines('\n')
-            log.writelines('test data : ' + data_dict + '\n')
+            log.writelines('test data : ' + str(data_dict) + '\n')
             log.writelines('\n')
             log.writelines('*********** End ***********' + '\n')
         log.close()
