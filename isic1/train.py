@@ -29,8 +29,7 @@ isic.__assert_equality__()
 trainingdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 optimizer = model.optimizer
 criteria = model.loss_function
-logger.start_record()
-logger.log_training_data(vars(args))
+logger.set_arguments(vars(args))
 loss_list_draw = []
 loss_dict_draw = {}
 
@@ -55,8 +54,8 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_total_per_epoch/(args.batchsize*idx)#获取这个epoch中一个平input的均loss
     loss_list_draw.append(loss_avg_per_epoch)
 loss_dict_draw['cross_loss'] = loss_list_draw
-logger.log_training_data(loss_dict_draw)
+logger.set_arguments(vars(args))
+logger.set_training_data(loss_dict_draw)
+logger.write_training_data()
 visualizer.draw_picture_block(loss_dict_draw)
-pkl_name = model.save_model(logger.date_string, logger.time_string)
-logger.record_checkpoint(pkl_name)
-logger.finish_record()
+pkl_name = model.save_model(logger.date_string, logger.start_time_string)

@@ -26,7 +26,6 @@ isic = ISICDataset(args, transforms)
 isic.__assert_equality__()
 testdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 
-logger.start_record()
 
 model.eval()#模型为测试，不使用dropput等
 acurracy = 0
