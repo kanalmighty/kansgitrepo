@@ -55,3 +55,4 @@ for idx, (x, y) in enumerate(testdata_loader):
 metrics_dict = utils.get_evaluation_metrics(true_positive, true_negative, false_positive, false_negative)
 print(metrics_dict)
 logger.append_test_data(args.date, args.time, metrics_dict)
+exit(0)
