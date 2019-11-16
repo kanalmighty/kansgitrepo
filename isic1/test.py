@@ -39,6 +39,7 @@ for idx, (x, y) in enumerate(testdata_loader):
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
+    print(y_hat_scalar)
     #if groundtruth is positive
     if y_scalar == 0:
         if y_hat_scalar == 0:#prediction is positive

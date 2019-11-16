@@ -122,7 +122,7 @@ def get_file_path(filename):
 
 
 #input 4 number ,output a dictionary of metrics
-def get_evaluation_metrics(tp, tn, fp ,fn):
+def get_evaluation_metrics(tp, tn, fp, fn):
     metrics_dict = {}
     metrics_dict['recall'] = tp/(tp + fp)
     metrics_dict['precision'] = tp/(tp + fn)
