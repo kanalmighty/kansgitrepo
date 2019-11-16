@@ -12,6 +12,7 @@ from pathlib import Path
 import requests
 import pandas as pd
 import urllib.request
+
 import configparser
 
 IMG_EXTENSIONS = [
@@ -47,12 +48,20 @@ def get_image(image_path):
 
 def get_transforms(opt):
     transform_list = []
-    if opt.Normalize:
+    if opt.autoaugment:
+        transform_list.append(AutoAugment())
+    elif opt.Normalize:
         transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
-    if opt.centercropsize:
+    elif opt.centercropsize:
         transform_list.append(transforms.CenterCrop(opt.centercropsize))
-    if opt.resize:
+    elif opt.resize:
         transform_list.append(transforms.Resize(opt.resize))
+    transform_list.append(transforms.ToTensor())
+    return transforms.Compose(transform_list)
+
+def get_auto_augments(auto_augment_object):
+    transform_list = []
+    transform_list.append(auto_augment_object)
     transform_list.append(transforms.ToTensor())
     return transforms.Compose(transform_list)
 
@@ -69,6 +78,7 @@ def download_dataset(url):
     print('downloading started at %str' % time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()))
     urllib.request.urlretrieve(url, file_path, reporthook)
     print('target file has been successfully downloaded in %s' % file_path)
+
 
 #urlretrieve的回调函数
 def reporthook(blocks_read, block_size, total_size):

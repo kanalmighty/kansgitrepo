@@ -10,16 +10,19 @@ from models.model import Model
 from options.base_options import BaseOptions
 from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
+from data.autoaugment import *
 from visualizer.visualizer import Visualizer
 # model = torchvision.models.resnet18(pretrained=True).cuda()
 options = BaseOptions()
-logger = DataRecorder()
-visualizer = Visualizer()
-args = options.get_args()
-model = Model(args)
-dataprober = DataProber(args.datapath, args.labelpath)
-dataprober.get_data_difference()
-transforms = utils.get_transforms(args)
+logger = DataRecorder()#初始化记录器
+visualizer = Visualizer()#初始化视觉展示器
+args = options.get_args()#获取参数
+auto_augment = AutoAugment()#初始化数据增强器
+args.augment_policy = auto_augment.policy_detail#记录数据增强策略
+model = Model(args)#根据参数获取模型
+dataprober = DataProber(args.datapath, args.labelpath)#初始化数据探查器
+# dataprober.get_data_difference()
+transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 isic = ISICDataset(args, transforms)
@@ -52,7 +55,6 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
     loss_list_draw.append(loss_avg_per_epoch)
 loss_dict_draw['cross_loss'] = loss_list_draw
-logger.set_arguments(vars(args))
 logger.set_training_data(loss_dict_draw)
 logger.write_training_data()
 visualizer.draw_picture_block(loss_dict_draw)
