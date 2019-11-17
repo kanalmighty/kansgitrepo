@@ -129,6 +129,8 @@ def get_evaluation_metrics(tp, tn, fp, fn):
     metrics_dict['true_positive_rate'] = tp/(tp + fn)
     if tn + fp == 0:
         metrics_dict['false_postive_rate'] = None
+    else:
+        metrics_dict['false_postive_rate'] = fp/(tn + fp)
     return metrics_dict
 
 
