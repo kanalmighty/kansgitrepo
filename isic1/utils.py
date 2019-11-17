@@ -106,7 +106,7 @@ def record_data():
         log.write('')
 
 
-#把CSV转换为ndarray返回出去
+#read csv and return as ndarray
 def read_csv(csv_dir):
     label_dataframe = pd.read_csv(csv_dir)
     # 把dataframe转换为ndarray

@@ -1,9 +1,9 @@
-import pandas
 from options.base_options import BaseOptions
 import utils
-import pdb
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import random
 
 
 class DataProber:
@@ -48,6 +48,19 @@ class DataProber:
         print(sorted(image_name_set_label))
         print(len(image_name_set_label.difference(image_name_set_data)))
 
+    def get_label_histgram(self):
+        df = pd.read_csv(self.label_path, header=0, index_col=0)
+        Row_sum = df.apply(lambda x: x.sum())
+        print(Row_sum)
+        Row_sum.plot()
+        plt.show()
+        # plt.hist(list(Row_sum),bins=)
+
+        # a = [random.randint(1, 10) for _ in range(10)]
+        #
+        # plt.hist(a, bins=10)
+        # plt.show()
+
 
 
 
@@ -55,15 +68,11 @@ class DataProber:
 
 
 if __name__ == '__main__':
-    dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth.csv')
-    # dp.get_data_difference()
-    print(os.sep)
-    # list1 = ['a','b','c']
-    # list2 = ['c', 'a']
-    # set1 = set(list1)
-    # set2 = set(list2)
-    # print(set1.difference(set2))
-    #
+    dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth_All.csv')
+    dp.get_label_histgram()
+
+
+
 
 
 
