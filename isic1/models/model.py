@@ -71,9 +71,9 @@ class Model(nn.Module):
         checkpoint_path = os.path.join(self.configer['checkPointPath'], date)
         if not Path(checkpoint_path).exists():
             os.mkdir(checkpoint_path)
-        pkl_name = os.path.join(checkpoint_path, time + '.pkl')
-        torch.save(self.network.state_dict(), pkl_name)
-        return pkl_name
+        pth_name = os.path.join(checkpoint_path, time + '.pth')
+        torch.save(self.network.state_dict(), pth_name)
+        return pth_name
 
 #data and time represents the report of a trained model as well as the path where it saved
     def load_model(self, date_string, time_string):
