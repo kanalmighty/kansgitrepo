@@ -77,7 +77,7 @@ class Model(nn.Module):
 
 #data and time represents the report of a trained model as well as the path where it saved
     def load_model(self, date_string, time_string):
-        model_path = os.path.join(self.configer['checkPointPath'], date_string, time_string + '.pkl')
+        model_path = os.path.join(self.configer['checkPointPath'], date_string, time_string + '.pth')
         try:
             saved_model_parameter = torch.load(model_path)
             self.network.load_state_dict(saved_model_parameter)
