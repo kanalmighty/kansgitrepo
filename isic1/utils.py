@@ -124,9 +124,14 @@ def get_file_path(filename):
 #input 4 number ,output a dictionary of metrics
 def get_evaluation_metrics(tp, tn, fp, fn):
     metrics_dict = {}
-    metrics_dict['recall'] = tp/(tp + fp)
-    metrics_dict['precision'] = tp/(tp + fn)
-    metrics_dict['true_positive_rate'] = tp/(tp + fn)
+    if tn + fp == 0:
+        metrics_dict['recall'] = None
+    else:
+        metrics_dict['recall'] = tp/(tp + fp)
+    if tp + fn == 0:
+        metrics_dict['precision'] = None
+    else:
+        metrics_dict['precision'] = tp / (tp + fn)
     if tn + fp == 0:
         metrics_dict['false_postive_rate'] = None
     else:
