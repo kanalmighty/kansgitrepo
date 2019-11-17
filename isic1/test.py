@@ -51,7 +51,7 @@ for idx, (x, y) in enumerate(testdata_loader):
         if y_hat_scalar == 0:#prediction is positive
             false_negative += 1# false_positive
         else:
-            true_positive += 1
+            true_negative += 1
 
 metrics_dict = utils.get_evaluation_metrics(true_positive, true_negative, false_positive, false_negative)
 print(metrics_dict)

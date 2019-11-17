@@ -4,6 +4,7 @@ import torch.nn as nn
 from options.configer import Configer
 from pathlib import Path
 import os
+from  models.lossfunctions import *
 import utils
 from options.base_options import BaseOptions
 
@@ -50,12 +51,12 @@ class Model(nn.Module):
         return nk
 
     def get_loss_function(self):
-        if self.args.lossfunction not in ['cross','softmax']:
+        if self.args.lossfunction not in ['cross', 'focalloss']:
             raise LookupError("no such loss function")
         if self.args.lossfunction == 'cross':
             lf = torch.nn.CrossEntropyLoss()
-        if self.args.lossfunction == 'softmax':
-            lf = torch.nn.Softmax()
+        if self.args.lossfunction == 'focalloss':
+            lf = FocalLoss(self.args.numclass, alpha=0.25, gamma=2, size_average=True)
         return lf
 
     def get_optimizer(self):
