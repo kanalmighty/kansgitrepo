@@ -54,7 +54,7 @@ for EPOCH in range(args.epoch):
         optimizer.step()
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
     loss_list_draw.append(loss_avg_per_epoch)
-loss_dict_draw[args.loss] = loss_list_draw
+loss_dict_draw[args.lossfunction] = loss_list_draw
 logger.set_training_data(loss_dict_draw)
 logger.write_training_data()
 visualizer.draw_picture_block(loss_dict_draw)
