@@ -22,15 +22,15 @@ class FocalLoss(nn.Module):
 
 
     """
-    def __init__(self, class_num, alpha=None, gamma=2, size_average=True):
+    def __init__(self, class_num, alpha=0.25, gamma=2, size_average=True):
         super(FocalLoss, self).__init__()
         if alpha is None:
-            self.alpha = Variable(torch.ones(class_num, 1))
+            self.alpha = torch.tensor(torch.ones(class_num, 1))
         else:
             if isinstance(alpha, Variable):
                 self.alpha = torch.ones(class_num, 1)*alpha
             else:
-                self.alpha = Variable(torch.ones(class_num, 1)*alpha)
+                self.alpha = torch.tensor(torch.ones(class_num, 1)*alpha)
         self.gamma = gamma
         self.class_num = class_num
         self.size_average = size_average
@@ -41,7 +41,7 @@ class FocalLoss(nn.Module):
         P = F.softmax(inputs)
 
         class_mask = inputs.data.new(N, C).fill_(0)
-        class_mask = Variable(class_mask)
+        class_mask = torch.tensor(class_mask)
         ids = targets.view(-1, 1)
         class_mask.scatter_(1, ids.data, 1.)
 

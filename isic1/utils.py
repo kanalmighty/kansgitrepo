@@ -48,9 +48,7 @@ def get_image(image_path):
 
 def get_transforms(opt):
     transform_list = []
-    if opt.autoaugment:
-        transform_list.append(AutoAugment())
-    elif opt.Normalize:
+    if opt.Normalize:
         transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
     elif opt.centercropsize:
         transform_list.append(transforms.CenterCrop(opt.centercropsize))
