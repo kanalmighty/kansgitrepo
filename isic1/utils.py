@@ -139,7 +139,7 @@ def get_evaluation_metrics(tp, tn, fp, fn):
 
 #所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
 def split_training_data():
-    test_file_name = pd.read_csv('/content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth.csv',
+    test_file_name = pd.read_csv('/content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth_Collab.csv',
                                  usecols=['image'], header=0).values.squeeze(1)
     des_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Test_Input')
     src_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Training_Input')
