@@ -7,20 +7,22 @@ from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
 import utils
 from models.model import Model
-from options.base_options import BaseOptions
+from options.configer import Configer
+from options.train_options import TrainingOptions
 from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
 from data.autoaugment import *
 from visualizer.visualizer import Visualizer
 # model = torchvision.models.resnet18(pretrained=True).cuda()
-options = BaseOptions()
+options = TrainingOptions()
 logger = DataRecorder()#初始化记录器
 visualizer = Visualizer()#初始化视觉展示器
 args = options.get_args()#获取参数
 auto_augment = AutoAugment()#初始化数据增强器
 args.augment_policy = auto_augment.policy_detail#记录数据增强策略
 model = Model(args)#根据参数获取模型
-dataprober = DataProber(args.datapath, args.labelpath)#初始化数据探查器
+configer = Configer().get_configer()#获取环境配置
+dataprober = DataProber(configer['trainingImagePath'], configer['traininglabelPath'])#初始化数据探查器
 # dataprober.get_data_difference()
 transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

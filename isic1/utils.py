@@ -7,6 +7,7 @@ import torchvision.transforms as transforms
 import cv2
 import os
 import torch
+import numpy as np
 from sys import exit
 from pathlib import Path
 import requests
@@ -39,16 +40,16 @@ def get_image_set(dir):
                 images_path_list.append(varifeid_image_path)
     return images_path_list
 
-#传入图片路径数组，获取图片对象数组
+#传入单张图片路径，返回图片
 def get_image(image_path):
     if not Path(image_path).exists():
-        raise IOError('not such file of' + image_path)
+        raise IOError('not such file of ' + image_path)
     return Image.open(image_path)
 
 
 def get_transforms(opt):
     transform_list = []
-    if opt.Normalize:
+    if opt.normalize:
         transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
     elif opt.centercropsize:
         transform_list.append(transforms.CenterCrop(opt.centercropsize))
@@ -57,11 +58,19 @@ def get_transforms(opt):
     transform_list.append(transforms.ToTensor())
     return transforms.Compose(transform_list)
 
+
 def get_auto_augments(auto_augment_object):
     transform_list = []
     transform_list.append(auto_augment_object)
     transform_list.append(transforms.ToTensor())
     return transforms.Compose(transform_list)
+
+
+def make_directory(path):
+    dataset_path = Path(path)
+    if not dataset_path.exists():
+        os.mkdir(dataset_path)
+
 
 def download_dataset(url):
     pwd = os.getcwd()
@@ -154,5 +163,70 @@ def split_training_data():
             print('rename file error!')
 
 
+#rename a list of images to a path with a speciyied name
+
+def rename_image_list(image_list, target_path):
+    if not isinstance(image_list, list):
+        raise TypeError("input must be python list")
+    make_directory(target_path)
+    image_list_renamed = encode_image_name(image_list)
+    from tqdm import tqdm
+    for image in tqdm(image_list_renamed):
+        target_file_name = os.path.join(target_path, image_list_renamed)
+        os.rename(image, target_file_name)
+
+def rename_image(image, target_path):
+    target_file_name = os.path.join(target_path, image)
+    os.rename(image, target_file_name)
+
+def get_onehot_by_class(class_list, specified_class):
+    if not isinstance(class_list, list):
+        raise TypeError('aurgument #1 must be to a list')
+    onehot_dict = {}
+    for label_class in class_list:
+        onehot_dict[label_class] = 0
+    onehot_dict[specified_class] = 1
+    return onehot_dict
+
+
+
+
+#rename a list of files to the names derived from their indices
+def encode_image_name(total_number,index=0):
+    #获取文件总长度
+    length = len(str(total_number))
+    #获取序号长度
+    idx_length = len(str(index))
+    #计算补几个零
+    place_holder = '0'
+    for _ in range(length - idx_length):
+        place_holder += '0'
+    file_name = place_holder + str(index)
+    return file_name
+
+# def encode_image_name(file_list, index=0):
+#     file_list_encoded = []
+#     if not isinstance(file_list, list):
+#         raise TypeError("input must be python list")
+#     length = len(file_list)
+#     string_lenth = str(length)
+#     for idx, image in file_list:
+#         #获取文件名后缀
+#         suffix = image.split('.')[1]
+#         #获取序号长度
+#         idx_length = len(str(idx))
+#         #计算补几个零
+#         place_holder = '0'
+#         for _ in (length - idx_length):
+#             place_holder += '0'
+#         file_name = place_holder + str(idx+index)
+#         file_list_encoded.append(file_name + '.' + suffix)
+#     return file_list_encode
+
+
+
+
+
 if __name__ == '__main__':
-    print(filter_image_file('aa/b.txt'))
+    list  = get_onehot_by_class(['MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC'],'NV')
+    print(list)

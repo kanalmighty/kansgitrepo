@@ -69,11 +69,11 @@ class DataProber:
 
 if __name__ == '__main__':
     # dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Test_GroundTruth.csv')
-    # dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image',
-    #                 'D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth_Collab.csv')
-    dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image',
-                    'D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Test_GroundTruth_Collab.csv')
+    # dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\label\\ISIC_2019_Training_GroundTruth.csv')
+    # dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth_All.csv')
+    dp = DataProber('D:\\pycharmspace\\datasets\\isic2019\\image','D:\\pycharmspace\\datasets\\isic2019\\label_processed\\processed_label.csv')
     dp.get_label_histgram()
+
 
 
 

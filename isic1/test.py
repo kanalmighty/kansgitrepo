@@ -43,7 +43,7 @@ for idx, (x, y) in enumerate(testdata_loader):
     #if groundtruth is positive
     if y_scalar == 0:
         if y_hat_scalar == 0:#prediction is positive
-            true_positive += 1# the it's true positive
+            true_positive += 1# then it's true positive
         else:
             false_positive += 1#it's positive,not predition is negative
     else:

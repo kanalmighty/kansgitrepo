@@ -3,15 +3,18 @@ from torch.utils.data import DataLoader
 import utils
 import pandas as pd
 import torch
+import os
+from options.configer import Configer
 from torchvision.transforms import transforms
 
 class ISICDataset(Dataset):
     def __init__(self, args, transforms):
         self.image_dir = args.datapath
         self.label_dir = args.labelpath
-        self.image_path_list = utils.get_image_set(self.image_dir)
+        self.configer = Configer().get_configer()#获取环境配置
+        self.image_path_list = utils.get_image_set(self.configer['trainingImagePath'])
         self.transforms = transforms
-        self.label_tensor = torch.from_numpy(utils.read_csv(self.label_dir))
+        self.label_tensor = torch.from_numpy(utils.read_csv(os.path.join(self.configer['traininglabelPath'], 'processed_label.csv')))
         # self.image_array = utils.get_images(self.image_path_array)
         # self.image_array_trainsformed = transform(self.image_array)
 
