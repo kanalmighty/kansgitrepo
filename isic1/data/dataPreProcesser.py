@@ -12,6 +12,7 @@ from options.preprocess_options import PreprocessOptions
 
 class DataPreProcesser():
     def __init__(self):
+        print('lable_dataframe')
         self.configer = Configer().get_configer()
         self.auto_augment = AutoAugment()
         self.row_image_path = self.configer['rowImagePath']
