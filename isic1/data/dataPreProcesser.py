@@ -12,7 +12,6 @@ from options.preprocess_options import PreprocessOptions
 
 class DataPreProcesser():
     def __init__(self):
-        print('lable_dataframe')
         self.configer = Configer().get_configer()
         self.auto_augment = AutoAugment()
         self.row_image_path = self.configer['rowImagePath']
@@ -24,7 +23,6 @@ class DataPreProcesser():
 
     def __call__(self, expected_number):
         self.check_all_paths()
-        print('lable_dataframe')
         self.data_pre_process(expected_number)
 
     def check_all_paths(self):
@@ -55,7 +53,6 @@ class DataPreProcesser():
             #get image list for a specfied class
             image_detail_dict[column_name] = lable_dataframe[lable_dataframe[column_name].isin([1])]['image'].values.tolist()
         #get the bais between expected number and actual number
-        pdb.set_trace()
         for k1, v1 in sum_dict.items():
             bias_dict[k1] = image_number - v1
         for k2, v2 in bias_dict.items():
