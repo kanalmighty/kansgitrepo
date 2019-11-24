@@ -23,6 +23,7 @@ class DataPreProcesser():
 
     def __call__(self, expected_number):
         self.check_all_paths()
+        print('lable_dataframe')
         self.data_pre_process(expected_number)
 
     def check_all_paths(self):
