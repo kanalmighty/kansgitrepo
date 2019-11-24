@@ -4,6 +4,7 @@ import glob
 import utils
 import pdb as pdb
 import cv2
+from tqdm import tqdm
 from data.autoaugment import AutoAugment
 from pathlib import Path
 import os
@@ -59,7 +60,8 @@ class DataPreProcesser():
                 multitude = v2//sum_dict[k2]#取整
                 left_over = v2 % sum_dict[k2]#取余
                 #rename origin images
-                for image_name in single_class_images:
+                print('copy original %s data' % k2)
+                for image_name in tqdm(single_class_images):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_count_index += 1
@@ -72,8 +74,9 @@ class DataPreProcesser():
                     onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                     new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
                         #append augumented data
+                print('multiply by augumented %s data' % k2)
                 for _ in range(multitude):
-                    for image_name in single_class_images:
+                    for image_name in tqdm(single_class_images):
                         image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                         image = utils.get_image(image_path)
                         image_processed = self.auto_augment(image)
@@ -86,7 +89,8 @@ class DataPreProcesser():
                         onehot_dict['image'] = k2 + image_name_encoded
                         onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                         new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
-                for _ in single_class_images[:left_over]:
+                print('adding left augumented %s data' % k2)
+                for _ in tqdm(single_class_images[:left_over]):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_processed = self.auto_augment(image)
@@ -100,7 +104,8 @@ class DataPreProcesser():
                     onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                     new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
             else:
-                for image_name in single_class_images[:image_number]:
+                print('remove redundant %s data' % k2)
+                for image_name in tqdm(single_class_images[:image_number]):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_count_index += 1
