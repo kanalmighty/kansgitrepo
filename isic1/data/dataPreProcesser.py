@@ -52,11 +52,11 @@ class DataPreProcesser():
             #get image list for a specfied class
             image_detail_dict[column_name] = lable_dataframe[lable_dataframe[column_name].isin([1])]['image'].values.tolist()
         #get the bais between expected number and actual number
+        pdb.set_trace()
         for k1, v1 in sum_dict.items():
             bias_dict[k1] = image_number - v1
         for k2, v2 in bias_dict.items():
             single_class_images = image_detail_dict[k2]
-            pdb.set_trace()
             if v2 > 0:
                 multitude = v2//sum_dict[k2]#取整
                 left_over = v2 % sum_dict[k2]#取余
