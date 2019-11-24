@@ -56,7 +56,6 @@ class DataPreProcesser():
             bias_dict[k1] = image_number - v1
         for k2, v2 in bias_dict.items():
             single_class_images = image_detail_dict[k2]
-            # images_to_process = single_class_images[0: v2]
             if v2 > 0:
                 if sum_dict[k2] == 0:
                     pdb.set_trace()
