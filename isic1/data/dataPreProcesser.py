@@ -57,8 +57,7 @@ class DataPreProcesser():
         for k2, v2 in bias_dict.items():
             single_class_images = image_detail_dict[k2]
             if v2 > 0:
-                if sum_dict[k2] == 0:
-                    pdb.set_trace()
+                pdb.set_trace()
                 multitude = v2//sum_dict[k2]#取整
                 left_over = v2 % sum_dict[k2]#取余
                 #rename origin images
@@ -134,7 +133,7 @@ class DataPreProcesser():
 
 if __name__ == '__main__':
     d = DataPreProcesser()
-    d(50)
+    d(10)
 
 
 
