@@ -36,7 +36,7 @@ class DataPreProcesser():
     def data_pre_process(self, image_number):
         lable_dataframe = pd.DataFrame(self.row_lable_dataframe)
         lable_dataframe = lable_dataframe.drop('UNK', axis=1)
-        print(lable_dataframe)
+        print('lable_dataframe')
         lable_dataframe_without_image = lable_dataframe.drop('image', axis=1)
         sum_dict = {}
         bias_dict = {}
