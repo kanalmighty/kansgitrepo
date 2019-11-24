@@ -35,7 +35,6 @@ criteria = model.loss_function
 logger.set_arguments(vars(args))
 loss_list_draw = []
 loss_dict_draw = {}
-#aa
 model.train()
 for EPOCH in range(args.epoch):
     loss_all_samples_per_epoch = 0#记录每个epoch,所有batch的loss总和
