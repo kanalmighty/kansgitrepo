@@ -58,6 +58,8 @@ class DataPreProcesser():
             single_class_images = image_detail_dict[k2]
             # images_to_process = single_class_images[0: v2]
             if v2 > 0:
+                if sum_dict[k2] == 0:
+                    pdb.set_trace()
                 multitude = v2//sum_dict[k2]#取整
                 left_over = v2 % sum_dict[k2]#取余
                 #rename origin images
