@@ -36,7 +36,6 @@ class DataPreProcesser():
     def data_pre_process(self, image_number):
         lable_dataframe = pd.DataFrame(self.row_lable_dataframe)
         lable_dataframe = lable_dataframe.drop('UNK', axis=1)
-        print('lable_dataframe')
         lable_dataframe_without_image = lable_dataframe.drop('image', axis=1)
         sum_dict = {}
         bias_dict = {}
@@ -61,7 +60,7 @@ class DataPreProcesser():
                 multitude = v2//sum_dict[k2]#取整
                 left_over = v2 % sum_dict[k2]#取余
                 #rename origin images
-                print('copy original %s data' % k2)
+                print('\n copy original %s data' % k2)
                 for image_name in tqdm(single_class_images):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
@@ -75,7 +74,7 @@ class DataPreProcesser():
                     onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                     new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
                         #append augumented data
-                print('multiply by augumented %s data' % k2)
+                print('\n multiply by augumented %s data' % k2)
                 for _ in range(multitude):
                     for image_name in tqdm(single_class_images):
                         image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
@@ -90,7 +89,7 @@ class DataPreProcesser():
                         onehot_dict['image'] = k2 + image_name_encoded
                         onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                         new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
-                print('adding left augumented %s data' % k2)
+                print('\n adding left augumented %s data' % k2)
                 for _ in tqdm(single_class_images[:left_over]):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
@@ -105,7 +104,7 @@ class DataPreProcesser():
                     onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                     new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
             else:
-                print('remove redundant %s data' % k2)
+                print('\n removing redundant %s data' % k2)
                 for image_name in tqdm(single_class_images[:image_number]):
                     image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
@@ -119,7 +118,7 @@ class DataPreProcesser():
                     onehot_dict['image'] = k2 + image_name_encoded
                     onehot_dict = pd.DataFrame(onehot_dict, index=[image_count_index])
                     new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
-        new_lable_dataframe = new_lable_dataframe[['image','MEL','NV','BCC','AK','BKL','DF','VASC','SCC']]
+        new_lable_dataframe = new_lable_dataframe[['image', 'MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC']]
         new_lable_dataframe.to_csv(os.path.join(self.configer['traininglabelPath'], 'processed_label.csv'),index=False)
 
 
