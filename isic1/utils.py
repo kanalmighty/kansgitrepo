@@ -50,9 +50,10 @@ def get_transforms(opt):
             transform_list.append(transforms.CenterCrop(opt.centercropsize))
         elif opt.resize:
             transform_list.append(transforms.Resize(opt.resize))
-        transform_list.append(transforms.ToTensor())
-    else:
-        pass
+        else:
+            pass
+    transform_list.append(transforms.ToTensor())
+
     return transforms.Compose(transform_list)
 
 
