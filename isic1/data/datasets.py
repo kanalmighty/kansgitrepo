@@ -4,6 +4,7 @@ import utils
 import pandas as pd
 import torch
 import os
+import glob
 from options.configer import Configer
 from torchvision.transforms import transforms
 
@@ -14,7 +15,8 @@ class ISICDataset(Dataset):
         self.configer = Configer().get_configer()#获取环境配置
         self.image_path_list = utils.get_image_set(self.image_dir)
         self.transforms = transforms
-        self.label_tensor = torch.from_numpy(utils.read_csv(self.label_dir))
+        training_label = glob.glob(os.path.join(self.label_dir, '*.csv'))
+        self.label_tensor = torch.from_numpy(utils.read_csv(training_label[0]))
         # self.image_array = utils.get_images(self.image_path_array)
         # self.image_array_trainsformed = transform(self.image_array)
 
