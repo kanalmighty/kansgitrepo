@@ -43,13 +43,16 @@ def get_image(image_path):
 
 def get_transforms(opt):
     transform_list = []
-    if opt.normalize:
-        transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
-    elif opt.centercropsize:
-        transform_list.append(transforms.CenterCrop(opt.centercropsize))
-    elif opt.resize:
-        transform_list.append(transforms.Resize(opt.resize))
-    transform_list.append(transforms.ToTensor())
+    if opt.mode == 'train':
+        if opt.normalize:
+            transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
+        elif opt.centercropsize:
+            transform_list.append(transforms.CenterCrop(opt.centercropsize))
+        elif opt.resize:
+            transform_list.append(transforms.Resize(opt.resize))
+        transform_list.append(transforms.ToTensor())
+    else:
+        pass
     return transforms.Compose(transform_list)
 
 
