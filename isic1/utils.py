@@ -1,22 +1,14 @@
-import torch.utils.data as data
-import datetime
 import time
-import pdb
 from PIL import Image
 import torchvision.transforms as transforms
-import cv2
 import shutil
 import os
-import torch
-import numpy as np
 from sys import exit
 from pathlib import Path
 import requests
 import pandas as pd
 import urllib.request
-from options.configer import Configer
 
-import configparser
 
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
@@ -149,11 +141,10 @@ def get_evaluation_metrics(tp, tn, fp, fn):
 
 
 #所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
-def split_test_data():
-    configer = Configer().get_configer()
-    test_file_name = pd.read_csv(configer['testLabelPath'], usecols=['image'], header=0).values.squeeze(1)
-    des_file_root = Path(configer['testImagePath'])
-    src_file_root = Path(configer['rowImagePath'])
+def split_test_data(rowImagePath, testImagePath, testLabelPath):
+    test_file_name = pd.read_csv(testLabelPath, usecols=['image'], header=0).values.squeeze(1)
+    des_file_root = Path(testImagePath)
+    src_file_root = Path(rowImagePath)
     if not des_file_root.exists():
         os.mkdir(des_file_root)
     for file_name in test_file_name:
