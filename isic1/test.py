@@ -24,7 +24,9 @@ dataprober.get_type_profile()
 dataprober.get_data_difference()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 transforms = utils.get_transforms(args)
-isic = ISICDataset(args, transforms)
+image_path = configer['testImagePath']
+label_path = configer['testLabelPath']
+isic = ISICDataset(image_path, label_path, transforms)
 isic.__assert_equality__()
 testdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 

@@ -26,8 +26,9 @@ dataprober = DataProber(configer['trainingImagePath'], configer['traininglabelPa
 # dataprober.get_data_difference()
 transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-isic = ISICDataset(args, transforms)
+image_path = configer['trainingImagePath']
+label_path = configer['trainingLabelPath']
+isic = ISICDataset(image_path, label_path, transforms)
 isic.__assert_equality__()
 trainingdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 optimizer = model.optimizer
