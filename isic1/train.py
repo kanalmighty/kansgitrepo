@@ -45,7 +45,7 @@ for EPOCH in range(args.epoch):
         x = x.to(device)
         y = torch.argmax(y, dim=1)
         y_hat = model.network(x.float())
-        train_accuracy += (y == torch.argmax(y_hat, dim=1)).sum()
+        train_accuracy += (y.to(device) == torch.argmax(y_hat, dim=1)).sum()
         loss = criteria(y_hat, y.long().to(device))
         loss_all_samples_per_epoch += loss.item()#loss.item()获取的是每个batchsize的平均loss
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
