@@ -36,10 +36,11 @@ criteria = model.loss_function
 logger.set_arguments(vars(args))
 loss_list_draw = []
 loss_dict_draw = {}
-train_accuracy = 0
+train_accuracy_dict = {}
 model.train()
 for EPOCH in range(args.epoch):
     loss_all_samples_per_epoch = 0#记录每个epoch,所有batch的loss总和
+    train_accuracy = 0
     for idx, (x, y) in enumerate(trainingdata_loader):
         loss_dict_print = {}
         x = x.to(device)
@@ -51,7 +52,8 @@ for EPOCH in range(args.epoch):
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
         loss_dict_print['EPOCH'] = EPOCH
         loss_dict_print[args.lossfunction] = loss.item()
-        loss_dict_print['TRAIN ACCURACY'] = train_accuracy.item()
+        #get accuracy for each epoch
+        loss_dict_print['TRAIN ACCURACY'] = train_accuracy.item()/((idx+1)*args.batchsize)
         # loss_dict_print，没有epoch,都是损失函数名:值（值是list）
         visualizer.get_data_report(loss_dict_print)
         optimizer.zero_grad()
