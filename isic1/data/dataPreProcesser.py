@@ -132,7 +132,7 @@ class DataPreProcesser():
 
 if __name__ == '__main__':
     d = DataPreProcesser()
-    d(10)
+    d(50)
 
 
 

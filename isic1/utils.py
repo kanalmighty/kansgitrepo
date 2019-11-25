@@ -5,6 +5,7 @@ import pdb
 from PIL import Image
 import torchvision.transforms as transforms
 import cv2
+import shutil
 import os
 import torch
 import numpy as np
@@ -13,6 +14,7 @@ from pathlib import Path
 import requests
 import pandas as pd
 import urllib.request
+from options.configer import Configer
 
 import configparser
 
@@ -147,20 +149,21 @@ def get_evaluation_metrics(tp, tn, fp, fn):
 
 
 #所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
-def split_training_data():
+def split_test_data():
+    configr = Configer().get_configer()
     test_file_name = pd.read_csv('/content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth_Collab.csv',
                                  usecols=['image'], header=0).values.squeeze(1)
-    des_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Test_Input')
-    src_file_root = Path('/content/cloned-repo/isic1/ISIC_2019_Training_Input')
+    des_file_root = Path(configr['testImagePath'])
+    src_file_root = Path(configr['rowImagePath'])
     if not des_file_root.exists():
         os.mkdir(des_file_root)
     for file_name in test_file_name:
         src_file_path = os.path.join(src_file_root, file_name + '.jpg')
         des_file_path = os.path.join(des_file_root, file_name + '.jpg')
         try:
-            os.rename(src_file_path, des_file_path)
+            shutil.copy(src_file_path, des_file_path)
         except IOError:
-            print('rename file error!')
+            print('copy file error!')
 
 
 #rename a list of images to a path with a speciyied name
