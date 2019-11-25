@@ -15,10 +15,10 @@ class Model(nn.Module):
         self.args = opt
         self.network = self.get_network()
         #only training mode needs loss function
-        if self.args.lossfunction:
+        if self.args.mode == 'train':
             self.loss_function = self.get_loss_function()
         # only training mode optimizer
-        if self.args.optimizer:
+        if self.args.mode == 'train':
             self.optimizer = self.get_optimizer()
         configer = Configer()
         self.configer = configer.get_configer()

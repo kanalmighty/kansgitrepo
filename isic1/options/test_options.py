@@ -8,6 +8,7 @@ class TestOptions(BaseOptions):
     def initialize(self):    
         # experiment specifics
         BaseOptions.initialize(self)
+        self.argument_parser.add_argument('--mode', type=str, default='test', help='model mode')
         self.argument_parser.add_argument('--date', type=str, help='the date of the trained model')
         self.argument_parser.add_argument('--time', type=str, help='the time of the trained model')
 
