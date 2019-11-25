@@ -18,7 +18,7 @@ args = options.get_args()
 model = Model(args)
 #load model being trained previously
 model.load_model(args.date, args.time)
-dataprober = DataProber(configer['testImagePath'], args.labelpath)
+dataprober = DataProber(configer['testImagePath'], configer['testLabelPath'])
 dataprober.get_size_profile()
 dataprober.get_type_profile()
 dataprober.get_data_difference()
