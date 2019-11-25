@@ -2,6 +2,7 @@ import torchvision
 import torch
 import pdb
 import matplotlib
+from options.configer import Configer
 import torch.nn as nn
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
@@ -12,11 +13,12 @@ from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
 options = TestOptions()
 logger = DataRecorder()
+configer = Configer.get_configer()
 args = options.get_args()
 model = Model(args)
 #load model being trained previously
 model.load_model(args.date, args.time)
-dataprober = DataProber(args.datapath, args.labelpath)
+dataprober = DataProber(configer['testImagePath'], args.labelpath)
 dataprober.get_size_profile()
 dataprober.get_type_profile()
 dataprober.get_data_difference()

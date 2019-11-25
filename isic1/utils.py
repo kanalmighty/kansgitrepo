@@ -150,11 +150,10 @@ def get_evaluation_metrics(tp, tn, fp, fn):
 
 #所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
 def split_test_data():
-    configr = Configer().get_configer()
-    test_file_name = pd.read_csv('/content/drive/My Drive/isic2019test/ISIC_2019_Test_GroundTruth_Collab.csv',
-                                 usecols=['image'], header=0).values.squeeze(1)
-    des_file_root = Path(configr['testImagePath'])
-    src_file_root = Path(configr['rowImagePath'])
+    configer = Configer().get_configer()
+    test_file_name = pd.read_csv(configer['testLabelPath'], usecols=['image'], header=0).values.squeeze(1)
+    des_file_root = Path(configer['testImagePath'])
+    src_file_root = Path(configer['rowImagePath'])
     if not des_file_root.exists():
         os.mkdir(des_file_root)
     for file_name in test_file_name:
