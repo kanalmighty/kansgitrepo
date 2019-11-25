@@ -38,7 +38,7 @@ class Model(nn.Module):
         if self.args.network == 'googlenet':
             nk = torchvision.models.GoogLeNet(pretrained=True)
         if self.args.network == 'resnet18':
-            nk = torchvision.models.resnet18(pretrained=True)
+            nk = torchvision.models.resnet18(pretrained=False)
             #if you want to customize the number of classes of the output
             if self.args.numclass:
                 fc_features = nk.fc.in_features
