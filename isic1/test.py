@@ -2,7 +2,7 @@ import torchvision
 import torch
 import pdb
 import matplotlib
-from kansgitrepo.isic1.options.configer import Configer
+from options.configer import Configer
 import torch.nn as nn
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
