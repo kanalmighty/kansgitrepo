@@ -1,5 +1,5 @@
 import pandas as pd
-from options.configer import Configer
+from kansgitrepo.isic1.options.configer import Configer
 import glob
 import utils
 import pdb as pdb

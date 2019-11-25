@@ -2,7 +2,7 @@ import torchvision
 import torch
 import pdb
 import matplotlib
-from options.configer import Configer
+from kansgitrepo.isic1.options.configer import Configer
 import torch.nn as nn
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
@@ -13,7 +13,7 @@ from data.datasets import ISICDataset
 from torch.utils.data import DataLoader
 options = TestOptions()
 logger = DataRecorder()
-configer = Configer.get_configer()
+configer = Configer().get_configer()
 args = options.get_args()
 model = Model(args)
 #load model being trained previously

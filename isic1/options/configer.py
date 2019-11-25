@@ -18,4 +18,4 @@ class Configer:
 
 
 if __name__ == '__main__':
-    c = Configer.get_configer()
+    c = Configer().get_configer()
