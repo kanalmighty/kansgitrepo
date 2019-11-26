@@ -47,12 +47,10 @@ def get_transforms(opt):
     if opt.mode == 'train':
         if opt.normalize:
             transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
-        elif opt.centercropsize:
-            transform_list.append(transforms.CenterCrop(opt.centercropsize))
-        elif opt.resize:
+        if opt.centerCropSize:
+            transform_list.append(transforms.CenterCrop(opt.centerCropSize))
+        if opt.resize:
             transform_list.append(transforms.Resize(opt.resize))
-        else:
-            pass
 
     return transforms.Compose(transform_list)
 
