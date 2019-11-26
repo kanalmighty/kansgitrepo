@@ -45,12 +45,13 @@ def get_transforms(opt):
     transform_list = []
     transform_list.append(transforms.ToTensor())
     if opt.mode == 'train':
+        if opt.resize:
+            transform_list.append(transforms.Resize(opt.resize))
         if opt.normalize:
             transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
         if opt.centerCropSize:
             transform_list.append(transforms.CenterCrop(opt.centerCropSize))
-        if opt.resize:
-            transform_list.append(transforms.Resize(opt.resize))
+
 
     return transforms.Compose(transform_list)
 
