@@ -63,6 +63,7 @@ for EPOCH in range(args.epoch):
     epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
     epoch_loss_list.append(loss_avg_per_epoch)#record epoch loss for drawing
     epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
+    print('epoch %s finished '% EPOCH)
     visualizer.get_data_report(epoch_statics_dict)
     train_statics_dict[EPOCH] = epoch_statics_dict
 logger.set_training_data(train_statics_dict)

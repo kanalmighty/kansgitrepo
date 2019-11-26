@@ -8,6 +8,7 @@ import glob
 from options.configer import Configer
 from torchvision.transforms import transforms
 
+
 class ISICDataset(Dataset):
     def __init__(self, image_path, label_path, transforms):
         self.image_dir = image_path
