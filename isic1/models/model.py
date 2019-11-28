@@ -63,7 +63,7 @@ class Model(nn.Module):
         if self.args.optimizer not in ['adam', 'sgd']:
             raise LookupError("no such optimizer")
         if self.args.optimizer == 'adam':
-            opm = torch.optim.Adam(self.network.parameters(), lr=0.003, betas=(0.9, 0.999), eps=1e-8)
+            opm = torch.optim.Adam(self.network.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-8)
         if self.args.optimizer == 'sgd':
             opm = torch.optim.SGD(self.network.parameters(), lr=0.003)
         return opm

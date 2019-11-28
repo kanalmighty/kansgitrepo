@@ -127,11 +127,44 @@ def get_erode(image):
     dst = cv.erode(binary, kernel)
     cv.imshow("mat", dst)
 
+def get_centercropsed(image):
+    grey = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    ret, binary = cv.threshold(grey, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
+    kernel1 = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
+    kernel2 = cv.getStructuringElement(cv.MORPH_RECT, (8, 8))
+    #先开操作，取除噪声
+    opened_image = cv.morphologyEx(binary, cv.MORPH_OPEN, kernel1, iterations=5)
+    # 填充内部空隙
+    closed_image = cv.morphologyEx(opened_image, cv.MORPH_CLOSE, kernel2, iterations=5)
+    dst1 = cv.dilate(closed_image, kernel2)
+    dst1 = cv.erode(dst1, kernel2)
+    contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    cordinates = (0,0,0,0)
+    for i, contour in enumerate(contours):
+        x, y, w, h = cv.boundingRect(contour)
+        if (x+w)*(w+h) > (cordinates[0]+cordinates[2])*(cordinates[1]+cordinates[3]):
+            cordinates = x, y, w, h
+    cv.rectangle(image, (cordinates[0], cordinates[1]), (cordinates[0]+cordinates[2], cordinates[1]+cordinates[3]), (0, 0, 255), 3)
+    cv.imshow("dst1", dst1)
+    cv.imshow("dst2", image)
 
 
 
 
 if __name__ == '__main__':
-    img1 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0000000.jpg")
+    img1 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024322.jpg")
     img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0000004.jpg")
-    get_erode(img1)
+    get_centercropsed(img1)
+
+    # get_centercropsed(img1)
+
+# 用绿色(0, 255, 0)来画出最小的矩形框架
+# x, y, w, h = cv2.boundingRect(cnt)
+# cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+#
+# # 用红色表示有旋转角度的矩形框架
+# rect = cv2.minAreaRect(cnt)
+# box = cv2.cv.BoxPoints(rect)
+# box = np.int0(box)
+# cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
+# cv2.imwrite('contours.png', img)

@@ -25,6 +25,8 @@ class ISICDataset(Dataset):
 
         image_path = self.image_path_list[index]
         image = utils.get_image(image_path)
+        resize_img = transforms.Resize(128)
+        image = resize_img(image)
         if self.transforms:
             image = self.transforms(image)
         return (image, self.label_tensor[index])
