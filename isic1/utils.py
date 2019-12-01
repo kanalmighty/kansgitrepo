@@ -227,8 +227,8 @@ def get_distance(m, n):
 
 #input image width and height,return order width
 def get_expand_border(w, h, target_size):
-    if target_size < w or target_size < h:
-        raise ValueError('target size %d is less than input %d %d' % (target_size, w, h))
+    if target_size > w or target_size > h:
+        raise ValueError('target size %d is larger than input %d %d' % (target_size, w, h))
     return int((target_size - w)/2), int((target_size - h)/2)
 
 
