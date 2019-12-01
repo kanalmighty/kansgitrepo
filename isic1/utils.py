@@ -5,7 +5,7 @@ import shutil
 import os
 from sys import exit
 from pathlib import Path
-import requests
+import numpy as np
 import pandas as pd
 import urllib.request
 
@@ -34,7 +34,7 @@ def get_image_set(dir):
                 images_path_list.append(varifeid_image_path)
     return images_path_list
 
-#传入单张图片路径，返回图片
+#input dir,output Image
 def get_image(image_path):
     if not Path(image_path).exists():
         raise IOError('not such file of ' + image_path)
@@ -199,6 +199,33 @@ def encode_image_name(total_number,index=0):
         place_holder += '0'
     file_name = place_holder + str(index)
     return file_name
+
+
+def get_expand_coordinates(lmda, coordinates):
+    if len(coordinates) != 4:
+        raise ValueError("the second input must be tuple of 4 elements")
+    x_start, y_start, w, h = coordinates
+    w_hat = w*lmda
+    h_hat = h*lmda
+    x_hat = x_start - w * (lmda - 1)/ 2
+    y_hat = y_start - h * (lmda - 1)/2
+    if x_hat > 0 and y_hat > 0:
+        return round(x_hat), round(y_hat), round(w_hat), round(h_hat)
+    else:
+        return x_start, y_start, round(w*lmda), round(h*lmda)
+
+
+#input two points in numpy array,return the distance between
+def get_distance(m, n):
+    return np.sqrt(np.sum((m - n) ** 2))
+
+
+#input image width and height,return order width
+def get_expand_border(w, h, target_size):
+    if target_size < w or target_size < h:
+        raise ValueError('target size %d is less than input %d %d' % (target_size, w, h))
+    return int((target_size - w)/2), int((target_size - h)/2)
+
 
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []

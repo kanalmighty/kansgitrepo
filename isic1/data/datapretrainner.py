@@ -1,6 +1,9 @@
 import cv2 as cv
 import numpy as np
+import utils
 import matplotlib.pyplot as plt
+import numpy as np
+import torchvision.transforms as transforms
 def color_space_demo(image1,image2):
    low = np.array([125,43,46])
    high = np.array([155,255,255])
@@ -127,44 +130,92 @@ def get_erode(image):
     dst = cv.erode(binary, kernel)
     cv.imshow("mat", dst)
 
-def get_centercropsed(image):
+def get_centercropsed_image(image):
     grey = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
     ret, binary = cv.threshold(grey, 0, 255, cv.THRESH_BINARY_INV | cv.THRESH_OTSU)
-    kernel1 = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
-    kernel2 = cv.getStructuringElement(cv.MORPH_RECT, (8, 8))
+    kernel_open = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
+    kernel_close = cv.getStructuringElement(cv.MORPH_RECT, (3, 3))
+    kernel_dilate = cv.getStructuringElement(cv.MORPH_RECT, (15, 15))
+    kernel_erode = cv.getStructuringElement(cv.MORPH_RECT, (2, 2))
     #先开操作，取除噪声
-    opened_image = cv.morphologyEx(binary, cv.MORPH_OPEN, kernel1, iterations=5)
+    opened_image = cv.morphologyEx(binary, cv.MORPH_OPEN, kernel_open, iterations=5)
+    cv.imshow("open", opened_image)
     # 填充内部空隙
-    closed_image = cv.morphologyEx(opened_image, cv.MORPH_CLOSE, kernel2, iterations=5)
-    dst1 = cv.dilate(closed_image, kernel2)
-    dst1 = cv.erode(dst1, kernel2)
+    closed_image = cv.morphologyEx(opened_image, cv.MORPH_CLOSE, kernel_close, iterations=5)
+    cv.imshow("close", closed_image)
+    dst1 = cv.dilate(closed_image, kernel_dilate)
+    cv.imshow("dilate", dst1)
+    # dst1 = cv.erode(dst1, kernel_erode)
+    # cv.imshow("dilate", dst1)
     contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    cordinates = (0,0,0,0)
+    max_cordinates = (0, 0, 0, 0)
     for i, contour in enumerate(contours):
         x, y, w, h = cv.boundingRect(contour)
-        if (x+w)*(w+h) > (cordinates[0]+cordinates[2])*(cordinates[1]+cordinates[3]):
-            cordinates = x, y, w, h
-    cv.rectangle(image, (cordinates[0], cordinates[1]), (cordinates[0]+cordinates[2], cordinates[1]+cordinates[3]), (0, 0, 255), 3)
-    cv.imshow("dst1", dst1)
-    cv.imshow("dst2", image)
+        if w*h > max_cordinates[2]*max_cordinates[3]:
+            max_cordinates = x, y, w, h
+    x_hat, y_hat, w_hat, h_hat = utils.get_expand_coordinates(1.2, max_cordinates)
+    # circye_center = [((max_cordinates[0] + max_cordinates[2])/2, (max_cordinates[1] + max_cordinates[3])/2)]
+    # cv.circle(image, circye_center, radius,(0, 255, 0), 2)
+    cv.rectangle(image, (x_hat, y_hat), (x_hat + w_hat, y_hat + h_hat), (0, 255, 0), 2)
+    cv.imshow("binary", binary)
+    cv.imshow("image", image)
+    image1 = image[y_hat: y_hat + h_hat, x_hat: x_hat + w_hat, :]
+    horzonital, vertical = utils.get_expand_border(w_hat, y_hat, 330)
+    cons = cv.copyMakeBorder(image1, vertical, vertical, horzonital, horzonital, cv.BORDER_CONSTANT, value=0)
+    return cons
+    # return image[y_start: y_start + h, x_start: x_start+w, :]
+
+
+def get_bordercroped_image(image, lmda):
+    w, h = image.shape[0], image.shape[1]
+    w_hat = w * lmda
+    h_hat = h * lmda
+    x_start = round((w - w_hat) / 2)
+    x_end = round((w + w_hat) / 2)
+    y_start = round((h - h_hat) / 2)
+    y_end= round((h + h_hat) / 2)
+    croped = image[x_start: x_end, y_start: y_end, :]
+    return croped
+
+
+def show_multiple_pictures():
+    list = []
+    images_path = utils.get_image_set('D:\\pycharmspace\\datasets\\isic2019\\image')
+    for image_path in images_path:
+        image = cv.imread(image_path)
+        bordered = get_bordercroped_image(image, 0.8)
+        cordinates = get_centercropsed_image(bordered)
+        cv.rectangle(image,(cordinates[0],cordinates[1],cordinates[0]+cordinates[2],cordinates[1]+cordinates[3]), (0, 255, 0), 2)
+        list.append(image)
+    images = np.hstack(list)
+    cv.imshow('aa',images)
+
 
 
 
 
 if __name__ == '__main__':
-    img1 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024322.jpg")
-    img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0000004.jpg")
-    get_centercropsed(img1)
+    # show_multiple_pictures()
+    # cv.imshow('origin', img1)
 
-    # get_centercropsed(img1)
 
-# 用绿色(0, 255, 0)来画出最小的矩形框架
-# x, y, w, h = cv2.boundingRect(cnt)
-# cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-#
-# # 用红色表示有旋转角度的矩形框架
-# rect = cv2.minAreaRect(cnt)
-# box = cv2.cv.BoxPoints(rect)
-# box = np.int0(box)
-# cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
-# cv2.imwrite('contours.png', img)
+    img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024458.jpg")
+    a = get_bordercroped_image(img2, 0.55)
+    cv.imshow('border', a)
+    b = get_centercropsed_image(a)
+    cv.imshow('center', b)
+    # id = 0
+    # image_list = utils.get_image_set('D:\\pycharmspace\\datasets\\isic2019\\image')
+    # for i in image_list:
+    #     image = cv.imread(i)
+    #     a = get_centercroped_image(image, 0.8)
+    #
+    #     cordinates = get_centercropsed(a)
+    #
+    #     if (cordinates[0] * cordinates[1] != 0) and (cordinates[2] * cordinates[3] < ((image.shape[0] * image.shape[1])/4)):
+    #         a = cordinates[2] * cordinates[3]
+    #         b = (image.shape[0] * image.shape[1]) / 4
+    #         print(i)
+    #         id+=1
+    # print(id)
+
