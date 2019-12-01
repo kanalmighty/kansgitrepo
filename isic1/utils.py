@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import urllib.request
-
+import cv2 as cv
 
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
@@ -51,8 +51,6 @@ def get_transforms(opt):
     transform_list.append(transforms.ToTensor())
     if opt.normalize:
         transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))#input must be a tensor
-
-
     return transforms.Compose(transform_list)
 
 
@@ -184,7 +182,14 @@ def get_onehot_by_class(class_list, specified_class):
     onehot_dict[specified_class] = 1
     return onehot_dict
 
-
+#input speficied size return center-croped image
+def centercrop_image(image, target_width, target_height):
+    w, h = image.shape[0], image.shape[1]
+    if target_height > h or target_width > w:
+        raise ValueError('target width %d or target height %d is less then input size %d, %d' % (target_width, target_height, w, h))
+    x_start = round((w - target_width) / 2)
+    y_start = round((h - target_height) / 2)
+    return image[x_start:x_start + target_width, y_start: y_start + target_height, :]
 
 
 #rename a list of files to the names derived from their indices
@@ -251,5 +256,6 @@ def get_expand_border(w, h, target_size):
 
 
 if __name__ == '__main__':
-    list  = get_onehot_by_class(['MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC'],'NV')
-    print(list)
+    img2 = cv.imread("C:\\Users\\23270\\Desktop\\aa\\ISIC_0010605.jpg")
+    a  = centercrop_image(img2, 200, 200)
+    cv.imshow('a', a)

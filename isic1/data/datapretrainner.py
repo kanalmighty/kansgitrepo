@@ -198,12 +198,13 @@ if __name__ == '__main__':
     # show_multiple_pictures()
     # cv.imshow('origin', img1)
     img2 = cv.imread("C:\\Users\\23270\\Desktop\\aa\\ISIC_0010605.jpg")
-
-    # img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024458.jpg")
-    a = get_bordercroped_image(img2, 0.55)
-    cv.imshow('border', a)
-    b = get_centercropsed_image(a)
-    cv.imshow('center', b)
+    a = utils.centercrop_image(img2, 200, 200)
+    cv.imshow('a', a)
+    # # img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024458.jpg")
+    # a = get_bordercroped_image(img2, 0.55)
+    # cv.imshow('border', a)
+    # b = get_centercropsed_image(a)
+    # cv.imshow('center', b)
     # id = 0
     # image_list = utils.get_image_set('D:\\pycharmspace\\datasets\\isic2019\\image')
     # for i in image_list:
