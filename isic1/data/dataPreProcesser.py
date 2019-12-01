@@ -162,13 +162,17 @@ class DataPreProcesser():
             dst1 = cv.dilate(closed_image, kernel_dilate)
             _, contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             max_cordinates = (0, 0, 0, 0)
-            for i, contour in enumerate(contours):
-                x, y, w, h = cv.boundingRect(contour)
-                if w * h > max_cordinates[2] * max_cordinates[3]:
-                    max_cordinates = x, y, w, h
-            x_start, y_start, w, h = max_cordinates
-            x_hat, y_hat, w_hat, h_hat = utils.get_expand_coordinates(1.2, max_cordinates)
-            image_croped = image[y_hat: y_hat + h_hat, x_hat: x_hat+w_hat, :]
+            if len(contours) != 0:
+                for i, contour in enumerate(contours):
+                    x, y, w, h = cv.boundingRect(contour)
+                    if w * h > max_cordinates[2] * max_cordinates[3]:
+                        max_cordinates = x, y, w, h
+                x_start, y_start, w, h = max_cordinates
+                x_hat, y_hat, w_hat, h_hat = utils.get_expand_coordinates(1.2, max_cordinates)
+                image_croped = image[y_hat: y_hat + h_hat, x_hat: x_hat+w_hat, :]
+            else:
+                image_croped = image
+
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image_croped)
 
     def pad_images(self, target_size):

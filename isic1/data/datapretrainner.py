@@ -197,9 +197,9 @@ def show_multiple_pictures():
 if __name__ == '__main__':
     # show_multiple_pictures()
     # cv.imshow('origin', img1)
+    img2 = cv.imread("C:\\Users\\23270\\Desktop\\aa\\ISIC_0010605.jpg")
 
-
-    img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024458.jpg")
+    # img2 = cv.imread("D:\\pycharmspace\\datasets\\isic2019\\image\\ISIC_0024458.jpg")
     a = get_bordercroped_image(img2, 0.55)
     cv.imshow('border', a)
     b = get_centercropsed_image(a)
