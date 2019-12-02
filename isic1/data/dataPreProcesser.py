@@ -24,11 +24,11 @@ class DataPreProcesser():
 
     def __call__(self, expected_number):
         self.check_all_paths()
-        self.save_bordercroped_images(0.55)
-        self.save_centercropsed_images()
+        # self.save_bordercroped_images(0.55)
+        # self.save_centercropsed_images()
 
         self.extend_dataset(expected_number)
-        self.pad_images(500)
+        # self.pad_images(500)
 
     def check_all_paths(self):
         utils.make_directory(self.configer['trainingImagePath'])
@@ -68,7 +68,7 @@ class DataPreProcesser():
                 #rename origin images
                 print('\n copy original %s data' % k2)
                 for image_name in tqdm(single_class_images):
-                    image_path = os.path.join(self.configer['tempImagePath'], image_name + '.jpg')
+                    image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_count_index += 1
                     image_name_encoded = utils.encode_image_name(total_image_number, image_count_index)
