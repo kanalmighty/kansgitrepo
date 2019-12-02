@@ -24,6 +24,7 @@ model = Model(args)#根据参数获取模型
 configer = Configer().get_configer()#获取环境配置
 dataprober = DataProber(configer['trainingImagePath'], configer['traininglabelPath'])#初始化数据探查器
 # dataprober.get_data_difference()
+pdb.set_trace()
 transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 image_path = configer['trainingImagePath']
