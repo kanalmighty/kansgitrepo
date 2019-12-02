@@ -171,7 +171,7 @@ class DataPreProcesser():
                 x_hat, y_hat, w_hat, h_hat = utils.get_expand_coordinates(1.2, max_cordinates)
                 image_croped = image[y_hat: y_hat + h_hat, x_hat: x_hat+w_hat, :]
             else:
-                image_croped = utils.centercrop_image(image, 300, 300)
+                image_croped = utils.centercrop_image(image, 200, 200)
 
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image_croped)
 
