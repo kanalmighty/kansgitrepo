@@ -22,15 +22,15 @@ class DataPreProcesser():
             raise ValueError('expect 1 csc file but got %s' + row_label.size)
         self.row_lable_dataframe = pd.read_csv(row_label[0], header=0)
 
-    def __call__(self):
+    def __call__(self, expected_number):
         self.check_all_paths()
-    #     self.save_bordercroped_images(0.55)
-    #     self.save_centercropsed_images()
-    #
-    #     self.extend_dataset(expected_number)
-    #     self.pad_images(500)
-    #
-    # def check_all_paths(self):
+        self.save_bordercroped_images(0.55)
+        self.save_centercropsed_images()
+
+        self.extend_dataset(expected_number)
+        self.pad_images(500)
+
+    def check_all_paths(self):
         utils.make_directory(self.configer['trainingImagePath'])
         utils.make_directory(self.configer['traininglabelPath'])
         utils.make_directory(self.configer['tempImagePath'])
