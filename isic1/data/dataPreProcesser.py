@@ -181,9 +181,12 @@ class DataPreProcesser():
         for image in tqdm(dataset):
             image_name = image.split(os.sep)[-1]
             image_cv = cv.imread(image)
-            horizontal, vertical = utils.get_expand_border(image_cv.shape[0], image_cv.shape[1], 500)
-            image_padded = cv.copyMakeBorder(image_cv, horizontal, horizontal, vertical, vertical, cv.BORDER_CONSTANT, value=0)
-            cv.imwrite((os.path.join(self.configer['trainingImagePath'], image_name)), image_padded)
+            if image_cv.shape[0] < 500 and image_cv.shape[1] < 500:
+                horizontal, vertical = utils.get_expand_border(image_cv.shape[0], image_cv.shape[1], 500)
+                image_padded = cv.copyMakeBorder(image_cv, horizontal, horizontal, vertical, vertical, cv.BORDER_CONSTANT, value=0)
+                cv.imwrite((os.path.join(self.configer['trainingImagePath'], image_name)), image_padded)
+            else:
+                cv.imwrite((os.path.join(self.configer['trainingImagePath'], image_name)), image_cv)
     #show pictures with a frame to mark the mass of the lesion
     def save_framed_images(self):
         dataset = utils.get_image_set(self.temp_image_path)
