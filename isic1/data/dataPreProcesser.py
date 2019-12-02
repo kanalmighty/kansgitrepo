@@ -160,7 +160,7 @@ class DataPreProcesser():
             # 填充内部空隙
             closed_image = cv.morphologyEx(opened_image, cv.MORPH_CLOSE, kernel_close, iterations=5)
             dst1 = cv.dilate(closed_image, kernel_dilate)
-            contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+            _, contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             max_cordinates = (0, 0, 0, 0)
             if len(contours) != 0:
                 for _, contour in enumerate(contours):
