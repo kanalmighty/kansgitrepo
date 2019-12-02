@@ -163,7 +163,7 @@ class DataPreProcesser():
             _, contours, herichy = cv.findContours(dst1, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
             max_cordinates = (0, 0, 0, 0)
             if len(contours) != 0:
-                for i, contour in enumerate(contours):
+                for  contour in enumerate(contours):
                     x, y, w, h = cv.boundingRect(contour)
                     if w * h > max_cordinates[2] * max_cordinates[3]:
                         max_cordinates = x, y, w, h
