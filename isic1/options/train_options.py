@@ -8,6 +8,7 @@ class TrainingOptions(BaseOptions):
     def initialize(self):
         # experiment specifics
         BaseOptions.initialize(self)
+        self.argument_parser.add_argument('--resize', type=int, help='the size(w,h) of images if you want a resize')
         self.argument_parser.add_argument('--mode', type=str,  default='train', help='model mode')
         self.argument_parser.add_argument('--autoaugment', type=bool, help='activate data auto augment,true of false')
         self.argument_parser.add_argument('--optimizer', type=str, help='choices including adam,sgd,momentum', choices=['adam', 'sgd'])
