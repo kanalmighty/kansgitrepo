@@ -15,7 +15,8 @@ class DataPreProcesser():
         self.auto_augment = AutoAugment()
         self.row_image_path = self.configer['rowImagePath']
         self.row_label_path = self.configer['rowLabelPath']
-        self.temp_image_path = self.configer['tempImagePath']
+        # self.temp_image_path = self.configer['tempImagePath']
+        self.temp_image_path = self.configer['rowImagePath']
         self.training_image_path = self.configer['trainingImagePath']
         row_label = glob.glob(os.path.join(self.configer['rowLabelPath'], '*.csv'))
         if len(row_label) != 1:
@@ -68,11 +69,11 @@ class DataPreProcesser():
                 #rename origin images
                 print('\n copy original %s data' % k2)
                 for image_name in tqdm(single_class_images):
-                    image_path = os.path.join(self.configer['rowImagePath'], image_name + '.jpg')
+                    image_path = os.path.join(self.row_image_path, image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_count_index += 1
                     image_name_encoded = utils.encode_image_name(total_image_number, image_count_index)
-                    encoded_file_path = os.path.join(self.configer['trainingImagePath'], k2 + image_name_encoded + '.jpg')
+                    encoded_file_path = os.path.join(self.training_image_path, k2 + image_name_encoded + '.jpg')
                     image.save(encoded_file_path)
                     # append label to label dataframe
                     onehot_dict = utils.get_onehot_by_class(class_list, k2)
@@ -83,12 +84,12 @@ class DataPreProcesser():
                 print('\n multiply by augumented %s data' % k2)
                 for _ in range(multitude):
                     for image_name in tqdm(single_class_images):
-                        image_path = os.path.join(self.configer['tempImagePath'], image_name + '.jpg')
+                        image_path = os.path.join(self.temp_image_path, image_name + '.jpg')
                         image = utils.get_image(image_path)
                         image_processed = self.auto_augment(image)
                         image_count_index += 1
                         image_name_encoded = utils.encode_image_name(total_image_number, image_count_index)
-                        encoded_file_path = os.path.join(self.configer['trainingImagePath'], k2 + image_name_encoded + '.jpg')
+                        encoded_file_path = os.path.join(self.training_image_path, k2 + image_name_encoded + '.jpg')
                         image_processed.save(encoded_file_path)
                         # append label to label dataframe
                         onehot_dict = utils.get_onehot_by_class(class_list, k2)
@@ -97,12 +98,12 @@ class DataPreProcesser():
                         new_lable_dataframe = new_lable_dataframe.append(onehot_dict)
                 print('\n adding left augumented %s data' % k2)
                 for _ in tqdm(single_class_images[:left_over]):
-                    image_path = os.path.join(self.configer['tempImagePath'], image_name + '.jpg')
+                    image_path = os.path.join(self.temp_image_path, image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_processed = self.auto_augment(image)
                     image_count_index += 1
                     image_name_encoded = utils.encode_image_name(total_image_number, image_count_index)
-                    encoded_file_path = os.path.join(self.configer['trainingImagePath'], k2+image_name_encoded + '.jpg')
+                    encoded_file_path = os.path.join(self.training_image_path, k2+image_name_encoded + '.jpg')
                     image_processed.save(encoded_file_path)
                     # append label to label dataframe
                     onehot_dict = utils.get_onehot_by_class(class_list, k2)
@@ -112,12 +113,11 @@ class DataPreProcesser():
             else:
                 print('\n removing redundant %s data' % k2)
                 for image_name in tqdm(single_class_images[:image_number]):
-                    image_path = os.path.join(self.configer['tempImagePath'], image_name + '.jpg')
+                    image_path = os.path.join(self.temp_image_path, image_name + '.jpg')
                     image = utils.get_image(image_path)
                     image_count_index += 1
                     image_name_encoded = utils.encode_image_name(total_image_number, image_count_index)
-                    encoded_file_path = os.path.join(self.configer['trainingImagePath'],
-                                                     k2 + image_name_encoded + '.jpg')
+                    encoded_file_path = os.path.join(self.training_image_path, k2 + image_name_encoded + '.jpg')
                     image.save(encoded_file_path)
                     # append label to label dataframe
                     onehot_dict = utils.get_onehot_by_class(class_list, k2)
