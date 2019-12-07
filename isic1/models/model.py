@@ -37,6 +37,8 @@ class Model(nn.Module):
             nk = torchvision.models.inception_v3(pretrained=True)
         if self.args.network == 'googlenet':
             nk = torchvision.models.GoogLeNet(pretrained=True)
+        if self.args.network == 'densenet161':
+            nk = torchvision.models.densenet161(pretrained=True)
         if self.args.network == 'resnet18':
             nk = torchvision.models.resnet18(pretrained=False)
             #if you want to customize the number of classes of the output
