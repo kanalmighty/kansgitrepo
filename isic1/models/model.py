@@ -25,7 +25,7 @@ class Model(nn.Module):
 
 
     def get_network(self):
-        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet']:
+        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet', 'densenet161']:
             raise LookupError("no such network")
         if self.args.network == 'vgg16':
             nk = torchvision.models.vgg16(pretrained=True)
