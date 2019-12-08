@@ -22,6 +22,11 @@ class Model(nn.Module):
             self.optimizer = self.get_optimizer()
         configer = Configer()
         self.configer = configer.get_configer()
+        if self.args.learningRate:
+            self.learning_rate = self.args.learningRate
+        else:
+            self.learning_rate = 0.0003
+
 
 
     def get_network(self):
@@ -65,9 +70,9 @@ class Model(nn.Module):
         if self.args.optimizer not in ['adam', 'sgd']:
             raise LookupError("no such optimizer")
         if self.args.optimizer == 'adam':
-            opm = torch.optim.Adam(self.network.parameters(), lr=0.0003, betas=(0.9, 0.999), eps=1e-8)
+            opm = torch.optim.Adam(self.network.parameters(), lr=self.learning_rate, betas=(0.9, 0.999), eps=1e-8)
         if self.args.optimizer == 'sgd':
-            opm = torch.optim.SGD(self.network.parameters(), lr=0.003)
+            opm = torch.optim.SGD(self.network.parameters(), lr=self.learning_rate)
         return opm
 
     def save_model(self, date, time):

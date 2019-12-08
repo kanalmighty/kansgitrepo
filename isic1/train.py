@@ -55,7 +55,7 @@ for EPOCH in range(args.epoch):
         batch_statics_dict['EPOCH'] = EPOCH
         batch_statics_dict[args.lossfunction] = loss.item()
         # loss_dict_print，每个epoch,都是损失函数名:值（值是list）
-        visualizer.get_data_report(batch_statics_dict)
+        # visualizer.get_data_report(batch_statics_dict)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
