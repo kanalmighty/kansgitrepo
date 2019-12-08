@@ -4,7 +4,7 @@ import torch.nn as nn
 from options.configer import Configer
 from pathlib import Path
 import os
-from  models.lossfunctions import *
+from models.lossfunctions import *
 import utils
 from options.base_options import BaseOptions
 
