@@ -22,6 +22,9 @@ args = options.get_args()#获取参数
 auto_augment = AutoAugment()#初始化数据增强器
 args.augment_policy = auto_augment.policy_detail#记录数据增强策略
 model = Model(args)#根据参数获取模型
+#continue training if date and time are specified
+if args.date and args.time:
+    model.load_model(args.date, args.time)
 configer = Configer().get_configer()#获取环境配置
 dataprober = DataProber(configer['trainingImagePath'], configer['traininglabelPath'])#初始化数据探查器
 # dataprober.get_data_difference()
@@ -38,7 +41,7 @@ criteria = model.loss_function
 logger.set_arguments(vars(args))
 #define a loss dict to plot different losses
 train_loss_dict = {}
-epoch_loss1_list = []
+epoch_statics_list = []#store epoch loss and training accuracy
 epoch_statics_dict = {}#record epochly training statics
 train_statics_dict = {}#record overall training statics
 model.train()
@@ -65,15 +68,19 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
     train_accuracy_epoch = train_accuracy / len(isic)#training accuracy/sample numbers
     epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
-    epoch_loss1_list.append(loss_avg_per_epoch)#record epoch loss for drawing
+
     epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
-    print('epoch %s finished ' % EPOCH)
-    visualizer.get_data_report(epoch_statics_dict)
+
 
 
     pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
-    train_statics_dict[EPOCH] = epoch_statics_dict
+    epoch_statics_dict['saved_model'] = pkl_name
+    epoch_statics_list.append(epoch_statics_dict)  # record epoch loss for drawing
+    print('epoch %s finished ' % EPOCH)
+    visualizer.get_data_report(epoch_statics_dict)
+train_statics_dict['training_statics'] = epoch_statics_list
+
 logger.set_training_data(train_statics_dict)
 logger.write_training_data()
-train_loss_dict['loss_classifier'] = epoch_loss1_list
+train_loss_dict['loss_classifier'] = [loss for loss in train_statics_dict['training_statics']]
 visualizer.draw_picture_block(train_loss_dict)

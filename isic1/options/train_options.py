@@ -10,6 +10,8 @@ class TrainingOptions(BaseOptions):
         # experiment specifics
         BaseOptions.initialize(self)
         self.argument_parser.add_argument('--mode', type=str,  default='train', help='model mode')
+        self.argument_parser.add_argument('--date', type=str,  help='load a trained model specified by date to continue training')
+        self.argument_parser.add_argument('--time', type=str, help='load a trained model specified by time to continue training')
         self.argument_parser.add_argument('--autoaugment', type=bool, help='activate data auto augment,true or false')
         self.argument_parser.add_argument('--optimizer', type=str, help='choices including adam,sgd,momentum', choices=['adam', 'sgd'])
         self.argument_parser.add_argument('--learningRate', type=float, help='learningRate')
