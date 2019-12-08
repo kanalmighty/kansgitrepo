@@ -1,6 +1,6 @@
 import pandas as pd
 import sys
-sys.path.append('.../')
+sys.path.append('../')
 from options.configer import Configer
 import glob
 import utils
@@ -221,6 +221,7 @@ class DataPreProcesser():
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image)
 
 if __name__ == '__main__':
+    print(sys.path)
     d = DataPreProcesser()
     d()
 
