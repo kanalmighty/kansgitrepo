@@ -11,6 +11,7 @@ class Visualizer:
         print(string_report)
 
     # loss_dict，没有epoch,都是损失函数名:值（值是list）
+    # input is a loss dict
     def draw_picture_block(self, loss_dict):
         icons = ['r--', 'g^', 'cs', 'k*', 'bs', 'yv', 'r+', 'b<', 'm8']
         plt.title("test")

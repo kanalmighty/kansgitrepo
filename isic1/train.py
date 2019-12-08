@@ -36,7 +36,9 @@ trainingdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, 
 optimizer = model.optimizer
 criteria = model.loss_function
 logger.set_arguments(vars(args))
-epoch_loss_list = []
+#define a loss dict to plot different losses
+train_loss_dict = {}
+epoch_loss1_list = []
 epoch_statics_dict = {}#record epochly training statics
 train_statics_dict = {}#record overall training statics
 model.train()
@@ -63,12 +65,15 @@ for EPOCH in range(args.epoch):
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
     train_accuracy_epoch = train_accuracy / len(isic)#training accuracy/sample numbers
     epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
-    epoch_loss_list.append(loss_avg_per_epoch)#record epoch loss for drawing
+    epoch_loss1_list.append(loss_avg_per_epoch)#record epoch loss for drawing
     epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
-    print('epoch %s finished '% EPOCH)
+    print('epoch %s finished ' % EPOCH)
     visualizer.get_data_report(epoch_statics_dict)
+
+
+    pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
     train_statics_dict[EPOCH] = epoch_statics_dict
 logger.set_training_data(train_statics_dict)
 logger.write_training_data()
-visualizer.draw_picture_block(epoch_loss_list)
-pkl_name = model.save_model(logger.date_string, logger.start_time_string)
+train_loss_dict['loss_classifier'] = epoch_loss1_list
+visualizer.draw_picture_block(train_loss_dict)
