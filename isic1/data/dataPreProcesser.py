@@ -1,6 +1,6 @@
 import pandas as pd
 import sys
-sys.path.append('..')
+sys.path.append('.../')
 from options.configer import Configer
 import glob
 import utils
