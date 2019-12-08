@@ -42,10 +42,10 @@ logger.set_arguments(vars(args))
 #define a loss dict to plot different losses
 train_loss_dict = {}
 epoch_statics_list = []#store epoch loss and training accuracy
-epoch_statics_dict = {}#record epochly training statics
 train_statics_dict = {}#record overall training statics
 model.train()
 for EPOCH in range(args.epoch):
+    epoch_statics_dict = {}#record epochly training statics
     loss_all_samples_per_epoch = 0#记录每个epoch,所有batch的loss总和
     train_accuracy = 0#trainnig accuaracy per epoch
     for idx, (x, y) in tqdm(enumerate(trainingdata_loader)):
