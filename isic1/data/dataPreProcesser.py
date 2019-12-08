@@ -1,6 +1,6 @@
 import pandas as pd
 import sys
-sys.path.append('.../')
+sys.path.append('/content/cloned-repo/isic1')
 print(sys.path)
 from options.configer import Configer
 import glob
