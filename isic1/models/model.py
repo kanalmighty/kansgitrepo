@@ -17,10 +17,10 @@ class Model(nn.Module):
         #only training mode needs loss function
         if self.args.mode == 'train':
             self.loss_function = self.get_loss_function()
-        if self.args.learningRate:
-            self.learning_rate = self.args.learningRate
-        else:
-            self.learning_rate = 0.0003
+            if self.args.learningRate:
+                self.learning_rate = self.args.learningRate
+            else:
+                self.learning_rate = 0.0003
 
         # only training mode optimizer
         if self.args.mode == 'train':
