@@ -48,7 +48,8 @@ def get_transforms(opt):
             transform_list.append(transforms.Resize(opt.resize))
         if opt.centerCropSize:
             transform_list.append(transforms.CenterCrop(opt.centerCropSize))
-
+    # 多种组合变换有一定的先后顺序，处理PILImage的变换方法（大多数方法）
+    # 都需要放在ToTensor方法之前，而处理tensor的方法（比如Normalize方法）就要放在ToTensor方法之后。
     transform_list.append(transforms.ToTensor())
     if opt.mode == 'train':
         if opt.normalize:
