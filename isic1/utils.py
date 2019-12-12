@@ -65,10 +65,10 @@ def get_auto_augments(auto_augment_object):
 
 
 def make_directory(path):
-    shutil.rmtree(path)
     dataset_path = Path(path)
-    if not dataset_path.exists():
-        os.mkdir(dataset_path)
+    if  dataset_path.exists():
+        shutil.rmtree(path)
+    os.mkdir(dataset_path)
 
 
 def download_dataset(url):
