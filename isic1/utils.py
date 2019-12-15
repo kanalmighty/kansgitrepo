@@ -239,7 +239,7 @@ def get_expand_border(w, h, target_size):
 #input a path,search for csv and return file name
 def get_csv_by_path_name(path):
     csv = glob.glob(os.path.join(path, '*.csv'))
-    return csv
+    return csv[0]
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []
 #     if not isinstance(file_list, list):
