@@ -12,12 +12,12 @@ from torchvision.transforms import transforms
 class ISICDataset(Dataset):
     def __init__(self, image_path, label_path, transforms):
         self.image_dir = image_path
-        self.label_dir = label_path
+        self.label_path = label_path
         self.configer = Configer().get_configer()#获取环境配置
         self.image_path_list = utils.get_image_set(self.image_dir)
         self.transforms = transforms
-        csv =utils.get_csv_by_path_name(self.label_dir)
-        self.label_tensor = torch.from_numpy(utils.read_csv(csv[0]))
+        csv = utils.get_csv_by_path_name(self.label_path)
+        self.label_tensor = torch.from_numpy(utils.read_csv(csv))
         # self.image_array = utils.get_images(self.image_path_array)
         # self.image_array_trainsformed = transform(self.image_array)
 
