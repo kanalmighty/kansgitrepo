@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import urllib.request
 import cv2 as cv
-
+import glob
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
     '.png', '.PNG', '.ppm', '.PPM', '.bmp', '.BMP', '.tiff'
@@ -236,6 +236,10 @@ def get_expand_border(w, h, target_size):
     return int((target_size - w)/2), int((target_size - h)/2)
 
 
+#input a path,search for csv and return file name
+def get_csv_by_path_name(path):
+    csv = glob.glob(os.path.join(path, '*.csv'))
+    return csv
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []
 #     if not isinstance(file_list, list):

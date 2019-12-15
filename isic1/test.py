@@ -26,7 +26,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 transforms = utils.get_transforms(args)
 image_path = configer['testImagePath']
 label_path = configer['testLabelPath']
-isic = ISICDataset(image_path, label_path, transforms)
+test_csv = utils.get_csv_by_path_name(label_path)
+isic = ISICDataset(image_path, test_csv, transforms)
 isic.__assert_equality__()
 testdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 
