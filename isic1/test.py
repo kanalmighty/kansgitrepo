@@ -21,14 +21,14 @@ model.load_model(args.date, args.time)
 image_path = configer['testImagePath']
 label_path = configer['testLabelPath']
 test_csv = utils.get_csv_by_path_name(label_path)
-dataprober = DataProber(image_path, test_csv)
+dataprober = DataProber(image_path, test_csv[0])
 dataprober.get_size_profile()
 dataprober.get_type_profile()
 dataprober.get_data_difference()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 transforms = utils.get_transforms(args)
 
-isic = ISICDataset(image_path, test_csv, transforms)
+isic = ISICDataset(image_path, test_csv[0], transforms)
 isic.__assert_equality__()
 testdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 
