@@ -30,35 +30,36 @@ transforms = utils.get_transforms(args)
 
 isic = ISICDataset(image_path, test_csv[0], transforms)
 isic.__assert_equality__()
-testdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
+testdata_loader = DataLoader(isic, batch_size=args.batchsize)
 
 
 model.eval()#模型为测试，不使用dropput等
-acurracy = 0
-total = 0
-true_positive = 0#检查出患病，真患病，true代表预测和实际都不对得上
-true_negative = 0#检查出没病，真没病
-false_positive = 0#检擦出没病，其实有病
-false_negative = 0#检查有病，其实没病
+metrics = {}
 for idx, (x, y) in enumerate(testdata_loader):
+
     x = x.to(device)
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
-    print(y_hat_scalar)
-    #if groundtruth is positive
-    if y_scalar == 0:
-        if y_hat_scalar == 0:#prediction is positive
-            true_positive += 1# then it's true positive
-        else:
-            false_positive += 1#it's positive,not predition is negative
+    if y_scalar.item() == y_hat_scalar.item():
+        if not 'tp' + '_' + str(y_scalar.item()) in metrics.keys():
+            metrics['tp' + '_' + str(y_scalar.item())] = 0
+        metrics['tp' + '_' + str(y_scalar.item())] += 1
     else:
-        # if groundtruth is negative
-        if y_hat_scalar == 0:#prediction is positive
-            false_negative += 1# false_positive
-        else:
-            true_negative += 1
+        if not 'fn' + '_' + str(y_scalar.item()) in metrics.keys():
+            metrics['fn' + '_' + str(y_scalar.item())] = 0
+        metrics['fn' + '_' + str(y_scalar.item())] += 1
 
-metrics_dict = utils.get_evaluation_metrics(true_positive, true_negative, false_positive, false_negative)
-print(metrics_dict)
-logger.append_test_data(args.date, args.time, metrics_dict)
+class_number = y.size(1)
+sensitivity = 0
+for k, v in metrics.items():
+    #sensitivity is valid when only true positive sample of this class is not 0
+    if 'tp' in k:
+        class_no = k.split('_')[1]
+        #get the the fn numbers of this tp sample,and caculate sensitivity
+        fn_key = 'fn' + '_' + class_no
+        if not fn_key in metrics.keys():
+            sensitivity += 1/class_number
+
+print(sensitivity)
+logger.append_test_data(args.date, args.time, sensitivity)
