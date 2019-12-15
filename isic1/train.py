@@ -26,13 +26,15 @@ model = Model(args)#根据参数获取模型
 if args.date and args.time:
     model.load_model(args.date, args.time)
 configer = Configer().get_configer()#获取环境配置
-dataprober = DataProber(configer['trainingImagePath'], configer['traininglabelPath'])#初始化数据探查器
+
 # dataprober.get_data_difference()
 transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 image_path = configer['trainingImagePath']
 label_path = configer['trainingLabelPath']
-isic = ISICDataset(image_path, label_path, transforms)
+training_csv = utils.get_csv_by_path_name(label_path)
+dataprober = DataProber(image_path, training_csv[0])#初始化数据探查器
+isic = ISICDataset(image_path, training_csv[0], transforms)
 isic.__assert_equality__()
 trainingdata_loader = DataLoader(isic, batch_size=args.batchsize, shuffle=True, drop_last=True)
 
