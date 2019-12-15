@@ -16,7 +16,7 @@ class ISICDataset(Dataset):
         self.configer = Configer().get_configer()#获取环境配置
         self.image_path_list = utils.get_image_set(self.image_dir)
         self.transforms = transforms
-        csv =ils.get_csv_by_path_name(self.label_dir)
+        csv =utils.get_csv_by_path_name(self.label_dir)
         self.label_tensor = torch.from_numpy(utils.read_csv(csv[0]))
         # self.image_array = utils.get_images(self.image_path_array)
         # self.image_array_trainsformed = transform(self.image_array)
