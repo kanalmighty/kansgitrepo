@@ -37,7 +37,7 @@ class DataProber:
 
     def get_data_difference(self):
         #获取label里的文件名并转为set
-        image_name_list = pd.read_csv(self.label_path, header=0, usecols=[0], skiprows=0).values
+        image_name_list = pd.read_csv(self.label_path, header=0, usecols=[0], skiprows=0, engine='python').values
         image_name_set_label = set(image_name_list.squeeze().tolist())
         image_name_list_data = []
         for image_path in self.image_path_list:
