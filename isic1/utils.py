@@ -147,7 +147,7 @@ def get_evaluation_metrics(tp, tn, fp, fn):
 
 #所有参数都fix,把测试数据集分为测试和验证，目前仅适用于collab
 def split_test_data(rowImagePath, testImagePath, testLabelPath):
-    test_file_name = pd.read_csv(testLabelPath, usecols=['image'], header=0).values.squeeze(1)
+    test_file_name = pd.read_csv(testLabelPath, usecols=['image'], header=0,  engine='python').values.squeeze(1)
     des_file_root = Path(testImagePath)
     src_file_root = Path(rowImagePath)
     if not des_file_root.exists():
