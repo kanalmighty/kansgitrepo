@@ -87,8 +87,9 @@ class Model(nn.Module):
 #data and time represents the report of a trained model as well as the path where it saved
     def load_model(self, date_string, time_string):
         model_path = os.path.join(self.configer['checkPointPath'], date_string, time_string + '.pth')
+        device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         try:
-            saved_model_parameter = torch.load(model_path)
+            saved_model_parameter = torch.load(model_path, map_location=device)
             self.network.load_state_dict(saved_model_parameter)
         except IOError:
             print('there is not such model %s' % model_path)
