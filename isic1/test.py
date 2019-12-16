@@ -42,7 +42,6 @@ for idx, (x, y) in enumerate(testdata_loader):
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
-    print(y_hat_scalar.item())
     if y_scalar.item() == y_hat_scalar.item():
         if not 'tp' + '_' + str(y_scalar.item()) in metrics.keys():
             metrics['tp' + '_' + str(y_scalar.item())] = 0
