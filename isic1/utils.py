@@ -173,6 +173,7 @@ def rename_image_list(image_list, target_path):
         target_file_name = os.path.join(target_path, image_list_renamed)
         os.rename(image, target_file_name)
 
+
 def rename_image(image, target_path):
     target_file_name = os.path.join(target_path, image)
     os.rename(image, target_file_name)
@@ -236,11 +237,17 @@ def get_expand_border(w, h, target_size):
     return int((target_size - w)/2), int((target_size - h)/2)
 
 
+
 #input a path,search for csv and return file name
 def get_csv_by_path_name(path):
     csv_path = glob.glob(os.path.join(path, '*.csv'))
     print(csv_path)
     return csv_path
+
+
+#input /d/d/a.py return a.py
+def get_file_name(path):
+    return path.split(os.sep)[-1]
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []
 #     if not isinstance(file_list, list):

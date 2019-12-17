@@ -5,6 +5,7 @@ print(sys.path)
 from options.configer import Configer
 import glob
 import utils
+import shutil
 import cv2 as cv
 from tqdm import tqdm
 from data.autoaugment import AutoAugment
@@ -39,8 +40,9 @@ class DataPreProcesser():
         if self.args.off:
             image_list = utils.get_image_set(self.row_image_path)
             for image in tqdm(image_list):
-                utils.rename_image(image, self.training_image_path)
-            utils.rename_image(self.row_label[0], self.configer['traininglabelPath'])
+                print(os.path.join(self.training_image_path, utils.get_file_name(image)))
+                shutil.copy(image, os.path.join(self.training_image_path, utils.get_file_name(image)))
+            shutil.copy(self.row_label[0], os.path.join(self.configer['traininglabelPath'], utils.get_file_name(self.row_label[0])))
 
 
     def check_all_paths(self):
@@ -224,7 +226,7 @@ class DataPreProcesser():
                 if w * h > max_cordinates[2] * max_cordinates[3]:
                     max_cordinates = x, y, w, h
             x_hat, y_hat, w_hat, h_hat = utils.get_expand_coordinates(1.2, max_cordinates)
-            cv.rectangle(image, (x_hat,y_hat,x_hat+w_hat,y_hat+h_hat), (0, 255, 0), 2)
+            cv.rectangle(image, (x_hat, y_hat, x_hat+w_hat, y_hat+h_hat), (0, 255, 0), 2)
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image)
 
 if __name__ == '__main__':
