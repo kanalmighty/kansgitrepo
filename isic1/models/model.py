@@ -31,7 +31,7 @@ class Model(nn.Module):
 
 
     def get_network(self):
-        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet', 'densenet161']:
+        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet', 'densenet161', 'resnet50']:
             raise LookupError("no such network")
         if self.args.network == 'vgg16':
             nk = torchvision.models.vgg16(pretrained=True)
@@ -47,6 +47,8 @@ class Model(nn.Module):
             nk = torchvision.models.densenet161(pretrained=True)
         if self.args.network == 'resnet18':
             nk = torchvision.models.resnet18(pretrained=False)
+        if self.args.network == 'resnet50':
+            nk = torchvision.models.resnet50(pretrained=False)
             #if you want to customize the number of classes of the output
             if self.args.numclass:
                 fc_features = nk.fc.in_features
