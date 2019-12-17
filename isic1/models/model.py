@@ -46,9 +46,9 @@ class Model(nn.Module):
         if self.args.network == 'densenet161':
             nk = torchvision.models.densenet161(pretrained=True)
         if self.args.network == 'resnet18':
-            nk = torchvision.models.resnet18(pretrained=False)
+            nk = torchvision.models.resnet18(pretrained=True)
         if self.args.network == 'resnet50':
-            nk = torchvision.models.resnet50(pretrained=False)
+            nk = torchvision.models.resnet50(pretrained=True)
             #if you want to customize the number of classes of the output
             if self.args.numclass:
                 fc_features = nk.fc.in_features
