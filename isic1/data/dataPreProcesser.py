@@ -23,10 +23,10 @@ class DataPreProcesser():
         # self.temp_image_path = self.configer['tempImagePath']
         self.temp_image_path = self.configer['tempImagePath'] if self.args.massCrop else self.configer['rowImagePath']
         self.training_image_path = self.configer['trainingImagePath']
-        row_label = glob.glob(os.path.join(self.configer['rowLabelPath'], '*.csv'))
-        if len(row_label) != 1:
-            raise ValueError('expect 1 csc file but got %s' + row_label.size)
-        self.row_label_dataframe = pd.read_csv(row_label[0], header=0)
+        self.row_label = glob.glob(os.path.join(self.configer['rowLabelPath'], '*.csv'))
+        if len(self.row_label) != 1:
+            raise ValueError('expect 1 csc file but got %s' + self.row_label.size)
+        self.row_label_dataframe = pd.read_csv(self.row_label[0], header=0)
 
     def __call__(self):
         self.check_all_paths()
@@ -36,6 +36,12 @@ class DataPreProcesser():
             self.pad_images(self.args.padBorderSize)
         if self.args.dataBalance:
             self.extend_dataset(self.args.dataBalance)
+        if self.args.off:
+            image_list = utils.get_image_set(self.row_image_path)
+            for image in tqdm(image_list):
+                utils.rename_image(image, self.training_image_path)
+            utils.rename_image(self.row_label[0], self.configer['traininglabelPath'])
+
 
     def check_all_paths(self):
         utils.make_directory(self.configer['trainingImagePath'])

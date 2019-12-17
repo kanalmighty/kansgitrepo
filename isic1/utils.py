@@ -66,7 +66,7 @@ def get_auto_augments(auto_augment_object):
 
 def make_directory(path):
     dataset_path = Path(path)
-    if  dataset_path.exists():
+    if dataset_path.exists():
         shutil.rmtree(path)
     os.mkdir(dataset_path)
 
