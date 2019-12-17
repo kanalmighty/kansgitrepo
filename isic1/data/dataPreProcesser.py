@@ -40,7 +40,6 @@ class DataPreProcesser():
         if self.args.off:
             image_list = utils.get_image_set(self.row_image_path)
             for image in tqdm(image_list):
-                print(os.path.join(self.training_image_path, utils.get_file_name(image)))
                 shutil.copy(image, os.path.join(self.training_image_path, utils.get_file_name(image)))
             shutil.copy(self.row_label[0], os.path.join(self.configer['traininglabelPath'], utils.get_file_name(self.row_label[0])))
 
