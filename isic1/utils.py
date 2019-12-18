@@ -248,6 +248,23 @@ def get_csv_by_path_name(path):
 #input /d/d/a.py return a.py
 def get_file_name(path):
     return path.split(os.sep)[-1]
+
+
+#input evaluation metrics,output sensitivity
+def calculate_sensitivity(class_number, metrics_dict):
+    sensitivity = 0
+    for k, v in metrics_dict.items():
+        # sensitivity is valid when only true positive sample of this class is not 0
+        if 'tp' in k:
+            class_no = k.split('_')[1]
+            # get the the fn numbers of this tp sample,and caculate sensitivity
+            fn_key = 'fn' + '_' + class_no
+            if not fn_key in metrics_dict.keys():
+                sensitivity += 1 / class_number
+            else:
+                sensitivity += v / ((v + metrics_dict[fn_key]) * class_number)
+    return sensitivity
+
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []
 #     if not isinstance(file_list, list):

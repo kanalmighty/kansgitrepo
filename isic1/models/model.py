@@ -52,12 +52,12 @@ class Model(nn.Module):
         if self.args.network == 'resnet34':
             nk = torchvision.models.resnet34(pretrained=True)
             #if you want to customize the number of classes of the output
-            if self.args.numclass:
-                fc_features = nk.fc.in_features
-                nk.fc = nn.Linear(fc_features, self.args.numclass)
-                if torch.cuda.is_available():
-                    nk = nk.cuda()
-                    return nk
+        if self.args.numclass:
+            fc_features = nk.fc.in_features
+            nk.fc = nn.Linear(fc_features, self.args.numclass)
+            if torch.cuda.is_available():
+                nk = nk.cuda()
+                return nk
         if torch.cuda.is_available():
             nk = nk.cuda()
         return nk

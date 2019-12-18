@@ -64,5 +64,5 @@ for k, v in metrics.items():
         else:
             sensitivity += v/((v + metrics[fn_key])*class_number)
 
-print(sensitivity)
+print(utils.calculate_sensitivity(class_number, metrics))
 logger.append_test_data(args.date, args.time, sensitivity)
