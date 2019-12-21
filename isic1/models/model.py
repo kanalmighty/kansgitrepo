@@ -4,6 +4,7 @@ import torch.nn as nn
 from options.configer import Configer
 from pathlib import Path
 import os
+from efficientnet_pytorch import EfficientNet
 from models.lossfunctions import *
 import utils
 from options.base_options import BaseOptions
@@ -31,7 +32,10 @@ class Model(nn.Module):
 
 
     def get_network(self):
-        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet', 'densenet161', 'resnet50', 'resnet34']:
+        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18',
+                                     'googlenet', 'densenet161', 'resnet50', 'resnet34', 'efficientnet-b0',
+                                     'efficientnet-b1', 'efficientnet-b2',  'efficientnet-b3', 'efficientnet-b4',
+                                     'efficientnet-b5', 'efficientnet-b6', 'efficientnet-b7']:
             raise LookupError("no such network")
         if self.args.network == 'vgg16':
             nk = torchvision.models.vgg16(pretrained=True)
@@ -51,6 +55,8 @@ class Model(nn.Module):
             nk = torchvision.models.resnet50(pretrained=True)
         if self.args.network == 'resnet34':
             nk = torchvision.models.resnet34(pretrained=True)
+        if self.args.network == 'efficientnet-b0':
+            nk = EfficientNet.from_pretrained('efficientnet-b0', num_classes=self.args.numclass)
             #if you want to customize the number of classes of the output
         if self.args.numclass:
             fc_features = nk.fc.in_features

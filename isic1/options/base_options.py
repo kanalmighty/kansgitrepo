@@ -8,12 +8,12 @@ class BaseOptions():
         self.initialized = False
 
     def initialize(self):    
-        # experiment specifics
+        # experiment specificss
         self.argument_parser.add_argument('--numclass', type=int, help='the number of classes of the input')
 
         self.argument_parser.add_argument('--device', type=str, help='device that you want you model to be trained on')
         self.argument_parser.add_argument('--resize', action='append', type=int, help='the size(w,h) of images if you want a resize')
-        self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18,densenet161', choices=['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'resnet34', 'resnet50', 'googlenet', 'densenet161'])
+        self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18,densenet161', choices=['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18', 'googlenet', 'densenet161', 'resnet50', 'resnet34', 'efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2',  'efficientnet-b3', 'efficientnet-b4', 'efficientnet-b5', 'efficientnet-b6', 'efficientnet-b7'])
         self.argument_parser.add_argument('--epoch', type=int, default=10, help='number of epoch you want to iterate')
         self.argument_parser.add_argument('--batchsize', type=int, help='batch size')
 
