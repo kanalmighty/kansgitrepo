@@ -58,7 +58,7 @@ class Model(nn.Module):
         if self.args.network == 'efficientnet-b0':
             nk = EfficientNet.from_pretrained('efficientnet-b0', num_classes=self.args.numclass)
             #if you want to customize the number of classes of the output
-        if self.args.numclass and 'efficientnet' not in self.network:
+        if self.args.numclass and 'efficientnet' not in self.args.network:
             fc_features = nk.fc.in_features
             nk.fc = nn.Linear(fc_features, self.args.numclass)
             if torch.cuda.is_available():
