@@ -53,7 +53,8 @@ for idx, (x, y) in enumerate(testdata_loader):
     #     metrics['fn' + '_' + str(y_scalar.item())] += 1
     y_list.append(y_scalar)
     y_hat_list.append(y_hat_scalar)
-
+print(y_list)
+print(y_hat_list)
 class_number = y.size(1)
 metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
 visualizer.get_data_report(metrics_dict)
