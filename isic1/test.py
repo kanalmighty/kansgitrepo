@@ -51,8 +51,8 @@ for idx, (x, y) in enumerate(testdata_loader):
     #     if not 'fn' + '_' + str(y_scalar.item()) in metrics.keys():
     #         metrics['fn' + '_' + str(y_scalar.item())] = 0
     #     metrics['fn' + '_' + str(y_scalar.item())] += 1
-    y_list.append(y_scalar)
-    y_hat_list.append(y_hat_scalar)
+    y_list.append(y_scalar.item())
+    y_hat_list.append(y_hat_scalar.item())
 print(y_list)
 print(y_hat_list)
 class_number = y.size(1)
