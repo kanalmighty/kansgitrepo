@@ -35,7 +35,7 @@ class UpsampleConvLayer(nn.Module):
 # Residual Block
 #   adapted from pytorch tutorial
 #   https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/02-
-#   intermediate/deep_residual_network/main.py
+#   intermediate/deep_residual_network/getcam.py
 class ResidualBlock(nn.Module):
     def __init__(self, channels):
         super(ResidualBlock, self).__init__()

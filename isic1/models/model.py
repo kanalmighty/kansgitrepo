@@ -57,6 +57,18 @@ class Model(nn.Module):
             nk = torchvision.models.resnet34(pretrained=True)
         if self.args.network == 'efficientnet-b0':
             nk = EfficientNet.from_pretrained('efficientnet-b0', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b1':
+            nk = EfficientNet.from_pretrained('efficientnet-b1', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b2':
+            nk = EfficientNet.from_pretrained('efficientnet-b2', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b3':
+            nk = EfficientNet.from_pretrained('efficientnet-b3', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b4':
+            nk = EfficientNet.from_pretrained('efficientnet-b4', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b5':
+            nk = EfficientNet.from_pretrained('efficientnet-b5', num_classes=self.args.numclass)
+        if self.args.network == 'efficientnet-b6':
+            nk = EfficientNet.from_pretrained('efficientnet-b6', num_classes=self.args.numclass)
             #if you want to customize the number of classes of the output
         if self.args.numclass and 'efficientnet' not in self.args.network:
             fc_features = nk.fc.in_features
