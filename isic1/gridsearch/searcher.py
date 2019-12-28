@@ -139,24 +139,23 @@ class Searcher:
         args.normalize = True
         args.numclass = self.setting.numclass
         args.lossDescendThreshold = self.setting.lossDescendThreshold
-        for k, v in self.super_param_combination_dict.items():
-            search_record_string = self.logger.get_search_data()
+        for spd_name, spd_value in self.super_param_combination_dict.items():
+            search_record_dict = self.logger.get_search_data()
             #pass the super parameter combination that has been searched
-            if k in search_record_string:
-                print('%s has been done,continue..' % k)
+            if spd_name in search_record_dict.keys() and search_record_dict[spd_name]['flag'] == 1:
+                print('%s has been done,continue..' % spd_name)
                 continue
-            one_search_dict = {}
-            args.network = v[0]
-            args.learningRate = v[1]
-            args.resize = (v[2], v[2])
-            args.optimizer = v[3]
-            args.lossfunction = v[4]
+            args.network = spd_value[0]
+            args.learningRate = spd_value[1]
+            args.resize = (spd_value[2], spd_value[2])
+            args.optimizer = spd_value[3]
+            args.lossfunction = spd_value[4]
             args.mode = 'train'
             self.train(args)
             self.test(args)
-            one_search_dict[k] = self.one_search_data
-            one_search_dict[k]['flag'] = 1
-            print('write log' + k)
+            one_search_dict[spd_name] = self.one_search_data
+            one_search_dict[spd_name]['flag'] = 1
+            print('write log' + spd_name)
             self.logger.append_search_data(one_search_dict)
         print('search end..')
 

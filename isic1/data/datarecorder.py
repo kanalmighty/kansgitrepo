@@ -90,14 +90,17 @@ class DataRecorder:
         log.close()
 
     def get_search_data(self):
-
+        search_log_dict ={}
         log_file = os.path.join(self.config_dict['searchLogPath'], 'search.log')
         with open(log_file, 'r') as log:
-            log_string = log.read()
+            log_record_list = log.readlines()
         log.close()
-        return log_string
+        for record in log_record_list:
+            record_dict = json.loads(record)
+            for k, v in record_dict.items():
+                search_log_dict[k] = v
+        return search_log_dict
 
 if __name__ == '__main__':
     dr = DataRecorder()
-    a = dr.get_search_data()
-    json.loads(a)
+    print(dr.get_search_data())
