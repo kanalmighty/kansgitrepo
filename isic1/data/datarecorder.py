@@ -6,7 +6,7 @@ from pathlib import Path
 from options.configer import Configer
 import os
 import json
-import sys
+import utils
 class DataRecorder:
     def __init__(self):
         configer = Configer()
@@ -81,6 +81,23 @@ class DataRecorder:
             log.write(json_dict)
         log.close()
 
+    def append_search_data(self, data_dict):
+        log_file = os.path.join(self.config_dict['searchLogPath'], 'search.log')
+        #dumps将字典转换为字符串,在写入文件
+        json_str = json.dumps(data_dict)
+        with open(log_file, 'a+') as log:
+            log.writelines(json_str + '\n')
+        log.close()
+
+    def get_search_data(self):
+
+        log_file = os.path.join(self.config_dict['searchLogPath'], 'search.log')
+        with open(log_file, 'r') as log:
+            log_string = log.read()
+        log.close()
+        return log_string
 
 if __name__ == '__main__':
     dr = DataRecorder()
+    a = dr.get_search_data()
+    json.loads(a)
