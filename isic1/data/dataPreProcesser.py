@@ -228,9 +228,28 @@ class DataPreProcesser():
             cv.rectangle(image, (x_hat, y_hat, x_hat+w_hat, y_hat+h_hat), (0, 255, 0), 2)
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image)
 
+
+    def split_test_dataset(self):
+        row_label_dataframe = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
+        print(row_label_dataframe)
+        # test_file_name = pd.read_csv(self.configer['testLabelPath'], usecols=['image'], header=0, engine='python').values.squeeze(1)
+        # des_file_root = Path(self.configer['testImagePath'])
+        # src_file_root = Path(self.row_image_path)
+        # if not des_file_root.exists():
+        #     os.mkdir(des_file_root)
+        # for file_name in test_file_name:
+        #     src_file_path = os.path.join(src_file_root, file_name + '.jpg')
+        #     des_file_path = os.path.join(des_file_root, file_name + '.jpg')
+        #     try:
+        #         shutil.copy(src_file_path, des_file_path)
+        #     except IOError:
+
+       #         print('copy file error!')
 if __name__ == '__main__':
-    d = DataPreProcesser()
-    d()
+    configer = Configer().get_configer()
+    row_label_csv = utils.get_csv_by_path_name(configer['rowLabelPath'])
+    row_label_dataframe = pd.read_csv(row_label_csv[0], index_col=['image'], header=0, engine='python')
+    print(row_label_dataframe[row_label_dataframe['MEL'].isin([1])])
 
 
 

@@ -2,6 +2,8 @@ import torch
 import pdb
 import matplotlib
 import torch.nn as nn
+import sys
+sys.path.append('/content/cloned-repo/isic1')
 from tqdm import tqdm
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
