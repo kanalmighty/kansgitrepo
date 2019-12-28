@@ -64,9 +64,9 @@ class Searcher:
         epoch_statics_list = []  # store epoch loss and training accuracy
         self.model.train()
         for EPOCH in range(self.setting.epoch):
-            if EPOCH > 3:
+            if EPOCH == 4:
                 loss_descend_rate = epoch_statics_list[-1]['AVG LOSS']/epoch_statics_list[0]['AVG LOSS'] >= self.setting.lossDescendThreshold
-                print('current loss descend rate is %d ,less than threshold %d, abandon this SPD' % (loss_descend_rate, self.setting.lossDescendThreshold))
+                print('current loss descend rate is %f ,less than threshold %f, abandon this SPD' % (loss_descend_rate, self.setting.lossDescendThreshold))
                 break
             epoch_statics_dict = {}  # record epochly training statics
             loss_all_samples_per_epoch = 0  # 记录每个epoch,所有batch的loss总和
