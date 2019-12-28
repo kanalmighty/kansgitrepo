@@ -139,6 +139,7 @@ class Searcher:
         args.normalize = True
         args.numclass = self.setting.numclass
         args.lossDescendThreshold = self.setting.lossDescendThreshold
+        one_search_dict = {}
         for spd_name, spd_value in self.super_param_combination_dict.items():
             search_record_dict = self.logger.get_search_data()
             #pass the super parameter combination that has been searched
