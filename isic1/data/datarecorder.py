@@ -91,7 +91,7 @@ class DataRecorder:
 
     def get_search_data(self):
         search_log_dict ={}
-        if not self.config_dict['searchLogPath'].exists():
+        if not Path(self.config_dict['searchLogPath']).exists():
             os.mkdir(self.config_dict['searchLogPath'])
         log_file = os.path.join(self.config_dict['searchLogPath'], 'search.log')
         with open(log_file, 'r') as log:
