@@ -243,7 +243,6 @@ def get_expand_border(w, h, target_size):
 #input a path,search for csv and return file name
 def get_csv_by_path_name(path):
     csv_path = glob.glob(os.path.join(path, '*.csv'))
-    print(csv_path)
     return csv_path
 
 
