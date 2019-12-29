@@ -67,6 +67,8 @@ class Searcher:
         for EPOCH in range(self.setting.epoch):
             if EPOCH > 1:
                 loss_descend_rate = epoch_statics_list[-1]['AVG LOSS']/epoch_statics_list[-2]['AVG LOSS'] >= self.setting.lossDescendThreshold
+                print(epoch_statics_list[-1]['AVG LOSS'])
+                print(epoch_statics_list[-2]['AVG LOSS'])
                 print('current loss descend rate is %f ,less than threshold %f, abandon this SPD' % (loss_descend_rate, self.setting.lossDescendThreshold))
                 self.is_abandoned = 1
                 break
