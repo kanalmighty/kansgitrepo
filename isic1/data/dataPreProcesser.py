@@ -247,7 +247,7 @@ class DataPreProcesser():
        #         print('copy file error!')
 if __name__ == '__main__':
     d = DataPreProcesser()
-
+    d()
     # configer = Configer().get_configer()
     # row_label_csv = utils.get_csv_by_path_name(configer['rowLabelPath'])
     # row_label_dataframe = pd.read_csv(row_label_csv[0], index_col=['image'], header=0, engine='python')
