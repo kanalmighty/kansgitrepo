@@ -66,12 +66,13 @@ class Searcher:
         self.is_abandoned = 0
         for EPOCH in range(self.setting.epoch):
             if EPOCH > 1:
-                loss_descend_rate = epoch_statics_list[-1]['AVG LOSS']/epoch_statics_list[-2]['AVG LOSS'] >= self.setting.lossDescendThreshold
-                print(epoch_statics_list[-1]['AVG LOSS'])
-                print(epoch_statics_list[-2]['AVG LOSS'])
-                print('current loss descend rate is %f ,less than threshold %f, abandon this SPD' % (loss_descend_rate, self.setting.lossDescendThreshold))
-                self.is_abandoned = 1
-                break
+                loss_descend_rate = epoch_statics_list[-1]['AVG LOSS']/epoch_statics_list[-2]['AVG LOSS']
+                if loss_descend_rate >= self.setting.lossDescendThreshold:
+                    print(epoch_statics_list[-1]['AVG LOSS'])
+                    print(epoch_statics_list[-2]['AVG LOSS'])
+                    print('current loss descend rate is %f ,larger than threshold %f, abandon this SPD' % (loss_descend_rate, self.setting.lossDescendThreshold))
+                    self.is_abandoned = 1
+                    break
             epoch_statics_dict = {}  # record epochly training statics
             loss_all_samples_per_epoch = 0  # 记录每个epoch,所有batch的loss总和
             train_accuracy = 0  # trainnig accuaracy per epoch
