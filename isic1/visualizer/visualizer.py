@@ -7,7 +7,7 @@ class Visualizer:
     def get_data_report(self, loss_data):
         string_report = ''
         for key in loss_data.keys():
-            string_report += key + ' = ' + str(loss_data[key]) + '\n '
+            string_report += key + ' = ' + str(loss_data[key]) + '\n'
         print(string_report)
 
     # loss_dict，没有epoch,都是损失函数名:值（值是list）
