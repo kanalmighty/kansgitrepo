@@ -27,7 +27,7 @@ class Searcher:
         # continue training if date and time are specified
         self.configer = Configer().get_configer()  # 获取环境配置
         self.learning_rate_space = [0.1, 0.01, 0.0001, 0.00001, 0.000001]
-        self.resolution_space = [224, 280, 320, 400, 500, 600]
+        self.resolution_space = [224, 280, 320, 400]
         self.nn_space = ['efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2',
                         'efficientnet-b3', 'efficientnet-b4', 'efficientnet-b5',
                         'efficientnet-b6', 'efficientnet-b7']

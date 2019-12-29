@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 class Visualizer:
 
     # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
-    def get_data_report(self, loss_data):
+    def get_data_report(self, data_data):
         string_report = ''
-        for key in loss_data.keys():
-            string_report += key + ' = ' + str(loss_data[key]) + '\n'
+        for key in data_data.keys():
+            string_report += key + ' : \n' + str(data_data[key]) + '\n'
         print(string_report)
 
     # loss_dict，没有epoch,都是损失函数名:值（值是list）

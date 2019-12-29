@@ -270,14 +270,13 @@ def calculate_mean_sensitivity(class_number, metrics_dict):
 #input evaluation metrics,output accuracy
 def calculate_test_metrics(truth_list, pred_list, class_number):
     assert len(truth_list) == len(pred_list)
-    labels = [i for i in range(class_number-1)]
     metric_dict = {}
-    metric_dict['average marcro precision'] = round(precision_score(truth_list, pred_list, labels, average='macro'))
-    metric_dict['average accuracy'] = round(accuracy_score(truth_list, pred_list))
-    metric_dict['average macro recall'] = round(recall_score(truth_list, pred_list, labels, average='macro'))
-    metric_dict['average macro f1 score'] = round(f1_score(truth_list, pred_list, labels, average='macro'))
+    metric_dict['average marcro precision'] = round(precision_score(truth_list, pred_list, average='macro'), 3)
+    metric_dict['average accuracy'] = round(accuracy_score(truth_list, pred_list), 3)
+    metric_dict['average macro recall'] = round(recall_score(truth_list, pred_list, average='macro'), 3)
+    metric_dict['average macro f1 score'] = round(f1_score(truth_list, pred_list, average='macro'), 3)
     target_names = ['MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC']
-    metric_dict['overall report'] = classification_report(truth_list, pred_list, labels, target_names=target_names)
+    metric_dict['overall report'] = classification_report(truth_list, pred_list, target_names=target_names)
     return metric_dict
 
 # def encode_image_name(file_list, index=0):
