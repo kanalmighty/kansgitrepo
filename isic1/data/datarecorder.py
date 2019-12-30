@@ -105,6 +105,12 @@ class DataRecorder:
                 search_log_dict[k] = v
         return search_log_dict
 
+
 if __name__ == '__main__':
     dr = DataRecorder()
-    print(dr.get_search_data())
+    search_dict = dr.get_search_data()
+    print('DISCARDED SPD:' + '\n')
+    for k, v in search_dict.items():
+        if v['flag'] == 0:
+            print(k+'\n')
+

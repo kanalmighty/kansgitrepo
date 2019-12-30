@@ -148,7 +148,7 @@ class Searcher:
         for spd_name, spd_value in self.super_param_combination_dict.items():
             search_record_dict = self.logger.get_search_data()
             #pass the super parameter combination that has been searched
-            if spd_name in search_record_dict.keys() and search_record_dict[spd_name]['flag'] == 1:
+            if spd_name in search_record_dict.keys():
                 print('%s has been done,continue..' % spd_name)
                 continue
             args.network = spd_value[0]
