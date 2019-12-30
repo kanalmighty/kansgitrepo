@@ -84,5 +84,3 @@ train_statics_dict['training_statics'] = epoch_statics_list
 
 logger.set_training_data(train_statics_dict)
 logger.write_training_data()
-train_loss_dict['loss_classifier'] = [loss for loss in train_statics_dict['training_statics']]
-visualizer.draw_picture_block(train_loss_dict)
