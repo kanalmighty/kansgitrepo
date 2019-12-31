@@ -143,6 +143,7 @@ class Searcher:
         args.centerCropSize = False
         args.normalize = True
         args.numclass = self.setting.numclass
+        args.batchsize = self.setting.batchsize
         args.lossDescendThreshold = self.setting.lossDescendThreshold
         one_search_dict = {}
         for spd_name, spd_value in self.super_param_combination_dict.items():
