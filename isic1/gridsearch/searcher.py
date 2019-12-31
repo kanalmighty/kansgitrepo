@@ -57,7 +57,7 @@ class Searcher:
         transforms = utils.get_transforms(parameters)
         isic_dataset = ISICDataset(image_path, training_csv[0], transforms)
         isic_dataset.__assert_equality__()
-        trainingdata_loader = DataLoader(isic_dataset, batch_size=32, shuffle=True, drop_last=True)
+        trainingdata_loader = DataLoader(isic_dataset, batch_size=parameters.batchsize, shuffle=True, drop_last=True)
         self.model = Model(parameters)  # 根据参数获取模型
         optimizer = self.model.optimizer
         criteria = self.model.loss_function
