@@ -157,6 +157,7 @@ class Searcher:
             args.optimizer = spd_value[3]
             args.lossfunction = spd_value[4]
             args.mode = 'train'
+            torch.cuda.empty_cache()
             print('ready to apply %s to model..' % spd_name)
             self.train(args)
             if self.is_abandoned == 0:
