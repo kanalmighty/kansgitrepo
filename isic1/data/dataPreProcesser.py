@@ -240,7 +240,7 @@ class DataPreProcesser():
         class_list = label_dataframe.columns.tolist()
         test_label_dataframe = pd.DataFrame(columns=class_list)
         class_list.pop(0)
-        for one_class in class_list:
+        for one_class in tqdm(class_list):
             sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
         test_label_dataframe.to_csv(os.path.join(self.configer['testlabelPath'], 'test_label.csv'), index=False)
