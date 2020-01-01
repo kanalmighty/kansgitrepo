@@ -50,6 +50,8 @@ class DataPreProcesser():
         utils.make_directory(self.configer['trainingImagePath'])
         utils.make_directory(self.configer['traininglabelPath'])
         utils.make_directory(self.configer['tempImagePath'])
+        utils.make_directory(self.configer['testImagePath'])
+        utils.make_directory(self.configer['testLabelPath'])
         if not Path(self.configer['rowImagePath']).exists():
             raise IOError(self.configer['rowImagePath'] + 'does not exist')
         if not Path(self.configer['rowLabelPath']).exists():
