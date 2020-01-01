@@ -205,6 +205,7 @@ class DataPreProcesser():
                 cv.imwrite((os.path.join(self.configer['trainingImagePath'], image_name)), image_padded)
             else:
                 cv.imwrite((os.path.join(self.configer['trainingImagePath'], image_name)), image_cv)
+
     #show pictures with a frame to mark the mass of the lesion
     def save_framed_images(self):
         dataset = utils.get_image_set(self.temp_image_path)
@@ -246,6 +247,7 @@ class DataPreProcesser():
         for one_class in tqdm(class_list):
             sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
+        test_label_dataframe = test_label_dataframe.sort_values(by="image")
         test_label_dataframe.to_csv(os.path.join(self.configer['testLabelPath'], 'test_label.csv'), index=False)
         #start to rename images
         test_file_name = test_label_dataframe['image'].values
