@@ -229,29 +229,35 @@ class DataPreProcesser():
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image)
 
 
-    def split_test_dataset(self):
-        row_label_dataframe = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
-        print(row_label_dataframe)
-        # test_file_name = pd.read_csv(self.configer['testLabelPath'], usecols=['image'], header=0, engine='python').values.squeeze(1)
-        # des_file_root = Path(self.configer['testImagePath'])
-        # src_file_root = Path(self.row_image_path)
-        # if not des_file_root.exists():
-        #     os.mkdir(des_file_root)
-        # for file_name in test_file_name:
-        #     src_file_path = os.path.join(src_file_root, file_name + '.jpg')
-        #     des_file_path = os.path.join(des_file_root, file_name + '.jpg')
-        #     try:
-        #         shutil.copy(src_file_path, des_file_path)
-        #     except IOError:
+    def split_test_dataset(self, sample_number):
+        row_label_csv = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
+        row_label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
+        # get all class from row label csv
+        label_dataframe = row_label_dataframe.drop('UNK', axis=1)
+        class_list = label_dataframe.columns.tolist()
+        test_label_dataframe = pd.DataFrame(columns=class_list)
+        class_list.pop(0)
+        for one_class in class_list:
+            sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
+            test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
+        print(test_label_dataframe)
+        test_label_dataframe.to_csv(os.path.join(self.configer['testlabelPath'], 'test_label.csv'), index=False)
 
-       #         print('copy file error!')
 if __name__ == '__main__':
-    d = DataPreProcesser()
-    d()
-    # configer = Configer().get_configer()
-    # row_label_csv = utils.get_csv_by_path_name(configer['rowLabelPath'])
-    # row_label_dataframe = pd.read_csv(row_label_csv[0], index_col=['image'], header=0, engine='python')
-    # print(row_label_dataframe[row_label_dataframe['MEL'].isin([1])])
-
-
+    # d = DataPreProcesser()
+    # d()
+    configer = Configer().get_configer()
+    row_label_csv = utils.get_csv_by_path_name(configer['rowLabelPath'])
+    row_label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
+    #get all class from row label csv
+    label_dataframe = row_label_dataframe.drop('UNK', axis=1)
+    class_list = label_dataframe.columns.tolist()
+    test_label_dataframe = pd.DataFrame(columns=class_list)
+    class_list.pop(0)
+    for one_class in class_list:
+        sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(1)
+        test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
+    print(test_label_dataframe)
+    test_label_dataframe.to_csv(os.path.join(self.configer['testlabelPath'], 'test_label.csv'), index=False)
+    # print(label_dataframe[row_label_dataframe['MEL'].isin([1])].sample(10))
 

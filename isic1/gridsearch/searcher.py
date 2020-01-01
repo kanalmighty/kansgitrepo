@@ -160,7 +160,17 @@ class Searcher:
             args.mode = 'train'
             torch.cuda.empty_cache()
             print('ready to apply %s to model..' % spd_name)
-            self.train(args)
+            try:
+                self.train(args)
+            except RuntimeError:
+                args.batchsize = args.batchsize - 8
+                print('get OOM!,reduce batch  size to %d' % args.batchsize)
+                try:
+                    self.train(args)
+                except RuntimeError:
+                    args.batchsize = args.batchsize - 8
+                    print('get OOM!,reduce batch  size to %d' % args.batchsize)
+                    self.train(args)
             if self.is_abandoned == 0:
                 self.test(args)
             one_search_dict[spd_name] = self.one_search_data
