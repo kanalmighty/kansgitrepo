@@ -12,5 +12,5 @@ class PreprocessOptions(BaseOptions):
         self.argument_parser.add_argument('--padBorderSize', type=int, default=500, help='rescale images to the given resolution')
         self.argument_parser.add_argument('--massCrop', type=bool, help='use opencv to crop up the lesion without the background')
         self.argument_parser.add_argument('--off', type=bool, help='do nothing but move images and label from row path to processed path')
-        self.argument_parser.add_argument('--testSamples', type=int, help='test sample set aside from the training dataset')
+        self.argument_parser.add_argument('--testSamples', type=int, help='dev dataset set aside from the training dataset')
         self.initialized = False

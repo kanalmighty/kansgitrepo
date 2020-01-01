@@ -31,6 +31,7 @@ class DataPreProcesser():
 
     def __call__(self):
         self.check_all_paths()
+        self.split_dev_dataset(self.args.testSamples)
         if self.args.massCrop:
             self.save_bordercroped_images(self.args.borderCropRate)
             self.save_centercropsed_images()
@@ -42,7 +43,7 @@ class DataPreProcesser():
             for image in tqdm(image_list):
                 shutil.copy(image, os.path.join(self.training_image_path, utils.get_file_name(image)))
             shutil.copy(self.row_label[0], os.path.join(self.configer['traininglabelPath'], utils.get_file_name(self.row_label[0])))
-        self.split_test_dataset(self.args.testSamples)
+
 
 
     def check_all_paths(self):
@@ -230,7 +231,7 @@ class DataPreProcesser():
             cv.imwrite((os.path.join(self.configer['tempImagePath'], image_name)), image)
 
 
-    def split_test_dataset(self, sample_number):
+    def split_dev_dataset(self, sample_number):
         row_label_csv = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
         row_label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
         # get all class from row label csv
