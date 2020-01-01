@@ -232,6 +232,7 @@ class DataPreProcesser():
 
 
     def split_dev_dataset(self, sample_number):
+        print('setting aside dev data set from training data set')
         row_label_csv = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
         row_label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
         # get all class from row label csv
@@ -242,7 +243,6 @@ class DataPreProcesser():
         for one_class in class_list:
             sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
-        print(test_label_dataframe)
         test_label_dataframe.to_csv(os.path.join(self.configer['testlabelPath'], 'test_label.csv'), index=False)
 
 if __name__ == '__main__':
