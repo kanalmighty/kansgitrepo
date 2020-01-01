@@ -21,7 +21,6 @@ class ISICDataset(Dataset):
         # self.image_array_trainsformed = transform(self.image_array)
 
     def __getitem__(self, index):
-
         image_path = self.image_path_list[index]
         image = utils.get_image(image_path)
         # resize_img = transforms.Resize(128)
@@ -37,13 +36,6 @@ class ISICDataset(Dataset):
         print('assert equality images : %d ?= labels: %d ' % (self.__len__(), self.label_tensor.size()[0]))
         assert self.__len__() == self.label_tensor.size()[0]
 
-    # def get_trainsforms(opt):
-    #     transform_list = []
-    #     if opt.Normalize:
-    #         transform_list.append(transforms.Normalize((0.5, 0.5, 0.5),
-    #                                                    (0.5, 0.5, 0.5)))
-    #         transform_list.append(transforms.ToTensor)
-    #     return transforms.Compose(transform_list)
 
 if __name__ == '__main__':
     isic = ISICDataset('D:\\pycharmspace\\datasets\\isic2019\image','D:\\pycharmspace\\datasets\\isic2019\\csv\\ISIC_2019_Training_GroundTruth.csv')

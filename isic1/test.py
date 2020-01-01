@@ -37,25 +37,23 @@ testdata_loader = DataLoader(isic, batch_size=args.batchsize)
 model.eval()#模型为测试，不使用dropput等
 y_list = []
 y_hat_list = []
+error_classified_num_list = []
+error_classified_image_list = []
 for idx, (x, y) in enumerate(testdata_loader):
 
     x = x.to(device)
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
-    # if y_scalar.item() == y_hat_scalar.item():
-    #     if not 'tp' + '_' + str(y_scalar.item()) in metrics.keys():
-    #         metrics['tp' + '_' + str(y_scalar.item())] = 0
-    #     metrics['tp' + '_' + str(y_scalar.item())] += 1
-    # else:
-    #     if not 'fn' + '_' + str(y_scalar.item()) in metrics.keys():
-    #         metrics['fn' + '_' + str(y_scalar.item())] = 0
-    #     metrics['fn' + '_' + str(y_scalar.item())] += 1
+    # record wrongly classified image
+    if y_scalar != y_hat_scalar:
+        error_classified_num_list.append(idx)
+        print(idx)
     y_list.append(y_scalar.item())
     y_hat_list.append(y_hat_scalar.item())
-print(y_list)
-print(y_hat_list)
 class_number = y.size(1)
 metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
+error_classified_image_list = utils.get_image_name_by_number(label_path, error_classified_num_list)
+metrics_dict['ERROR LIST'] = error_classified_image_list
 visualizer.get_data_report(metrics_dict)
 logger.append_test_data(args.date, args.time, metrics_dict)

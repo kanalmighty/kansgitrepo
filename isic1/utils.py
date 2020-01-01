@@ -128,6 +128,12 @@ def get_file_path(filename):
     file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)).split('filename')[0], filename)
     return file_path
 
+#get wrongly classified image name
+def get_image_name_by_number(csv_path,number_list):
+    label_csv_path = get_csv_by_path_name(csv_path)
+    label_dataframe = pd.read_csv(label_csv_path[0], header=0,  engine='python')
+    error_classified_image_list = label_dataframe.iloc[number_list]['image'].values.tolist()
+    return error_classified_image_list
 
 #input 4 number ,output a dictionary of metrics
 def get_evaluation_metrics(tp, tn, fp, fn):

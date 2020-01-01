@@ -118,6 +118,7 @@ class Searcher:
         self.model.eval()  # 模型为测试，不使用dropput等
         y_list = []
         y_hat_list = []
+        error_classified_num_list = []
         for idx, (x, y) in enumerate(testdata_loader):
             x = x.to(self.device)
             y_scalar = torch.argmax(y, dim=1)
@@ -133,8 +134,12 @@ class Searcher:
             #     metrics['fn' + '_' + str(y_scalar.item())] += 1
             y_list.append(y_scalar.item())
             y_hat_list.append(y_hat_scalar.item())
+            if y_scalar != y_hat_scalar:
+                error_classified_num_list.append(idx)
         class_number = y.size(1)
         metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
+        error_classified_image_list = utils.get_image_name_by_number(label_path, error_classified_num_list)
+        metrics_dict['ERROR LIST'] = error_classified_image_list
         self.visualizer.get_data_report(metrics_dict)
         self.one_search_data['test_data'] = metrics_dict
 
