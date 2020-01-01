@@ -31,7 +31,8 @@ class DataPreProcesser():
 
     def __call__(self):
         self.check_all_paths()
-        self.split_dev_dataset(self.args.testSamples)
+        if self.args.testSamples:
+            self.split_dev_dataset(self.args.testSamples)
         if self.args.massCrop:
             self.save_bordercroped_images(self.args.borderCropRate)
             self.save_centercropsed_images()

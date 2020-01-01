@@ -175,7 +175,7 @@ class Searcher:
                 self.test(args)
             one_search_dict[spd_name] = self.one_search_data
             one_search_dict[spd_name]['flag'] = 1 if self.is_abandoned == 0 else 0
-            print('write log' + spd_name)
+            print('write log ' + spd_name)
             self.logger.append_search_data(one_search_dict)
         print('search end..')
 
