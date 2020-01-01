@@ -247,7 +247,7 @@ class DataPreProcesser():
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
         test_label_dataframe.to_csv(os.path.join(self.configer['testLabelPath'], 'test_label.csv'), index=False)
         #start to rename images
-        test_file_name = test_label_dataframe.values.squeeze(1)
+        test_file_name = test_label_dataframe['image'].values
         des_file_root = Path(self.configer['testImagePath'])
         src_file_root = Path(self.configer['rowImagePath'])
         if not des_file_root.exists():
