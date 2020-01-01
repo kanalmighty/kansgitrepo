@@ -245,7 +245,20 @@ class DataPreProcesser():
         for one_class in tqdm(class_list):
             sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
-        test_label_dataframe.to_csv(os.path.join(self.configer['testlabelPath'], 'test_label.csv'), index=False)
+        test_label_dataframe.to_csv(os.path.join(self.configer['testLabelPath'], 'test_label.csv'), index=False)
+        #start to rename images
+        test_file_name = test_label_dataframe.values.squeeze(1)
+        des_file_root = Path(self.configer['testImagePath'])
+        src_file_root = Path(self.configer['rowImagePath'])
+        if not des_file_root.exists():
+            os.mkdir(des_file_root)
+        for file_name in test_file_name:
+            src_file_path = os.path.join(src_file_root, file_name + '.jpg')
+            des_file_path = os.path.join(des_file_root, file_name + '.jpg')
+            try:
+                shutil.copy(src_file_path, des_file_path)
+            except IOError:
+                print('copy file error!')
 
 if __name__ == '__main__':
     d = DataPreProcesser()
