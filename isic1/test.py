@@ -46,7 +46,7 @@ for idx, (x, y) in enumerate(testdata_loader):
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
     # record wrongly classified image
-    if y_scalar != y_hat_scalar:
+    if y_scalar.item() != y_hat_scalar.item():
         error_classified_num_list.append(idx)
         print(idx)
     y_list.append(y_scalar.item())
