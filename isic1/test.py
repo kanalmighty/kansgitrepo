@@ -23,8 +23,8 @@ image_path = configer['testImagePath']
 label_path = configer['testLabelPath']
 test_csv = utils.get_csv_by_path_name(label_path)
 dataprober = DataProber(image_path, test_csv[0])
-dataprober.get_size_profile()
-dataprober.get_type_profile()
+# dataprober.get_size_profile()
+# dataprober.get_type_profile()
 dataprober.get_data_difference()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 transforms = utils.get_transforms(args)
@@ -48,7 +48,6 @@ for idx, (x, y) in enumerate(testdata_loader):
     # record wrongly classified image
     if y_scalar.item() != y_hat_scalar.item():
         error_classified_num_list.append(idx)
-        print(idx)
     y_list.append(y_scalar.item())
     y_hat_list.append(y_hat_scalar.item())
 class_number = y.size(1)
