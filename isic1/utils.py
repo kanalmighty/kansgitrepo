@@ -277,8 +277,6 @@ def calculate_mean_sensitivity(class_number, metrics_dict):
 def calculate_test_metrics(truth_list, pred_list, class_number):
     assert len(truth_list) == len(pred_list)
     metric_dict = {}
-    print(set(truth_list))
-    print(set(pred_list))
     metric_dict['average marcro precision'] = round(precision_score(truth_list, pred_list, average='macro'), 3)
     metric_dict['average accuracy'] = round(accuracy_score(truth_list, pred_list), 3)
     metric_dict['average macro recall'] = round(recall_score(truth_list, pred_list, average='macro'), 3)
