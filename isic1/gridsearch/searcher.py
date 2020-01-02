@@ -134,7 +134,7 @@ class Searcher:
             #     metrics['fn' + '_' + str(y_scalar.item())] += 1
             y_list.append(y_scalar.item())
             y_hat_list.append(y_hat_scalar.item())
-            if y_scalar != y_hat_scalar:
+            if y_scalar.item() != y_hat_scalar.item():
                 error_classified_num_list.append(idx)
         class_number = y.size(1)
         metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
