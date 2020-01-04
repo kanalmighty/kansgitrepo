@@ -46,7 +46,10 @@ train_loss_dict = {}
 epoch_statics_list = []#store epoch loss and training accuracy
 train_statics_dict = {}#record overall training statics
 model.train()
+scheduler = model.scheduler(optimizer, args.milestone, gamma=0.1)
 for EPOCH in range(args.epoch):
+    scheduler.step()
+    print('current lr is' + str(optimizer.state_dict()['param_groups'][0]['lr']))
     epoch_statics_dict = {}#record epochly training statics
     loss_all_samples_per_epoch = 0#记录每个epoch,所有batch的loss总和
     train_accuracy = 0#trainnig accuaracy per epoch

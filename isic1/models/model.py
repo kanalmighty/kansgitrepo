@@ -28,6 +28,7 @@ class Model(nn.Module):
             self.optimizer = self.get_optimizer()
         configer = Configer()
         self.configer = configer.get_configer()
+        self.scheduler = self.get_scheduler()
 
 
 
@@ -97,6 +98,10 @@ class Model(nn.Module):
         if self.args.optimizer == 'sgd':
             opm = torch.optim.SGD(self.network.parameters(), lr=self.learning_rate)
         return opm
+
+    def get_scheduler(self):
+        scheduler = torch.optim.lr_scheduler.MultiStepLR
+        return scheduler
 
     def save_model(self, date, time):
         checkpoint_path = os.path.join(self.configer['checkPointPath'], date)
