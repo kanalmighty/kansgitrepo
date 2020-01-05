@@ -18,5 +18,5 @@ class TrainingOptions(BaseOptions):
         self.argument_parser.add_argument('--lossfunction', type=str, help='choices including cross,softmax', choices=['cross', 'focalloss'])
         self.argument_parser.add_argument('--centerCropSize', type=int, action='append', help='center crop size')
         self.argument_parser.add_argument('--normalize', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
-        self.argument_parser.add_argument('--milestone', type=int, action='append', help='milestone for MultiStepLR')
+        self.argument_parser.add_argument('--milestone', type=int, action='append', default=[10000, 100000], help='milestone for MultiStepLR')
         self.initialized = False

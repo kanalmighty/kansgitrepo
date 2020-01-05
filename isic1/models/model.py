@@ -28,8 +28,7 @@ class Model(nn.Module):
             self.optimizer = self.get_optimizer()
         configer = Configer()
         self.configer = configer.get_configer()
-        if self.args.milestone:
-            self.scheduler = self.get_scheduler()
+        self.scheduler = self.get_scheduler()
 
 
 
