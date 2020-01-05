@@ -35,7 +35,12 @@ class Visualizer:
         graph_number = len(log_visualize_dict)
         plt.figure(1)
         idx = 1
-        icons = ['r--', 'g^', 'cs', 'k*', 'bs', 'yv', 'r+', 'b<', 'm8']
+        icon_list = []
+        color_list = ['r', 'y', 'k', 'g', 'm', 'b']
+        marker_list = ['-', '.', 'o', '*', 's', 'p', '+', '<', '8', 'h', 'd', 'x']
+        for color in color_list:
+            for marker in marker_list:
+                icon_list.append(color + marker)
         plt.title("test")
         plt.ylabel('losses')
         plt.xlabel('epoch')
@@ -46,7 +51,7 @@ class Visualizer:
             plt.xlabel('epoch')
             plt.subplot(1, graph_number, idx)
             for model_name, data in model_data.items():
-                plt.plot(range(0, len(data)), model_data[model_name], random.choice(icons), label=model_name)
+                plt.plot(range(0, len(data)), model_data[model_name], random.choice(icon_list), label=model_name)
                 plt.legend(loc='upper right')
             idx += 1
         plt.show()
