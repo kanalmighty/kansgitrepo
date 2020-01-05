@@ -14,6 +14,8 @@ import torch
 from torch import nn
 from torchvision import models
 import argparse
+import sys
+sys.path.append('/content/cloned-repo/isic1')
 from skimage import io
 import cv2
 from gradcam.interpretability.grad_cam import GradCAM, GradCamPlusPlus
