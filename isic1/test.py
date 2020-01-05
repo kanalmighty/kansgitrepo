@@ -39,6 +39,8 @@ y_list = []
 y_hat_list = []
 error_classified_num_list = []
 error_classified_image_list = []
+right_classified_num_list = []
+right_classified_image_list = []
 for idx, (x, y) in enumerate(testdata_loader):
 
     x = x.to(device)
@@ -48,11 +50,15 @@ for idx, (x, y) in enumerate(testdata_loader):
     # record wrongly classified image
     if y_scalar.item() != y_hat_scalar.item():
         error_classified_num_list.append(idx)
+    else:
+        right_classified_num_list.append(idx)
     y_list.append(y_scalar.item())
     y_hat_list.append(y_hat_scalar.item())
 class_number = y.size(1)
 metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
 error_classified_image_list = utils.get_image_name_by_number(label_path, error_classified_num_list)
+right_classified_image_list = utils.get_image_name_by_number(label_path, right_classified_num_list)
 metrics_dict['ERROR LIST'] = error_classified_image_list
+metrics_dict['RIGHT LIST'] = right_classified_image_list
 visualizer.get_data_report(metrics_dict)
 logger.append_test_data(args.date, args.time, metrics_dict)
