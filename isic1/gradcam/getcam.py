@@ -18,7 +18,7 @@ from skimage import io
 import cv2
 from gradcam.interpretability.grad_cam import GradCAM, GradCamPlusPlus
 from gradcam.interpretability.guided_back_propagation import GuidedBackPropagation
-
+from efficientnet_pytorch import EfficientNet
 
 def get_net(net_name, class_number, weight_path=None):
     """
@@ -46,6 +46,22 @@ def get_net(net_name, class_number, weight_path=None):
         net = models.shufflenet_v2_x1_0(pretrained=pretrain)
     elif net_name in 'resnet18':
         net = models.resnet18(pretrained=pretrain)
+    elif net_name in 'efficientnet-b0':
+        net = EfficientNet.from_pretrained('efficientnet-b0', num_classes=class_number)
+    elif net_name in 'efficientnet-b1':
+        net = EfficientNet.from_pretrained('efficientnet-b1', num_classes=class_number)
+    elif net_name in 'efficientnet-b2':
+        net = EfficientNet.from_pretrained('efficientnet-b2', num_classes=class_number)
+    elif net_name in 'efficientnet-b3':
+        net = EfficientNet.from_pretrained('efficientnet-b3', num_classes=class_number)
+    elif net_name in 'efficientnet-b4':
+        net = EfficientNet.from_pretrained('efficientnet-b4', num_classes=class_number)
+    elif net_name in 'efficientnet-b5':
+        net = EfficientNet.from_pretrained('efficientnet-b5', num_classes=class_number)
+    elif net_name in 'efficientnet-b6':
+        net = EfficientNet.from_pretrained('efficientnet-b6', num_classes=class_number)
+    elif net_name in 'efficientnet-b7':
+        net = EfficientNet.from_pretrained('efficientnet-b7', num_classes=class_number)
     else:
         raise ValueError('invalid network name:{}'.format(net_name))
     # 加载指定路径的权重参数
@@ -61,7 +77,7 @@ def get_net(net_name, class_number, weight_path=None):
                 del state_dict[key]
         net.load_state_dict(state_dict)
     elif weight_path is not None:
-        if class_number is not None:
+        if class_number is not None and 'efficientnet' not in net_name:
             fc_features = net.fc.in_features
             net.fc = nn.Linear(fc_features, class_number)
         device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
