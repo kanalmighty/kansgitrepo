@@ -76,7 +76,7 @@ class DataRecorder:
         # self.data_dict = json.loads(data_json)
         # # append test data
         # self.data_dict["test_data"] = test_data_dict
-        json_dict = json.dumps(self.data_dict)
+        json_dict = json.dumps(test_data_dict)
         with open(test_log, 'w') as log:
             log.write(json_dict)
         log.close()
