@@ -7,6 +7,8 @@ Created on 2019/8/4 上午9:53
 入口类
 
 """
+import sys
+sys.path.append('/content/cloned-repo/isic1')
 import re
 import os
 import numpy as np
@@ -15,10 +17,10 @@ from torch import nn
 from torchvision import models
 import argparse
 import utils
-import sys
+
 from pathlib import Path
 from options.configer import Configer
-sys.path.append('/content/cloned-repo/isic1')
+
 from skimage import io
 import cv2
 from gradcam.interpretability.grad_cam import GradCAM, GradCamPlusPlus
