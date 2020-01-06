@@ -67,10 +67,18 @@ class DataRecorder:
     def append_test_data(self, date_string, time_string, test_data_dict):
         test_log = os.path.join(self.config_dict['logpath'], date_string, time_string + '_test.log')
         #get training data dictionary from training log
-
-        json_dict = json.dumps(self.data_dict)
+        # try:
+        #     file = open(training_log)
+        # except IOError:
+        #     print("%s doesn't exist" % training_log)
+        #     file = open(training_log, 'w')
+        # data_json = file.read()
+        # self.data_dict = json.loads(data_json)
+        # # append test data
+        # self.data_dict["test_data"] = test_data_dict
+        # json_dict = json.dumps(self.data_dict)
         with open(test_log, 'w') as log:
-            log.write(json_dict)
+            log.write(test_data_dict)
         log.close()
 
     def append_search_data(self, data_dict):
