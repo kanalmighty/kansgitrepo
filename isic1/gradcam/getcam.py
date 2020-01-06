@@ -169,9 +169,8 @@ def save_image(image_dicts, input_image_name, network, output_dir):
         io.imsave(os.path.join(output_dir, '{}-{}-{}.jpg'.format(prefix, network, key)), image)
 
 
-def get_cam_for_error(args, cam_image_path, original_image_path):
+def get_cam_for_error(args, cam_image_path, original_image_path, check_point_path):
     # 输入
-    configer = Configer()
     image_dict = {}
     img = io.imread(original_image_path)
     # 保存原图
@@ -182,7 +181,7 @@ def get_cam_for_error(args, cam_image_path, original_image_path):
     # 输出图像
 
     # 网络
-    model_path = os.path.join(configer['checkPointPath'], args.date, args.time + '.pth')
+    model_path = os.path.join(check_point_path, args.date, args.time + '.pth')
     net = get_net(args.network, args.class_number, model_path)
     # Grad-CAM
     layer_name = get_last_conv_name(net) if args.layer_name is None else args.layer_name
@@ -219,13 +218,14 @@ def get_cam_for_error(args, cam_image_path, original_image_path):
 def call_get_cam(args):
     configer = Configer().get_configer()
     cam_image_path = configer['camImagePath']
+    check_point_path = configer['checkPointPath']
     test_log = os.path.join(configer['logpath'], args.date, args.time + '_test.log')
     data_dict = utils.get_dict_from_json(test_log)
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
     for error_image in error_file_list:
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
-        get_cam_for_error(args, cam_image_path, original_test_image)
+        get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
