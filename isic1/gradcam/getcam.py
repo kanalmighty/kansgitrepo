@@ -167,11 +167,11 @@ def save_image(image_dicts, input_image_name, network, output_dir):
         io.imsave(os.path.join(output_dir, '{}-{}-{}.jpg'.format(prefix, network, key)), image)
 
 
-def main(args):
+def get_cam_for_error(args, cam_image_path, original_image_path):
     # 输入
     configer = Configer()
     image_dict = {}
-    img = io.imread(args.image_path)
+    img = io.imread(original_image_path)
     # 保存原图
     image_dict['origin'] = img
 
@@ -206,21 +206,29 @@ def main(args):
     image_dict['cam_gb'] = norm_image(cam_gb)
 
 
-    cam_image_path = configer['camImagePath']
+
 
     image_save_directory = os.path.join(cam_image_path, args.date, args.time)
     utils.make_directory(image_save_directory)
 
 
-    save_image(image_dict, os.path.basename(args.image_path), args.network, image_save_directory)
+    save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
 
+def call_get_cam(args):
+    configer = Configer().get_configer()
+    cam_image_path = configer['camImagePath']
+    test_log = os.path.join(configer['logpath'], args.date, args.time + '_test.log')
+    data_dict = utils.get_dict_from_json(test_log)
+    error_file_list = data_dict['ERROR LIST']
+    right_file_list = data_dict['RIGHT LIST']
+    for error_image in error_file_list:
+        original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
+        get_cam_for_error(args, cam_image_path, original_test_image)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--network', type=str, default='resnet50',
                         help='ImageNet classification network')
-    parser.add_argument('--image-path', type=str, default='./examples/pic1.jpg',
-                        help='input image path')
 
     parser.add_argument('--date', type=str, default=None,
                         help='weight path of the model')
@@ -236,4 +244,4 @@ if __name__ == '__main__':
                         help='class number')
     arguments = parser.parse_args()
 
-    main(arguments)
+    call_get_cam(arguments)

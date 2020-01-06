@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix, precision_score, accuracy_score,recall_score, f1_score,roc_auc_score, classification_report
-
+import json
 import urllib.request
 import cv2 as cv
 import glob
@@ -284,6 +284,19 @@ def calculate_test_metrics(truth_list, pred_list, class_number):
     target_names = ['MEL', 'NV', 'BCC', 'AK', 'BKL', 'DF', 'VASC', 'SCC']
     metric_dict['overall report'] = classification_report(truth_list, pred_list, target_names=target_names)
     return metric_dict
+
+#read dict from json string in a file
+def get_dict_from_json(file_name):
+    data_dict = {}
+    with open(file_name, 'r') as log:
+        log_record_list = log.readlines()
+    log.close()
+    for record in log_record_list:
+        record_dict = json.loads(record)
+        for k, v in record_dict.items():
+            data_dict[k] = v
+    return data_dict
+
 
 # def encode_image_name(file_list, index=0):
 #     file_list_encoded = []
