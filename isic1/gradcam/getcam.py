@@ -14,7 +14,10 @@ import torch
 from torch import nn
 from torchvision import models
 import argparse
+import utils
 import sys
+from pathlib import Path
+from options.configer import Configer
 sys.path.append('/content/cloned-repo/isic1')
 from skimage import io
 import cv2
@@ -166,13 +169,19 @@ def save_image(image_dicts, input_image_name, network, output_dir):
 
 def main(args):
     # 输入
+    configer = Configer()
+    image_dict = {}
     img = io.imread(args.image_path)
+    # 保存原图
+    image_dict['origin'] = img
+
     img = np.float32(cv2.resize(img, (224, 224))) / 255
     inputs = prepare_input(img)
     # 输出图像
-    image_dict = {}
+
     # 网络
-    net = get_net(args.network, args.class_number, args.weight_path)
+    model_path = os.path.join(configer['checkPointPath'], args.date, args.time + '.pth')
+    net = get_net(args.network, args.class_number, model_path)
     # Grad-CAM
     layer_name = get_last_conv_name(net) if args.layer_name is None else args.layer_name
     grad_cam = GradCAM(net, layer_name)
@@ -196,7 +205,14 @@ def main(args):
     cam_gb = gb * mask[..., np.newaxis]
     image_dict['cam_gb'] = norm_image(cam_gb)
 
-    save_image(image_dict, os.path.basename(args.image_path), args.network, args.output_dir)
+
+    cam_image_path = configer['camImagePath']
+
+    image_save_directory = os.path.join(cam_image_path, args.date, args.time)
+    utils.make_directory(image_save_directory)
+
+
+    save_image(image_dict, os.path.basename(args.image_path), args.network, image_save_directory)
 
 
 if __name__ == '__main__':
@@ -205,7 +221,10 @@ if __name__ == '__main__':
                         help='ImageNet classification network')
     parser.add_argument('--image-path', type=str, default='./examples/pic1.jpg',
                         help='input image path')
-    parser.add_argument('--weight-path', type=str, default=None,
+
+    parser.add_argument('--date', type=str, default=None,
+                        help='weight path of the model')
+    parser.add_argument('--time', type=str, default=None,
                         help='weight path of the model')
     parser.add_argument('--layer-name', type=str, default=None,
                         help='last convolutional layer name')

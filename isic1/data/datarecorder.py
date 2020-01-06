@@ -71,7 +71,7 @@ class DataRecorder:
             file = open(training_log)
         except IOError:
             print("%s doesn't exist" % training_log)
-            exit(0)
+            file = open(training_log, 'w')
         data_json = file.read()
         self.data_dict = json.loads(data_json)
         # append test data
