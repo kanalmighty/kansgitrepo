@@ -65,16 +65,11 @@ class DataRecorder:
         log.close()
 
     def append_test_data(self, date_string, time_string, test_data_dict):
-        training_log = os.path.join(self.config_dict['logpath'], date_string, time_string + '_test.log')
+        test_log = os.path.join(self.config_dict['logpath'], date_string, time_string + '_test.log')
         #get training data dictionary from training log
 
-        file = open(training_log, 'w')
-        data_json = file.read()
-        self.data_dict = json.loads(data_json)
-        # append test data
-        self.data_dict["test_data"] = test_data_dict
         json_dict = json.dumps(self.data_dict)
-        with open(training_log, 'w') as log:
+        with open(test_log, 'w') as log:
             log.write(json_dict)
         log.close()
 
