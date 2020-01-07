@@ -11,7 +11,7 @@ import sys
 sys.path.append('/content/cloned-repo/isic1')
 import re
 import os
-import tqdm
+from tqdm import tqdm
 import numpy as np
 import torch
 from torch import nn
@@ -225,7 +225,7 @@ def call_get_cam(args):
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
     cam_images_list = []
-    for error_image in tqdm(error_file_list):
+    for error_image in error_file_list:
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
         cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
         cam_images_list.append(cam_dict)
