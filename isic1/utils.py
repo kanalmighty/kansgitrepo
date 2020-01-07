@@ -10,6 +10,7 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix, precision_score, accuracy_score,recall_score, f1_score,roc_auc_score, classification_report
 import json
 import urllib.request
+import matplotlib.pyplot as plt
 import cv2 as cv
 import glob
 IMG_EXTENSIONS = [
@@ -296,6 +297,18 @@ def get_dict_from_json(file_name):
         for k, v in record_dict.items():
             data_dict[k] = v
     return data_dict
+
+# def show_image_dict(image_dict):
+#     if not isinstance(image_dict, dict):
+#         raise TypeError("input must be python dict")
+#     total_rows = len(image_dict)
+#
+#     plt.figure()
+#     for i in range(1, 32):
+#         plt.subplot(total_rows, 8, i)
+#         plt.imshow(img_test[i - 1])
+#     plt.show()
+
 
 
 # def encode_image_name(file_list, index=0):

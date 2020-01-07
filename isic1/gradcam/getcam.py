@@ -11,14 +11,14 @@ import sys
 sys.path.append('/content/cloned-repo/isic1')
 import re
 import os
+import tqdm
 import numpy as np
 import torch
 from torch import nn
 from torchvision import models
 import argparse
 import utils
-
-from pathlib import Path
+import matplotlib.pyplot as plt
 from options.configer import Configer
 
 from skimage import io
@@ -205,18 +205,16 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     # 生成Guided Grad-CAM
     cam_gb = gb * mask[..., np.newaxis]
     image_dict['cam_gb'] = norm_image(cam_gb)
+    return image_dict
 
-
-
-
-    image_save_root = os.path.join(cam_image_path, args.date)
-    if not Path(image_save_root).exists():
-        os.mkdir(image_save_root)
-    image_save_directory = os.path.join(cam_image_path, args.date, args.time)
-    utils.make_directory(image_save_directory)
-
-
-    save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
+    # image_save_root = os.path.join(cam_image_path, args.date)
+    # if not Path(image_save_root).exists():
+    #     os.mkdir(image_save_root)
+    # image_save_directory = os.path.join(cam_image_path, args.date, args.time)
+    # utils.make_directory(image_save_directory)
+    #
+    #
+    # save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
 
 def call_get_cam(args):
     configer = Configer().get_configer()
@@ -226,9 +224,22 @@ def call_get_cam(args):
     data_dict = utils.get_dict_from_json(test_log)
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
-    for error_image in error_file_list:
+    cam_images_list = []
+    for error_image in tqdm(error_file_list):
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
-        get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+        cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+        cam_images_list.append(cam_dict)
+
+    total_list_length = len(cam_images_list)
+
+
+    plt.figure()
+    for cam_dict in cam_images_list:
+        dict_length = len(cam_dict)
+        for idx, cam_name, image in enumerate(cam_dict.items()):
+            plt.subplot(total_list_length, dict_length, idx)
+            plt.imshow(image)
+    plt.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
