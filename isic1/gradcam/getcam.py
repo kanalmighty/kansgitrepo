@@ -209,6 +209,9 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
 
 
 
+    image_save_root = os.path.join(cam_image_path, args.date)
+    if not Path(image_save_root).exists():
+        os.mkdir(image_save_root)
     image_save_directory = os.path.join(cam_image_path, args.date, args.time)
     utils.make_directory(image_save_directory)
 
