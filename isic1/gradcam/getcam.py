@@ -237,7 +237,7 @@ def call_get_cam(args):
     for i in range(0, loops - 1):
         cam_images_list_sliced = cam_images_list[i * 50: i * 50 + 50].copy()
         plt.figure()
-        for cam_dict in cam_images_list_sliced:
+        for cam_dict in tqdm(cam_images_list_sliced):
             dict_length = len(cam_dict)
             for idx, cam_name, image in enumerate(cam_dict.items()):
                 plt.subplot(total_list_length, dict_length, idx)
