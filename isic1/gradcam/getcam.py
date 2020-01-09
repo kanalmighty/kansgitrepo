@@ -216,6 +216,7 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     #
     # save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
 
+
 def call_get_cam(args):
     configer = Configer().get_configer()
     cam_image_path = configer['camImagePath']
@@ -225,21 +226,23 @@ def call_get_cam(args):
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
     cam_images_list = []
+    error_file_list_length = len(error_file_list)
     for error_image in error_file_list:
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
         cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
         cam_images_list.append(cam_dict)
 
     total_list_length = len(cam_images_list)
-
-
-    plt.figure()
-    for cam_dict in cam_images_list:
-        dict_length = len(cam_dict)
-        for idx, cam_name, image in enumerate(cam_dict.items()):
-            plt.subplot(total_list_length, dict_length, idx)
-            plt.imshow(image)
-    plt.show()
+    loops = int(total_list_length / 50)
+    for i in range(0, loops - 1):
+        cam_images_list_sliced = cam_images_list[i * 50: i * 50 + 50].copy()
+        plt.figure()
+        for cam_dict in cam_images_list_sliced:
+            dict_length = len(cam_dict)
+            for idx, cam_name, image in enumerate(cam_dict.items()):
+                plt.subplot(total_list_length, dict_length, idx)
+                plt.imshow(image)
+        plt.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
