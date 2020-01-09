@@ -225,11 +225,12 @@ def call_get_cam(args):
     data_dict = utils.get_dict_from_json(test_log)
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
-    cam_images_list = []
+
     error_file_list_length = len(error_file_list)
     loops = int(error_file_list_length / 50)
     for i in range(0, loops - 1):
-        error_file_list_sliced = cam_images_list[i * 50: i * 50 + 50].copy()
+        cam_images_list = []
+        error_file_list_sliced = error_file_list[i * 50: i * 50 + 50].copy()
         total_list_length = len(error_file_list)
         for error_image in error_file_list_sliced:
             original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
