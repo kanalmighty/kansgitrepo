@@ -227,17 +227,16 @@ def call_get_cam(args):
     right_file_list = data_dict['RIGHT LIST']
     cam_images_list = []
     error_file_list_length = len(error_file_list)
-    for error_image in error_file_list:
-        original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
-        cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
-        cam_images_list.append(cam_dict)
-
-    total_list_length = len(cam_images_list)
-    loops = int(total_list_length / 50)
+    loops = int(error_file_list_length / 50)
     for i in range(0, loops - 1):
-        cam_images_list_sliced = cam_images_list[i * 50: i * 50 + 50].copy()
-        plt.figure()
-        for cam_dict in tqdm(cam_images_list_sliced):
+        error_file_list_sliced = cam_images_list[i * 50: i * 50 + 50].copy()
+        total_list_length = len(error_file_list)
+        for error_image in error_file_list_sliced:
+            original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
+            cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+            cam_images_list.append(cam_dict)
+        plt.figure(1)
+        for cam_dict in tqdm(cam_images_list):
             dict_length = len(cam_dict)
             for idx, cam_name, image in enumerate(cam_dict.items()):
                 plt.subplot(total_list_length, dict_length, idx)
