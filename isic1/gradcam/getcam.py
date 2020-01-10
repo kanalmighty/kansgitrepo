@@ -11,7 +11,7 @@ import sys
 sys.path.append('/content/cloned-repo/isic1')
 import re
 import os
-from tqdm import tqdm
+from pathlib import Path
 import numpy as np
 import torch
 from torch import nn
@@ -205,16 +205,16 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     # 生成Guided Grad-CAM
     cam_gb = gb * mask[..., np.newaxis]
     image_dict['cam_gb'] = norm_image(cam_gb)
-    return image_dict
+    # return image_dict
 
-    # image_save_root = os.path.join(cam_image_path, args.date)
-    # if not Path(image_save_root).exists():
-    #     os.mkdir(image_save_root)
-    # image_save_directory = os.path.join(cam_image_path, args.date, args.time)
-    # utils.make_directory(image_save_directory)
-    #
-    #
-    # save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
+    image_save_root = os.path.join(cam_image_path, args.date)
+    if not Path(image_save_root).exists():
+        os.mkdir(image_save_root)
+    image_save_directory = os.path.join(cam_image_path, args.date, args.time)
+    utils.make_directory(image_save_directory)
+
+
+    save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
 
 
 def call_get_cam(args):
@@ -226,26 +226,30 @@ def call_get_cam(args):
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
 
-    error_file_list_length = len(error_file_list)
-    image_num_loop = 20
-    loops = int(error_file_list_length / image_num_loop)
-    for i in range(0, loops - 1):
-        cam_images_list = []
-        error_file_list_sliced = error_file_list[i * image_num_loop: i * image_num_loop + image_num_loop].copy()
-        total_list_length = len(error_file_list)
-        for error_image in error_file_list_sliced:
-            original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
-            cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
-            cam_images_list.append(cam_dict)
-        plt.figure(1)
-        for cam_dict in cam_images_list:
-            dict_length = len(cam_dict)
-            idx = 1
-            for cam_name, image in cam_dict.items():
-                plt.subplot(total_list_length, dict_length, idx)
-                plt.imshow(image)
-                idx += 1
-        plt.show()
+    for error_image in error_file_list:
+        original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
+        get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+
+    # error_file_list_length = len(error_file_list)
+    # image_num_loop = 20
+    # loops = int(error_file_list_length / image_num_loop)
+    # for i in range(0, loops - 1):
+    #     cam_images_list = []
+    #     error_file_list_sliced = error_file_list[i * image_num_loop: i * image_num_loop + image_num_loop].copy()
+    #     total_list_length = len(error_file_list)
+    #     for error_image in error_file_list_sliced:
+    #         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
+    #         cam_dict = get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+    #         cam_images_list.append(cam_dict)
+    #     plt.figure(1)
+    #     for cam_dict in cam_images_list:
+    #         dict_length = len(cam_dict)
+    #         idx = 1
+    #         for cam_name, image in cam_dict.items():
+    #             plt.subplot(total_list_length, dict_length, idx)
+    #             plt.imshow(image)
+    #             idx += 1
+    #     plt.show()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,10 +1,15 @@
+import os
 import random
 
 import matplotlib.pyplot as plt
-from data.datarecorder import DataRecorder
 
+import utils
+from data.datarecorder import DataRecorder
+from options.configer import Configer
 class Visualizer:
 
+    def __init__(self):
+        self.config_dict = Configer().get_configer()
     # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
     def get_data_report(self, data_data):
         string_report = ''
@@ -54,6 +59,27 @@ class Visualizer:
                 plt.plot(range(0, len(data)), model_data[model_name], random.choice(icon_list), label=model_name)
                 plt.legend(loc='upper right')
             idx += 1
+        plt.show()
+
+    def show_cam_images(self, date, time):
+        cam_image_path = os.path.join(self.configer['camImagePath'], date, time)
+        cam_image_list = utils.get_image_set(cam_image_path)
+
+        cam_list_length = len(cam_image_list)
+        image_num_loop = 20
+        loops = int(cam_list_length / image_num_loop)
+        for i in range(0, loops - 1):
+            cam_images_list = []
+            cam_list_sliced = cam_image_list[i * image_num_loop: i * image_num_loop + image_num_loop].copy()
+            total_list_length = len(cam_list_sliced)
+            plt.figure(1)
+        for cam_dict in cam_images_list:
+            dict_length = len(cam_dict)
+            idx = 1
+            for cam_name, image in cam_dict.items():
+                plt.subplot(total_list_length, dict_length, idx)
+                plt.imshow(image)
+                idx += 1
         plt.show()
 
 
