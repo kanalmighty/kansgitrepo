@@ -185,10 +185,10 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     net = get_net(args.network, args.class_number, model_path)
     # Grad-CAM
     layer_name = get_last_conv_name(net) if args.layer_name is None else args.layer_name
-    grad_cam = GradCAM(net, layer_name)
-    mask = grad_cam(inputs, args.class_id)  # cam mask
-    image_dict['cam'], image_dict['heatmap'] = gen_cam(img, mask)
-    grad_cam.remove_handlers()
+    # grad_cam = GradCAM(net, layer_name)
+    # mask = grad_cam(inputs, args.class_id)  # cam mask
+    # image_dict['cam'], image_dict['heatmap'] = gen_cam(img, mask)
+    # grad_cam.remove_handlers()
     # Grad-CAM++
     grad_cam_plus_plus = GradCamPlusPlus(net, layer_name)
     mask_plus_plus = grad_cam_plus_plus(inputs, args.class_id)  # cam mask
@@ -196,16 +196,16 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     grad_cam_plus_plus.remove_handlers()
 
     # GuidedBackPropagation
-    gbp = GuidedBackPropagation(net)
-    inputs.grad.zero_()  # 梯度置零
-    grad = gbp(inputs)
-
-    gb = gen_gb(grad)
-    image_dict['gb'] = gb
+    # gbp = GuidedBackPropagation(net)
+    # inputs.grad.zero_()  # 梯度置零
+    # grad = gbp(inputs)
+    #
+    # gb = gen_gb(grad)
+    # image_dict['gb'] = gb
     # 生成Guided Grad-CAM
-    cam_gb = gb * mask[..., np.newaxis]
-    image_dict['cam_gb'] = norm_image(cam_gb)
-    # return image_dict
+    # cam_gb = gb * mask[..., np.newaxis]
+    # image_dict['cam_gb'] = norm_image(cam_gb)
+    # # return image_dict
 
     image_save_root = os.path.join(cam_image_path, args.date)
     if not Path(image_save_root).exists():
