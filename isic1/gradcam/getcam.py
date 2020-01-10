@@ -211,7 +211,6 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     if not Path(image_save_root).exists():
         os.mkdir(image_save_root)
     image_save_directory = os.path.join(cam_image_path, args.date, args.time)
-    utils.make_directory(image_save_directory)
 
 
     save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
@@ -220,6 +219,8 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
 def call_get_cam(args):
     configer = Configer().get_configer()
     cam_image_path = configer['camImagePath']
+    image_save_directory = os.path.join(cam_image_path, args.date, args.time)
+    utils.make_directory(image_save_directory)
     check_point_path = configer['checkPointPath']
     test_log = os.path.join(configer['logpath'], args.date, args.time + '_test.log')
     data_dict = utils.get_dict_from_json(test_log)
