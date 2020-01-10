@@ -71,7 +71,7 @@ def make_directory(path):
     dataset_path = Path(path)
     if dataset_path.exists():
         shutil.rmtree(path)
-    os.mkdir(dataset_path)
+    os.makedirs(dataset_path)
 
 
 def download_dataset(url):
