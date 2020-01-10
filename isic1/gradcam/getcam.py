@@ -219,6 +219,7 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
 def call_get_cam(args):
     configer = Configer().get_configer()
     cam_image_path = configer['camImagePath']
+    utils.make_directory(cam_image_path)
     image_save_directory = os.path.join(cam_image_path, args.date, args.time)
     utils.make_directory(image_save_directory)
     check_point_path = configer['checkPointPath']
