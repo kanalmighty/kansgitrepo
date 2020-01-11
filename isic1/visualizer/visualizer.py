@@ -9,7 +9,7 @@ from options.configer import Configer
 class Visualizer:
 
     def __init__(self):
-        self.config = Configer().get_configer()
+        self.configer = Configer().get_configer()
     # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
     def get_data_report(self, data_data):
         string_report = ''
