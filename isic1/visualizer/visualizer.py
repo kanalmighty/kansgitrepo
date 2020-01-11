@@ -61,18 +61,19 @@ class Visualizer:
             idx += 1
         plt.show()
 
-    def show_cam_images(self, date, time, images_per_raw, raw_num):
+    def show_cam_images(self, date, time, images_per_row, row_num):
         cam_image_path = os.path.join(self.configer['camImagePath'], str(date), str(time))
         cam_image_list = utils.get_image_set(cam_image_path)
         cam_image_list.sort()#排序
         total_image_num = len(cam_image_list)#总cam图片数量
-        images_per_loop = images_per_raw * raw_num#希望每次展示的图片数量，这个数字就代表行数了
+        images_per_loop = images_per_row * row_num#希望每次展示的图片数量，这个数字就代表行数了
         loops = int(total_image_num / images_per_loop)#求出需要循环的次数
+        print('ready to print total %d images, %d * %d in %d loops' % (total_image_num, images_per_row, row_num, loops))
         for i in range(0, loops - 1):
             cam_list_sliced = cam_image_list[i * images_per_loop: i * images_per_loop + images_per_loop].copy()
             plt.figure(1)
             for idx, cam_image_path in enumerate(cam_list_sliced):
-                plt.subplot(raw_num, images_per_raw, idx+1)
+                plt.subplot(row_num, images_per_row, idx+1)
                 cam_image = plt.imread(cam_image_path)
                 plt.imshow(cam_image)
         plt.show()
