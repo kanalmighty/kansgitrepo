@@ -62,7 +62,7 @@ class Visualizer:
         plt.show()
 
     def show_cam_images(self, date, time, images_per_raw, raw_num):
-        cam_image_path = os.path.join(self.configer['camImagePath'], date, time)
+        cam_image_path = os.path.join(self.configer['camImagePath'], str(date), str(time))
         cam_image_list = utils.get_image_set(cam_image_path)
         cam_image_list = cam_image_list.sort()#排序
         total_image_num = len(cam_image_list)#总cam图片数量
