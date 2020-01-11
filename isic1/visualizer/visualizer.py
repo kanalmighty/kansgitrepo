@@ -9,7 +9,7 @@ from options.configer import Configer
 class Visualizer:
 
     def __init__(self):
-        self.config_dict = Configer().get_configer()
+        self.config = Configer().get_configer()
     # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
     def get_data_report(self, data_data):
         string_report = ''
@@ -89,7 +89,8 @@ if __name__ == '__main__':
 
     v = Visualizer()
 
-    v.draw_search_report()
+    v = Visualizer()
+    v.show_cam_images(20200106, 85013, 8, 10)
 
 
 
