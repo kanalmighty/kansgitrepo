@@ -169,7 +169,7 @@ def save_image(image_dicts, input_image_name, network, output_dir):
         io.imsave(os.path.join(output_dir, '{}-{}-{}.jpg'.format(prefix, network, key)), image)
 
 
-def get_cam_for_error(args, cam_image_path, original_image_path, check_point_path):
+def get_cam_for_error(args, net, cam_image_path, original_image_path, check_point_path):
     # 输入
     image_dict = {}
     img = io.imread(original_image_path)
@@ -182,7 +182,8 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
 
     # 网络
     model_path = os.path.join(check_point_path, args.date, args.time + '.pth')
-    net = get_net(args.network, args.class_number, model_path)
+    if net == None:
+        net = get_net(args.network, args.class_number, model_path)
     # Grad-CAM
     layer_name = get_last_conv_name(net) if args.layer_name is None else args.layer_name
     # grad_cam = GradCAM(net, layer_name)
@@ -192,7 +193,8 @@ def get_cam_for_error(args, cam_image_path, original_image_path, check_point_pat
     # Grad-CAM++
     grad_cam_plus_plus = GradCamPlusPlus(net, layer_name)
     mask_plus_plus = grad_cam_plus_plus(inputs, args.class_id)  # cam mask
-    image_dict['cam++'], image_dict['heatmap++'] = gen_cam(img, mask_plus_plus)
+    # image_dict['cam++'], image_dict['heatmap++'] = gen_cam(img, mask_plus_plus)
+    image_dict['cam++'], heatmap = gen_cam(img, mask_plus_plus)
     grad_cam_plus_plus.remove_handlers()
 
     # GuidedBackPropagation
@@ -228,9 +230,11 @@ def call_get_cam(args):
     error_file_list = data_dict['ERROR LIST']
     right_file_list = data_dict['RIGHT LIST']
 
+    model_path = os.path.join(check_point_path, args.date, args.time + '.pth')
+    net = get_net(args.network, args.class_number, model_path)
     for error_image in error_file_list:
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
-        get_cam_for_error(args, cam_image_path, original_test_image, check_point_path)
+        get_cam_for_error(args, net, cam_image_path, original_test_image, check_point_path)
 
     # error_file_list_length = len(error_file_list)
     # image_num_loop = 20
