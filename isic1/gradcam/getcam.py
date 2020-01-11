@@ -18,6 +18,7 @@ from torch import nn
 from torchvision import models
 import argparse
 import utils
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 from options.configer import Configer
 
@@ -232,7 +233,7 @@ def call_get_cam(args):
 
     model_path = os.path.join(check_point_path, args.date, args.time + '.pth')
     net = get_net(args.network, args.class_number, model_path)
-    for error_image in error_file_list:
+    for error_image in tqdm(error_file_list):
         original_test_image = os.path.join(configer['testImagePath'], error_image + '.jpg')
         get_cam_for_error(args, net, cam_image_path, original_test_image, check_point_path)
 
