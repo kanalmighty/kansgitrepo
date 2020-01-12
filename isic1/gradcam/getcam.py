@@ -177,6 +177,7 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
     # 保存原图
     image_dict['origin'] = img
     original_shape = img.shape
+    print(original_shape)
 
     img = np.float32(cv2.resize(img, (224, 224))) / 255
     inputs = prepare_input(img)
