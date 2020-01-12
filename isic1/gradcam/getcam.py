@@ -173,7 +173,7 @@ def save_image(image_dicts, input_image_name, network, output_dir):
 def get_cam_for_error(args, net, cam_image_path, original_image_path, check_point_path):
     # 输入
     image_dict = {}
-    img = cv2.imread(original_image_path)
+    img = io.imread(original_image_path)
     # 保存原图k
     image_dict['origin'] = img
     original_shape = img.shape
