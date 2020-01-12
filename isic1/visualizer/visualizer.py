@@ -66,6 +66,8 @@ class Visualizer:
     def show_cam_images(self, date, time, images_per_row, row_num):
         cam_image_path = os.path.join(self.configer['camImagePath'], str(date), str(time))
         cam_image_list = utils.get_image_set(cam_image_path)
+        images_per_row = int(images_per_row)
+        row_num = int(row_num)
         cam_image_list.sort()#排序
         total_image_num = len(cam_image_list)#总cam图片数量
         images_per_loop = images_per_row * row_num#希望每次展示的图片数量，这个数字就代表行数了
