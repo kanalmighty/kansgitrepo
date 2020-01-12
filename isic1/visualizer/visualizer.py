@@ -71,7 +71,7 @@ class Visualizer:
         print('ready to print total %d images, %d * %d in %d loops' % (total_image_num, images_per_row, row_num, loops))
         for i in range(0, loops - 1):
             cam_list_sliced = cam_image_list[i * images_per_loop: i * images_per_loop + images_per_loop].copy()
-            plt.figure(figsize=(10, 5))
+            plt.figure(figsize=(15, 10))
             for idx, cam_image_path in enumerate(cam_list_sliced):
                 plt.subplot(row_num, images_per_row, idx+1)
                 cam_image = plt.imread(cam_image_path)
