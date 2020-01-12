@@ -1,7 +1,8 @@
 import argparse
 import os
 import random
-
+import sys
+sys.path.append('/content/cloned-repo/isic1')
 import matplotlib.pyplot as plt
 
 import utils
