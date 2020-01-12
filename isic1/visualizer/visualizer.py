@@ -1,3 +1,4 @@
+import argparse
 import os
 import random
 
@@ -82,11 +83,20 @@ class Visualizer:
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--date', type=str, default=None,
+                        help='weight path of the model')
+    parser.add_argument('--time', type=str, default=None,
+                        help='weight path of the model')
+    parser.add_argument('--images_per_row', type=str, default=None,
+                        help='last convolutional layer name')
+    parser.add_argument('--row_num', type=int, default=None,
+                        help='class id')
 
+    arguments = parser.parse_args()
     v = Visualizer()
 
-    v = Visualizer()
-    v.show_cam_images(20200106, '085013', 2, 2)
+    v.show_cam_images(arguments.date, arguments.time, arguments.images_per_row, arguments.row_num)
 
 
 
