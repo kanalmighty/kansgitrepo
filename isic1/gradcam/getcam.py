@@ -176,7 +176,7 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
     img = io.imread(original_image_path)
     # 保存原图
     image_dict['origin'] = img
-    width, height = img.shape
+    original_shape = img.shape
 
     img = np.float32(cv2.resize(img, (224, 224))) / 255
     inputs = prepare_input(img)
@@ -197,7 +197,7 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
     mask_plus_plus = grad_cam_plus_plus(inputs, args.class_id)  # cam mask
     # image_dict['cam++'], image_dict['heatmap++'] = gen_cam(img, mask_plus_plus)
     cam_plus_plus, heatmap = gen_cam(img, mask_plus_plus)
-    image_dict['cam++'] = cv2.resize(cam_plus_plus, (width, height))
+    image_dict['cam++'] = cv2.resize(cam_plus_plus, (original_shape[0], original_shape[1]))
     grad_cam_plus_plus.remove_handlers()
 
     # GuidedBackPropagation
