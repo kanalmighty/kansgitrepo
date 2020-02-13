@@ -236,10 +236,12 @@ def get_cam_for_training(args, net, input):
         stds = np.array([0.229, 0.224, 0.225])
         input_ndarray -= means
         input_ndarray /= stds
-
+        device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         input_ndarray = np.ascontiguousarray(np.transpose(input_ndarray, (2, 0, 1)))  # channel first
         input_ndarray = input_ndarray[np.newaxis, ...]  # 增加batch维
-        input = torch.tensor(input_ndarray, requires_grad=True)
+        input = torch.tensor(input_ndarray, requires_grad=True).to(device)
+
+
         # Grad-CAM
         layer_name = get_last_conv_name(net)
         # grad_cam = GradCAM(net, layer_name)
