@@ -71,6 +71,7 @@ for EPOCH in range(args.epoch):
 
         loss = criteria(y_hat, y.long().to(device))
         #计算attention loss
+        print(x.size())
         att_loss = attention_loss.get_attention_loss(model.network, x)
         att_loss = torch.from_numpy(np.array(att_loss))
         att_loss = att_loss.type_as(loss)
