@@ -64,6 +64,7 @@ class ImageProcessorBuilder():
         for grey_image in heatmap_list:
             # 灰度直方图均衡化
             # grey_image = cv.cvtColor(grey_image, cv.COLOR_RGB2GRAY)
+
             # grey_image = cv.equalizeHist(grey_image)
             # image_list.append(grey_image)
             #
