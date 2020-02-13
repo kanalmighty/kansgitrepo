@@ -224,6 +224,7 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
 def get_cam_for_training(args, net, input):
     mask_plus_plus_list = []
     for batch_num in range(0, args.batchsize-1):
+        print(single_tensor.size())
         single_tensor = input[batch_num, :, :, :]
         single_tensor = single_tensor.data.cpu()
         input_ndarray = utils.tensor_transform(single_tensor, 'numpy')
