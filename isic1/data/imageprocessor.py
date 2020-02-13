@@ -22,7 +22,6 @@ class ImageProcessorBuilder():
     def get_input_binary(self, input):
         if not isinstance(input, torch.Tensor):
             raise TypeError('input must be a Tensor!')
-        image_list = []
         binary_vector_list = []
 
         #循环tensor,把每个tensor转为图片,原始tensor形式为（b,c,w,h)
@@ -31,23 +30,23 @@ class ImageProcessorBuilder():
             single_tensor = single_tensor.data.cpu()
             original_image = utils.tensor_transform(single_tensor, 'image')
             image_cropped_ndarray = np.array(original_image)#to ndarray
-            image_list.append(image_cropped_ndarray)
+
             grey_image = cv.cvtColor(image_cropped_ndarray, cv.COLOR_BGR2GRAY)
             # 灰度直方图均衡化
             grey_image = cv.equalizeHist(grey_image)
-            image_list.append(grey_image)
+
 
             # 模糊处理
             grey_image = self.blur.get_blur_image(grey_image)
-            image_list.append(grey_image)
+
 
             #二值化
             ret, binary_image = self.threshold.get_binary_image(grey_image)
-            image_list.append(binary_image)
+
 
             #形态学处理
             binary_image = self.morphology.get_processed_image(binary_image)
-            image_list.append(binary_image)
+
 
 
             w = int(binary_image.shape[0])
@@ -60,13 +59,11 @@ class ImageProcessorBuilder():
 
     def get_cam_binary(self, heatmap_list):
 
-        image_list = []
         binary_vector_list = []
 
         for grey_image in heatmap_list:
             # 灰度直方图均衡化
             # grey_image = cv.cvtColor(grey_image, cv.COLOR_RGB2GRAY)
-            image_list.append(grey_image)
             # grey_image = cv.equalizeHist(grey_image)
             # image_list.append(grey_image)
             #
@@ -76,11 +73,11 @@ class ImageProcessorBuilder():
 
             #二值化
             ret, binary_image = self.cam_threshold.get_binary_image(grey_image)
-            image_list.append(binary_image)
+
 
             #形态学处理
             binary_image = self.morphology.get_processed_image(binary_image)
-            image_list.append(binary_image)
+
 
             w = int(binary_image.shape[0])
             h = int(binary_image.shape[1])

@@ -104,7 +104,7 @@ if __name__ == '__main__':
 
     v.draw_search_report()
 
-    v.show_cam_images(arguments.date, arguments.time, arguments.images_per_row, arguments.row_num)
+    # v.show_cam_images(arguments.date, arguments.time, arguments.images_per_row, arguments.row_num)
 
 
 
