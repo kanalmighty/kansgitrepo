@@ -28,8 +28,8 @@ class ImageProcessorBuilder():
         #循环tensor,把每个tensor转为图片,原始tensor形式为（b,c,w,h)
         for batch_num in range(0, self.args.batchsize-1):
             single_tensor = input[batch_num, :, :, :]
+            single_tensor = single_tensor.data.cpu()
             original_image = utils.tensor_transform(single_tensor, 'image')
-
             image_cropped_ndarray = np.array(original_image)#to ndarray
             image_list.append(image_cropped_ndarray)
             grey_image = cv.cvtColor(image_cropped_ndarray, cv.COLOR_BGR2GRAY)
