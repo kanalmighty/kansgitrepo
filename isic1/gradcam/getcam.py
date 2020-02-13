@@ -225,6 +225,7 @@ def get_cam_for_training(args, net, input):
     mask_plus_plus_list = []
     for batch_num in range(0, args.batchsize-1):
         single_tensor = input[batch_num, :, :, :]
+        single_tensor = single_tensor.data.cpu()
         input_ndarray = utils.tensor_transform(single_tensor, 'numpy')
         original_c = input_ndarray.shape[0]
         original_w = input_ndarray.shape[2]
