@@ -224,8 +224,6 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
 def get_cam_for_training(args, net, input):
     mask_plus_plus_list = []
     for batch_num in range(0, args.batchsize-1):
-        print(batch_num)
-        print(input.size())
         single_tensor = input[batch_num, :, :, :]
         single_tensor = single_tensor.data.cpu()
         input_ndarray = utils.tensor_transform(single_tensor, 'numpy')
@@ -241,7 +239,7 @@ def get_cam_for_training(args, net, input):
         device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         input_ndarray = np.ascontiguousarray(np.transpose(input_ndarray, (2, 0, 1)))  # channel first
         input_ndarray = input_ndarray[np.newaxis, ...]  # 增加batch维
-        input = torch.tensor(input_ndarray, requires_grad=True).to(device)
+        cam_input = torch.tensor(input_ndarray, requires_grad=True).to(device)
 
 
         # Grad-CAM
@@ -252,7 +250,7 @@ def get_cam_for_training(args, net, input):
         # grad_cam.remove_handlers()
         # Grad-CAM++
         grad_cam_plus_plus = GradCamPlusPlus(net, layer_name)
-        mask_plus_plus = grad_cam_plus_plus(input, None)  # cam mask
+        mask_plus_plus = grad_cam_plus_plus(cam_input, None)  # cam mask
         mask_plus_plus = np.uint8(mask_plus_plus*255)
         # heatmap = cv2.applyColorMap(np.uint8(255 * mask_plus_plus), cv2.COLORMAP_JET)
         # heatmap = np.float32(heatmap) / 255
