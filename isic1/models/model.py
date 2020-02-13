@@ -8,7 +8,7 @@ from efficientnet_pytorch import EfficientNet
 from models.lossfunctions import *
 import utils
 from options.base_options import BaseOptions
-
+from models.attention.wide_resnet_attention import WideResNetAttention
 
 class Model(nn.Module):
     def __init__(self, opt):
@@ -36,7 +36,7 @@ class Model(nn.Module):
         if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18',
                                      'googlenet', 'densenet161', 'resnet50', 'resnet34', 'efficientnet-b0',
                                      'efficientnet-b1', 'efficientnet-b2',  'efficientnet-b3', 'efficientnet-b4',
-                                     'efficientnet-b5', 'efficientnet-b6', 'efficientnet-b7']:
+                                     'efficientnet-b5', 'efficientnet-b6', 'efficientnet-b7', 'wres_attention']:
             raise LookupError("no such network")
         if self.args.network == 'vgg16':
             nk = torchvision.models.vgg16(pretrained=True)
@@ -70,8 +70,10 @@ class Model(nn.Module):
             nk = EfficientNet.from_pretrained('efficientnet-b5', num_classes=self.args.numclass)
         if self.args.network == 'efficientnet-b6':
             nk = EfficientNet.from_pretrained('efficientnet-b6', num_classes=self.args.numclass)
+        if self.args.network == 'wres_attention':
+            nk = WideResNetAttention(22, 2, self.args.numclass, 0.5, 4, 4)
             #if you want to customize the number of classes of the output
-        if self.args.numclass and 'efficientnet' not in self.args.network:
+        if self.args.numclass and 'efficientnet' not in self.args.network and 'wres_attention' not in self.args.network:
             fc_features = nk.fc.in_features
             nk.fc = nn.Linear(fc_features, self.args.numclass)
             if torch.cuda.is_available():

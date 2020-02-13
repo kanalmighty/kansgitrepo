@@ -17,7 +17,7 @@ class GradCAM(object):
 
     def __init__(self, net, layer_name):
         self.net = net
-        self.layer_name = layer_name
+        self.layer_name = layer_name#最后一个卷积层的名字
         self.feature = None
         self.gradient = None
         self.net.eval()

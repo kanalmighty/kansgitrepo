@@ -19,6 +19,7 @@ from torchvision import models
 import argparse
 import utils
 from tqdm import tqdm
+import cv2 as cv
 import matplotlib.pyplot as plt
 from options.configer import Configer
 
@@ -220,6 +221,44 @@ def get_cam_for_error(args, net, cam_image_path, original_image_path, check_poin
 
     save_image(image_dict, os.path.basename(original_image_path), args.network, image_save_directory)
 
+def get_cam_for_training(args, net, input):
+    mask_plus_plus_list = []
+    for batch_num in range(0, args.batchsize-1):
+        single_tensor = input[batch_num, :, :, :]
+        input_ndarray = utils.tensor_transform(single_tensor, 'numpy')
+        original_c = input_ndarray.shape[0]
+        original_w = input_ndarray.shape[2]
+        original_h = input_ndarray.shape[1]
+        # input_ndarray = np.float32(cv2.resize(input_ndarray, (original_w, original_h,original_c))) / 255
+        input_ndarray = np.transpose(input_ndarray, (1, 2, 0))
+        means = np.array([0.485, 0.456, 0.406])
+        stds = np.array([0.229, 0.224, 0.225])
+        input_ndarray -= means
+        input_ndarray /= stds
+
+        input_ndarray = np.ascontiguousarray(np.transpose(input_ndarray, (2, 0, 1)))  # channel first
+        input_ndarray = input_ndarray[np.newaxis, ...]  # 增加batch维
+        input = torch.tensor(input_ndarray, requires_grad=True)
+        # Grad-CAM
+        layer_name = get_last_conv_name(net)
+        # grad_cam = GradCAM(net, layer_name)
+        # mask = grad_cam(inputs, args.class_id)  # cam mask
+        # image_dict['cam'], image_dict['heatmap'] = gen_cam(img, mask)
+        # grad_cam.remove_handlers()
+        # Grad-CAM++
+        grad_cam_plus_plus = GradCamPlusPlus(net, layer_name)
+        mask_plus_plus = grad_cam_plus_plus(input, None)  # cam mask
+        mask_plus_plus = np.uint8(mask_plus_plus*255)
+        # heatmap = cv2.applyColorMap(np.uint8(255 * mask_plus_plus), cv2.COLORMAP_JET)
+        # heatmap = np.float32(heatmap) / 255
+        # heatmap = heatmap[..., ::-1]  # gbr to rgb
+        # cam_plus_plus, heatmap = gen_cam(img, mask_plus_plus)
+        mask_plus_plus = cv2.resize(mask_plus_plus, (original_w, original_h))
+        mask_plus_plus_list.append(mask_plus_plus)
+    grad_cam_plus_plus.remove_handlers()
+
+    return mask_plus_plus_list
+
 
 def call_get_cam(args):
     configer = Configer().get_configer()
@@ -231,7 +270,7 @@ def call_get_cam(args):
     test_log = os.path.join(configer['logpath'], args.date, args.time + '_test.log')
     data_dict = utils.get_dict_from_json(test_log)
     error_file_list = data_dict['ERROR LIST']
-    right_file_list = data_dict['RIGHT LIST']
+    # right_file_list = data_dict['RIGHT LIST']
 
     model_path = os.path.join(check_point_path, args.date, args.time + '.pth')
     net = get_net(args.network, args.class_number, model_path)

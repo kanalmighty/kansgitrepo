@@ -3,10 +3,15 @@ import torch
 import pdb
 import matplotlib
 import torch.nn as nn
+from torch.autograd import Variable
+
+from gradcam.getcam import *
 from tqdm import tqdm
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
+from data.imageprocessor import ImageProcessorBuilder
 import utils
+from models.lossfunctions import AttentionLoss
 from models.model import Model
 from options.configer import Configer
 from options.train_options import TrainingOptions
@@ -47,6 +52,10 @@ epoch_statics_list = []#store epoch loss and training accuracy
 train_statics_dict = {}#record overall training statics
 model.train()
 scheduler = model.scheduler(optimizer, args.milestone, gamma=0.1)
+#image process stratgy
+# stratgy = {'blur': 'gs', 'morphology': 'erode', 'threshold': 'normal'}
+# image_processor = ImageProcessorBuilder(stratgy, args)
+attention_loss = AttentionLoss(args)
 for EPOCH in range(args.epoch):
     scheduler.step()
     print('current lr is ' + str(optimizer.state_dict()['param_groups'][0]['lr']))
@@ -61,14 +70,19 @@ for EPOCH in range(args.epoch):
         train_accuracy += (y.to(device) == torch.argmax(y_hat, dim=1)).sum().item()
 
         loss = criteria(y_hat, y.long().to(device))
-        loss_all_samples_per_epoch += loss.item()#loss.item()获取的是每个batchsize的平均loss
+        #计算attention loss
+        att_loss = attention_loss.get_attention_loss(model.network, x)
+        att_loss = torch.from_numpy(np.array(att_loss))
+        att_loss = att_loss.type_as(loss)
+        loss_all_samples_per_epoch += (loss.item() + att_loss.item())#loss.item()获取的是每个batchsize的平均loss
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
         batch_statics_dict['EPOCH'] = EPOCH
-        batch_statics_dict[args.lossfunction] = loss.item()
+        batch_statics_dict[args.lossfunction] = loss.item() + att_loss.item()
         # loss_dict_print，每个epoch,都是损失函数名:值（值是list）
         # visualizer.get_data_report(batch_statics_dict)
         optimizer.zero_grad()
-        loss.backward()
+        loss_sum = att_loss + loss
+        loss_sum.backward()
         optimizer.step()
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
     train_accuracy_epoch = train_accuracy / len(isic)#training accuracy/sample numbers

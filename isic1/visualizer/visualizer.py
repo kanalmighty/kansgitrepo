@@ -99,6 +99,11 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
     v = Visualizer()
 
+    #search report
+    v = Visualizer()
+
+    v.draw_search_report()
+
     v.show_cam_images(arguments.date, arguments.time, arguments.images_per_row, arguments.row_num)
 
 

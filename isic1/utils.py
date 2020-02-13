@@ -3,6 +3,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 import shutil
 import os
+import PIL
 from sys import exit
 from pathlib import Path
 import numpy as np
@@ -12,6 +13,7 @@ import json
 import urllib.request
 import matplotlib.pyplot as plt
 import cv2 as cv
+import torch
 import glob
 IMG_EXTENSIONS = [
     '.jpg', '.JPG', '.jpeg', '.JPEG',
@@ -196,14 +198,20 @@ def get_onehot_by_class(class_list, specified_class):
     onehot_dict[specified_class] = 1
     return onehot_dict
 
-#input speficied size return center-croped image
-def centercrop_image(image, target_width, target_height):
-    w, h = image.shape[0], image.shape[1]
-    if target_height > h or target_width > w:
-        raise ValueError('target width %d or target height %d is less then input size %d, %d' % (target_width, target_height, w, h))
-    x_start = round((w - target_width) / 2)
-    y_start = round((h - target_height) / 2)
-    return image[x_start:x_start + target_width, y_start: y_start + target_height, :]
+
+#input speficied rate return center-croped image,image type jepimagefile
+def centercrop_image(input, rate):
+    w, h = input.size[0]*rate, input.size[1]*rate
+    centercrop = transforms.CenterCrop(size=(h, w))
+    input_cropped = centercrop(input)
+    return input_cropped
+# def centercrop_image(image, target_width, target_height):
+#     w, h = image.shape[0], image.shape[1]
+#     if target_height > h or target_width > w:
+#         raise ValueError('target width %d or target height %d is less then input size %d, %d' % (target_width, target_height, w, h))
+#     x_start = round((w - target_width) / 2)
+#     y_start = round((h - target_height) / 2)
+#     return image[x_start:x_start + target_width, y_start: y_start + target_height, :]
 
 
 #rename a list of files to the names derived from their indices
@@ -297,6 +305,28 @@ def get_dict_from_json(file_name):
         for k, v in record_dict.items():
             data_dict[k] = v
     return data_dict
+
+#image_list is a tuple of (image,image_name)
+def show_multiple_images(image_list, images_per_row):
+    total_image_num = len(image_list)  # 总cam图片数量
+    num_rows = total_image_num / images_per_row
+    plt.figure(figsize=(20, 15))
+    for idx, image in enumerate(image_list):
+        plt.subplot(num_rows, images_per_row, idx + 1)
+        plt.imshow(image)
+    plt.show()
+
+
+def tensor_transform(input, target_type):
+    if isinstance(input, torch.Tensor):
+        if target_type == 'image':
+            return transforms.ToPILImage()(input).convert('RGB')
+        if target_type == 'numpy':
+            return input.numpy()
+    if isinstance(input, np.ndarray):
+        if target_type == 'tensor':
+            tran = transforms.ToTensor()
+            return tran(input)
 
 # def show_image_dict(image_dict):
 #     if not isinstance(image_dict, dict):
