@@ -55,7 +55,7 @@ class ImageProcessorBuilder():
             binary_vector = np.reshape(binary_image, (w*h))
             binary_vector_list.append(binary_vector)
 
-            return binary_vector_list
+        return binary_vector_list
 
     def get_cam_binary(self, heatmap_list):
 
