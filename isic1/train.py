@@ -82,6 +82,7 @@ for EPOCH in range(args.epoch):
         # visualizer.get_data_report(batch_statics_dict)
         optimizer.zero_grad()
         loss_sum = att_loss + loss
+        print(loss_sum.size())
         loss_sum.backward()
         optimizer.step()
     loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
