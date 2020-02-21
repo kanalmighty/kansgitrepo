@@ -6,7 +6,7 @@ from PIL import Image, ImageEnhance, ImageOps
 
 
 class AutoAugment(object):
-    def __init__(self):
+    def __init__(self, policy_index=None):
         self.policies = [
             ['Invert', 0.1, 7, 'Contrast', 0.2, 6],
             ['Rotate', 0.7, 2, 'TranslateX', 0.3, 9],
@@ -34,7 +34,7 @@ class AutoAugment(object):
             ['Equalize', 0.8, 8, 'Invert', 0.1, 3],
             ['TranslateY', 0.7, 9, 'AutoContrast', 0.9, 1],
         ]
-        self.policy_index = random.randrange(len(self.policies))
+        self.policy_index = random.randrange(len(self.policies)) if policy_index == None else policy_index
         self.policy_detail = self.policies[self.policy_index]
 
     def __call__(self, img):
@@ -222,7 +222,7 @@ def sharpness(img, magnitude):
 
 
 def cutout(org_img, magnitude=None):
-    img = np.array(img)
+    img = np.array(org_img)
 
     magnitudes = np.linspace(0, 60/331, 11)
 

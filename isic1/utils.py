@@ -7,6 +7,7 @@ import PIL
 from sys import exit
 from pathlib import Path
 import numpy as np
+from data.autoaugment import AutoAugment
 import pandas as pd
 from sklearn.metrics import confusion_matrix, precision_score, accuracy_score,recall_score, f1_score,roc_auc_score, classification_report
 import json
@@ -25,8 +26,7 @@ def filter_image_file(filename):
     for extension in IMG_EXTENSIONS:
         if filename.endswith(extension):
             return filename
-        else:
-            return False
+    return False
 
 #传入路径，返回图片路径的list
 def get_image_set(dir):
@@ -49,10 +49,13 @@ def get_image(image_path):
 def get_transforms(opt):
     transform_list = []
     if opt.mode == 'train':
-        if opt.resize:
-            transform_list.append(transforms.Resize(opt.resize))
         if opt.centerCropSize:
             transform_list.append(transforms.CenterCrop(opt.centerCropSize))
+        if opt.autoAugments:
+            ag = AutoAugment(opt.autoAugments)
+            transform_list.append(ag)
+    if opt.resize:
+        transform_list.append(transforms.Resize(opt.resize))
     # 多种组合变换有一定的先后顺序，处理PILImage的变换方法（大多数方法）
     # 都需要放在ToTensor方法之前，而处理tensor的方法（比如Normalize方法）就要放在ToTensor方法之后。
     transform_list.append(transforms.ToTensor())
@@ -121,8 +124,8 @@ def record_data():
 def read_csv(csv_dir):
     label_dataframe = pd.read_csv(csv_dir)
     # 把dataframe转换为ndarray
-    label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
-    return label_ndarray
+    # label_ndarray = label_dataframe.iloc[:, 1:].as_matrix()
+    return label_dataframe
 
 
 
@@ -327,38 +330,10 @@ def tensor_transform(input, target_type):
         if target_type == 'tensor':
             tran = transforms.ToTensor()
             return tran(input)
+    if isinstance(input, pd.DataFrame):
+        if target_type == 'ndarray':
+            return input.values
 
-# def show_image_dict(image_dict):
-#     if not isinstance(image_dict, dict):
-#         raise TypeError("input must be python dict")
-#     total_rows = len(image_dict)
-#
-#     plt.figure()
-#     for i in range(1, 32):
-#         plt.subplot(total_rows, 8, i)
-#         plt.imshow(img_test[i - 1])
-#     plt.show()
-
-
-
-# def encode_image_name(file_list, index=0):
-#     file_list_encoded = []
-#     if not isinstance(file_list, list):
-#         raise TypeError("input must be python list")
-#     length = len(file_list)
-#     string_lenth = str(length)
-#     for idx, image in file_list:
-#         #获取文件名后缀
-#         suffix = image.split('.')[1]
-#         #获取序号长度
-#         idx_length = len(str(idx))
-#         #计算补几个零
-#         place_holder = '0'
-#         for _ in (length - idx_length):
-#             place_holder += '0'
-#         file_name = place_holder + str(idx+index)
-#         file_list_encoded.append(file_name + '.' + suffix)
-#     return file_list_encode
 
 
 
