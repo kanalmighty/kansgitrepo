@@ -269,8 +269,7 @@ def get_file_name(path):
     return path.split(os.sep)[-1]
 
 #input ['a/b/1.jpg', 'a/b/2.jpg], return ['1.jpg', '2.jpg']
-def get_filename_list(file_path_root):
-    file_path_list = get_image_set(file_path_root)
+def get_filename_list(file_path_list):
     file_name_list = []
     for file_path in file_path_list:
         file_name_list.append(file_path.split(os.sep)[-1])
