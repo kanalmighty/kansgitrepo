@@ -38,8 +38,6 @@ class DataProber:
     def get_length_difference(self):
         #获取label里的文件名并转为set
         label_name_list = pd.read_csv(self.label_path, header=0, usecols=[0], skiprows=0, engine='python').values
-        print('label number: ' + str(len(label_name_list)))
-        print('image number: ' + str(len(self.image_path_list)))
         if len(label_name_list) != len(self.image_path_list):
             raise AssertionError('lables do not match data')
 
