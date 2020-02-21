@@ -5,6 +5,8 @@ import pandas as pd
 import torch
 import os
 import glob
+import numpy as np
+from data.dataprober import DataProber
 from options.configer import Configer
 from torchvision.transforms import transforms
 
@@ -19,6 +21,12 @@ class ISICDataset(Dataset):
         self.transforms = transforms
         label_df = utils.read_csv(self.label_path)
         label_df_sorted = label_df.sort_values('image')
+        dp = DataProber(self.image_dir, self.label_path)
+        #check data and lable length
+        dp.get_length_difference()
+        image_name_list = utils.get_filename_list(self.image_dir)
+        dp.check_order(np.array(image_name_list), label_df_sorted['image'].values)
+        # label_name_ndarray = label_df_sorted['image'].values
         label_ndarray = label_df_sorted.iloc[:, 1:].as_matrix()
         self.label_tensor = torch.from_numpy(label_ndarray)
         # self.image_array = utils.get_images(self.image_path_array)

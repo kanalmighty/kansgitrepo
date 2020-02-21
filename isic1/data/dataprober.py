@@ -35,18 +35,18 @@ class DataProber:
                 image_type_dict[extension] += 1
         print(image_type_dict)
 
-    def get_data_difference(self):
+    def get_length_difference(self):
         #获取label里的文件名并转为set
-        image_name_list = pd.read_csv(self.label_path, header=0, usecols=[0], skiprows=0, engine='python').values
-        image_name_set_label = set(image_name_list.squeeze().tolist())
-        image_name_list_data = []
-        for image_path in self.image_path_list:
-            file_name = image_path.split(os.sep)[-1].split('.')[0]
-            image_name_list_data.append(file_name)
-        image_name_set_data = set(image_name_list_data)
-        print(sorted(image_name_set_data))
-        print(sorted(image_name_set_label))
-        print(len(image_name_set_label.difference(image_name_set_data)))
+        label_name_list = pd.read_csv(self.label_path, header=0, usecols=[0], skiprows=0, engine='python').values
+        a = len(label_name_list)
+        b = len(self.image_path_list)
+        if len(label_name_list) != len(self.image_path_list):
+            raise AssertionError('lables do not match data')
+
+    def check_order(self, data_order_ndarray, label_order_ndarray):
+        res = (data_order_ndarray == label_order_ndarray).all()
+        if not res:
+            raise ValueError('sample order doesnt match!')
 
     def get_label_histgram(self):
         df = pd.read_csv(self.label_path, header=0, index_col=0)

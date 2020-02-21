@@ -268,6 +268,15 @@ def get_csv_by_path_name(path):
 def get_file_name(path):
     return path.split(os.sep)[-1]
 
+#input ['a/b/1.jpg', 'a/b/2.jpg], return ['1.jpg', '2.jpg']
+def get_filename_list(file_path_root):
+    file_path_list = get_image_set(file_path_root)
+    file_name_list = []
+    for file_path in file_path_list:
+        file_name_list.append(file_path.split(os.sep)[-1])
+    return file_name_list
+
+
 
 #input evaluation metrics,output sensitivity
 def calculate_mean_sensitivity(class_number, metrics_dict):
