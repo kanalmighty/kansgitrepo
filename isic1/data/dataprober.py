@@ -44,6 +44,8 @@ class DataProber:
             raise AssertionError('lables do not match data')
 
     def check_order(self, data_order_ndarray, label_order_ndarray):
+        print(data_order_ndarray)
+        print(label_order_ndarray)
         res = (data_order_ndarray == label_order_ndarray).all()
         if not res:
             raise ValueError('sample order doesnt match!')
