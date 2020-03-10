@@ -82,6 +82,25 @@ class Visualizer:
                 plt.imshow(cam_image)
         plt.show()
 
+    def draw_curve(self, accuracy_list, test_accuracy_list, train_loss_list):
+        epoch = len(accuracy_list)
+        plt.figure(figsize=(8, 4))
+        plt.xlabel = 'epoch'
+        plt.ylabel = 'train_test_acc'
+        plt.axis([0, len(accuracy_list), 0, 1])
+        plt.plot(range(epoch), test_accuracy_list, 'r-', label='test_acc')
+        plt.plot(range(epoch), accuracy_list, 'b-', label='train_acc')
+        plt.legend(['test_acc', 'train_acc'])
+        # torch.save(net.state_dict(), 'D:\\mytest\\image_downloader_gui_v1.0.5\\')
+        plt.show()
+        plt.figure(figsize=(8, 4))
+        plt.xlabel = 'epoch'
+        plt.ylabel = 'train_loss'
+        plt.axis([0, len(train_loss_list), 0, 3])
+        plt.plot(range(epoch), train_loss_list, 'g-', label='train_acc')
+        plt.legend(['train_loss'])
+        plt.show()
+
 
 
 

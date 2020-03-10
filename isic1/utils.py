@@ -51,9 +51,9 @@ def get_transforms(opt):
     if opt.mode == 'train':
         if opt.centerCropSize:
             transform_list.append(transforms.CenterCrop(opt.centerCropSize))
-        if opt.autoAugments:
-            ag = AutoAugment(opt.autoAugments)
-            transform_list.append(ag)
+        # if opt.autoAugments:
+        #     ag = AutoAugment(opt.autoAugments)
+        #     transform_list.append(ag)
     if opt.resize:
         transform_list.append(transforms.Resize(opt.resize))
     # 多种组合变换有一定的先后顺序，处理PILImage的变换方法（大多数方法）
@@ -342,6 +342,12 @@ def tensor_transform(input, target_type):
         if target_type == 'ndarray':
             return input.values
 
+
+def accuracy_count(label_tensor, pred_tensor):
+    nd_pred = tensor_transform(pred_tensor, 'numpy')
+    y1_pred = tensor_transform(label_tensor, 'numpy')
+    result = (nd_pred == y1_pred).astype(int)
+    return result.sum()
 
 
 

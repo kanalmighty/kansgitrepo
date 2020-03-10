@@ -25,7 +25,7 @@ class ISICDataset(Dataset):
         #check data and lable length
         dp.get_length_difference()
         image_name_list = utils.get_filename_list(self.image_path_list)
-        dp.check_order(np.array(image_name_list), label_df_sorted['image'].values)
+        dp.check_order(np.array(image_name_list), label_df_sorted['image'].values + '.jpg')
         # label_name_ndarray = label_df_sorted['image'].values
         label_ndarray = label_df_sorted.iloc[:, 1:].as_matrix()
         self.label_tensor = torch.from_numpy(label_ndarray)

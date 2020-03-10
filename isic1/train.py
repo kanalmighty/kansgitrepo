@@ -33,7 +33,7 @@ if args.date and args.time:
 configer = Configer().get_configer()#获取环境配置
 
 # dataprober.get_data_difference()
-transforms = utils.get_auto_augments(auto_augment) if args.autoaugment else utils.get_transforms(args)
+transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 image_path = configer['trainingImagePath']
 label_path = configer['trainingLabelPath']
@@ -50,54 +50,72 @@ logger.set_arguments(vars(args))
 train_loss_dict = {}
 epoch_statics_list = []#store epoch loss and training accuracy
 train_statics_dict = {}#record overall training statics
-model.train()
-scheduler = model.scheduler(optimizer, args.milestone, gamma=0.1)
+train_accuracy_list = []
+test_accuracy_list = []
+train_loss_list = []
 #image process stratgy
 # stratgy = {'blur': 'gs', 'morphology': 'erode', 'threshold': 'normal'}
 # image_processor = ImageProcessorBuilder(stratgy, args)
-attention_loss = AttentionLoss(args)
 for EPOCH in range(args.epoch):
-    scheduler.step()
+    #training start
+    model.train()
     print('current lr is ' + str(optimizer.state_dict()['param_groups'][0]['lr']))
     epoch_statics_dict = {}#record epochly training statics
-    loss_all_samples_per_epoch = 0#记录每个epoch,所有batch的loss总和
-    train_accuracy = 0#trainnig accuaracy per epoch
+    loss_per_epoch = 0#记录每个epoch,所有batch的loss总和
+    accuracy_count_epoch = 0#trainnig accuaracy per epoch
+    test_accuracy_count_epoch = 0
     for idx, (x, y) in tqdm(enumerate(trainingdata_loader)):
         batch_statics_dict = {}
         x = x.to(device)
-        y = torch.argmax(y, dim=1)
         y_hat = model.network(x.float())
-        train_accuracy += (y.to(device) == torch.argmax(y_hat, dim=1)).sum().item()
+        y_arg = torch.argmax(y, dim=1).cpu()
+        pred_arg = torch.argmax(y_hat, dim=1).cpu()
+        accuracy_count_epoch += utils.accuracy_count(pred_arg, y_arg)
 
-        loss = criteria(y_hat, y.long().to(device))
+        loss = criteria(y_hat.to(device), y_arg.long().to(device))
         #计算attention loss
-        att_loss = attention_loss.get_attention_loss(model.network, x)
-        att_loss = torch.from_numpy(np.array(att_loss))
-        att_loss = att_loss.type_as(loss)
-        loss_all_samples_per_epoch += (loss.item() + att_loss.item())#loss.item()获取的是每个batchsize的平均loss
+        # att_loss = attention_loss.get_attention_loss(model.network, x)
+        # att_loss = torch.from_numpy(np.array(att_loss))
+        # att_loss = att_loss.type_as(loss)
+        loss_per_epoch += loss.item()#loss.item()获取的是每个batchsize的平均loss
         # 传入的data是一给字典，第个位置是epoch,后面是损失函数名:值
         batch_statics_dict['EPOCH'] = EPOCH
-        batch_statics_dict[args.lossfunction] = loss.item() + att_loss.item()
+        batch_statics_dict[args.lossfunction] = loss.item()
         # loss_dict_print，每个epoch,都是损失函数名:值（值是list）
         # visualizer.get_data_report(batch_statics_dict)
         optimizer.zero_grad()
-        loss_sum = att_loss + loss
-        print(loss_sum.size())
-        loss_sum.backward()
+        loss.backward()
         optimizer.step()
-    loss_avg_per_epoch = loss_all_samples_per_epoch/(idx+1)#获取这个epoch中一个平input的均loss,idx从0开始，所以需要加1
-    train_accuracy_epoch = train_accuracy / len(isic)#training accuracy/sample numbers
-    epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
+    loss_avg_per_epoch = loss_per_epoch/(len(trainingdata_loader))#计算本epoch每个样本的平均loss
+    train_accuracy_epoch = accuracy_count_epoch / (args.batchsize*len(trainingdata_loader))#计算本epoch每个样本的平均accuracy
+    train_loss_list.append(loss_avg_per_epoch)
+    train_accuracy_list.append(train_accuracy_epoch)
 
+    #参数信息计入日志
+    epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
     epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
 
-
-
+    #保存模型
     pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
+    #test start
+    test_image_path = configer['testImagePath']
+    test_label_path = configer['testLabelPath']
+    test_csv = utils.get_csv_by_path_name(test_label_path)
+    test_dataset = ISICDataset(test_image_path, test_csv[0], transforms)
+    testdata_loader = DataLoader(test_dataset, batch_size=1)
+    model.eval()  # 模型为测试，不使用dropput等
+    with torch.no_grad():
+        for idx, (x, y) in enumerate(testdata_loader):
+            x = x.to(device)
+            y_test_arg = torch.argmax(y, dim=1)
+            y_test_hat = model.network(x)
+            y_hat_test_arg = torch.argmax(y_test_hat, dim=1)
+            test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg, y_test_hat)#到这里为止
+    test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
+
     epoch_statics_dict['saved_model'] = pkl_name
     epoch_statics_list.append(epoch_statics_dict)  # record epoch loss for drawing
-    print('epoch %s finished ' % EPOCH)
-    visualizer.get_data_report(epoch_statics_dict)
+visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
 train_statics_dict['training_statics'] = epoch_statics_list
 
 logger.set_training_data(train_statics_dict)

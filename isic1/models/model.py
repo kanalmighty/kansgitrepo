@@ -6,6 +6,7 @@ from pathlib import Path
 import os
 from efficientnet_pytorch import EfficientNet
 from models.lossfunctions import *
+from models.networks.mobilenets import *
 import utils
 from options.base_options import BaseOptions
 from models.attention.wide_resnet_attention import WideResNetAttention
@@ -33,55 +34,14 @@ class Model(nn.Module):
 
 
     def get_network(self):
-        if self.args.network not in ['vgg16', 'vgg19', 'alexnet', 'inception', 'resnet18',
-                                     'googlenet', 'densenet161', 'resnet50', 'resnet34', 'efficientnet-b0',
-                                     'efficientnet-b1', 'efficientnet-b2',  'efficientnet-b3', 'efficientnet-b4',
-                                     'efficientnet-b5', 'efficientnet-b6', 'efficientnet-b7', 'wres_attention']:
+        if self.args.network not in ['mobileNetV1']:
             raise LookupError("no such network")
-        if self.args.network == 'vgg16':
-            nk = torchvision.models.vgg16(pretrained=True)
-        if self.args.network == 'vgg19':
-            nk = torchvision.models.vgg19(pretrained=True)
-        if self.args.network == 'alexnet':
-            nk = torchvision.models.alexnet(pretrained=True)
-        if self.args.network == 'inception':
-            nk = torchvision.models.inception_v3(pretrained=True)
-        if self.args.network == 'googlenet':
-            nk = torchvision.models.GoogLeNet(pretrained=True)
-        if self.args.network == 'densenet161':
-            nk = torchvision.models.densenet161(pretrained=True)
-        if self.args.network == 'resnet18':
-            nk = torchvision.models.resnet18(pretrained=True)
-        if self.args.network == 'resnet50':
-            nk = torchvision.models.resnet50(pretrained=True)
-        if self.args.network == 'resnet34':
-            nk = torchvision.models.resnet34(pretrained=True)
-        if self.args.network == 'efficientnet-b0':
-            nk = EfficientNet.from_pretrained('efficientnet-b0', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b1':
-            nk = EfficientNet.from_pretrained('efficientnet-b1', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b2':
-            nk = EfficientNet.from_pretrained('efficientnet-b2', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b3':
-            nk = EfficientNet.from_pretrained('efficientnet-b3', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b4':
-            nk = EfficientNet.from_pretrained('efficientnet-b4', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b5':
-            nk = EfficientNet.from_pretrained('efficientnet-b5', num_classes=self.args.numclass)
-        if self.args.network == 'efficientnet-b6':
-            nk = EfficientNet.from_pretrained('efficientnet-b6', num_classes=self.args.numclass)
-        if self.args.network == 'wres_attention':
-            nk = WideResNetAttention(22, 2, self.args.numclass, 0.5, 4, 4)
-            #if you want to customize the number of classes of the output
-        if self.args.numclass and 'efficientnet' not in self.args.network and 'wres_attention' not in self.args.network:
-            fc_features = nk.fc.in_features
-            nk.fc = nn.Linear(fc_features, self.args.numclass)
-            if torch.cuda.is_available():
-                nk = nk.cuda()
-                return nk
-        if torch.cuda.is_available():
-            nk = nk.cuda()
-        return nk
+        network = None
+        if self.args.network == 'mobileNetV1':
+            network = MobileNet_v1(self.args.numclass)
+        network = network.cuda() if torch.cuda.is_available() else network.cpu()
+        return network
+
 
     def get_loss_function(self):
         if self.args.lossfunction not in ['cross', 'focalloss']:

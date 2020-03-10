@@ -30,7 +30,6 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 transforms = utils.get_transforms(args)
 visualizer = Visualizer()
 isic = ISICDataset(image_path, test_csv[0], transforms)
-isic.__assert_equality__()
 testdata_loader = DataLoader(isic, batch_size=args.batchsize)
 
 
