@@ -4,12 +4,11 @@ import torch.nn as nn
 from options.configer import Configer
 from pathlib import Path
 import os
-from efficientnet_pytorch import EfficientNet
+
 from models.lossfunctions import *
 from models.networks.mobilenets import *
 import utils
-from options.base_options import BaseOptions
-from models.attention.wide_resnet_attention import WideResNetAttention
+
 
 class Model(nn.Module):
     def __init__(self, opt):
