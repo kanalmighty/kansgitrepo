@@ -5,6 +5,7 @@ from options.configer import Configer
 from pathlib import Path
 import os
 
+
 from models.networks.mobilenets import *
 import utils
 
@@ -42,12 +43,10 @@ class Model(nn.Module):
 
 
     def get_loss_function(self):
-        if self.args.lossfunction not in ['cross', 'focalloss']:
+        if self.args.lossfunction not in ['cross']:
             raise LookupError("no such loss function")
         if self.args.lossfunction == 'cross':
             lf = torch.nn.CrossEntropyLoss()
-        if self.args.lossfunction == 'focalloss':
-            lf = FocalLoss(self.args.numclass, alpha=0.25, gamma=2, size_average=True)
         return lf
 
     def get_optimizer(self):
