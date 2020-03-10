@@ -5,7 +5,6 @@ from options.configer import Configer
 from pathlib import Path
 import os
 
-from models.lossfunctions import *
 from models.networks.mobilenets import *
 import utils
 

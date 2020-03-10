@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 import torch
-from gradcam.getcam import *
 from data.imageprocessor import ImageProcessorBuilder
 class FocalLoss(nn.Module):
     r"""
@@ -64,32 +63,32 @@ class FocalLoss(nn.Module):
         return loss
 
 
-class AttentionLoss(nn.Module):
-
-    def __init__(self, args):
-        self.args = args
-        self.ip = ImageProcessorBuilder(self.args)
-
-    #输入tensor输出这个batch的图像二值化以后的N维向量
-    def get_input_binary_tensor(self, input_batch):
-        #get input_binary
-        batch_binary_vector = self.ip.get_input_binary(input_batch)
-        batch_binary_ndarray = np.array(batch_binary_vector)
-        return batch_binary_ndarray
-
-    def get_cam_binary_tensor(self, net, input_batch):
-        #get cam
-        heatmap_list = get_cam_for_training(self.args, net, input_batch)
-        cam_binary_vector = self.ip.get_cam_binary(heatmap_list)
-        cam_binary_vector = np.array(cam_binary_vector)
-        return cam_binary_vector
-
-
-    def get_attention_loss(self, net, input_batch):
-        a = self.get_input_binary_tensor(input_batch)
-        b = self.get_cam_binary_tensor(net, input_batch)
-        d1 = np.sqrt(np.sum(np.square(a-b)))/self.args.batchsize
-
-        return d1
+# class AttentionLoss(nn.Module):
+#
+#     def __init__(self, args):
+#         self.args = args
+#         self.ip = ImageProcessorBuilder(self.args)
+#
+#     #输入tensor输出这个batch的图像二值化以后的N维向量
+#     def get_input_binary_tensor(self, input_batch):
+#         #get input_binary
+#         batch_binary_vector = self.ip.get_input_binary(input_batch)
+#         batch_binary_ndarray = np.array(batch_binary_vector)
+#         return batch_binary_ndarray
+#
+#     def get_cam_binary_tensor(self, net, input_batch):
+#         #get cam
+#         heatmap_list = get_cam_for_training(self.args, net, input_batch)
+#         cam_binary_vector = self.ip.get_cam_binary(heatmap_list)
+#         cam_binary_vector = np.array(cam_binary_vector)
+#         return cam_binary_vector
+#
+#
+#     def get_attention_loss(self, net, input_batch):
+#         a = self.get_input_binary_tensor(input_batch)
+#         b = self.get_cam_binary_tensor(net, input_batch)
+#         d1 = np.sqrt(np.sum(np.square(a-b)))/self.args.batchsize
+#
+#         return d1
 
 
