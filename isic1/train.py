@@ -5,7 +5,7 @@ import matplotlib
 import torch.nn as nn
 from torch.autograd import Variable
 
-from gradcam.getcam import *
+
 from tqdm import tqdm
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
