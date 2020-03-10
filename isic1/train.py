@@ -9,9 +9,7 @@ from torch.autograd import Variable
 from tqdm import tqdm
 from data.datarecorder import DataRecorder
 from data.dataprober import DataProber
-from data.imageprocessor import ImageProcessorBuilder
 import utils
-from models.lossfunctions import AttentionLoss
 from models.model import Model
 from options.configer import Configer
 from options.train_options import TrainingOptions
