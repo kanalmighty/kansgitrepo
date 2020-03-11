@@ -84,7 +84,7 @@ class Visualizer:
 
     def draw_curve(self, accuracy_list, test_accuracy_list, train_loss_list):
         epoch = len(accuracy_list)
-        plt.figure(figsize=(8, 4))
+        fig = plt.figure(figsize=(8, 4))
         plt.xlabel = 'epoch'
         plt.ylabel = 'train_test_acc'
         plt.axis([0, len(accuracy_list), 0, 1])
@@ -99,6 +99,7 @@ class Visualizer:
         plt.axis([0, len(train_loss_list), 0, 3])
         plt.plot(range(epoch), train_loss_list, 'g-', label='train_acc')
         plt.legend(['train_loss'])
+        fig.savefig(os.path.join(self.configer['logPath'], 'data.png'), dpi=300, facecolor='gray')
         plt.show()
 
 
