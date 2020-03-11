@@ -108,7 +108,7 @@ for EPOCH in range(args.epoch):
             y_test_arg = torch.argmax(y, dim=1)
             y_test_hat = model.network(x)
             y_hat_test_arg = torch.argmax(y_test_hat, dim=1)
-            test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg, y_test_hat)#到这里为止
+            test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg.cpu(), y_test_hat.cpu())#到这里为止
     test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
 
     epoch_statics_dict['saved_model'] = pkl_name
