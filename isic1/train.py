@@ -57,7 +57,7 @@ train_loss_list = []
 for EPOCH in range(args.epoch):
     #training start
     model.train()
-    print('current lr is ' + str(optimizer.state_dict()['param_groups'][0]['lr']))
+    # print('current lr is ' + str(optimizer.state_dict()['param_groups'][0]['lr']))
     epoch_statics_dict = {}#record epochly training statics
     loss_per_epoch = 0#记录每个epoch,所有batch的loss总和
     accuracy_count_epoch = 0#trainnig accuaracy per epoch

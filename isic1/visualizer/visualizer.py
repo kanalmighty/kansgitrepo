@@ -97,8 +97,8 @@ class Visualizer:
         plt.figure(figsize=(8, 4))
         plt.xlabel = 'epoch'
         plt.ylabel = 'train_loss'
-        plt.axis([0, len(train_loss_list), 0, 3])
-        plt.plot(range(epoch), train_loss_list, 'g-', label='train_acc')
+        plt.axis([0, len(train_loss_list), 0, int(max(train_loss_list))])
+        plt.plot(range(epoch), train_loss_list, 'g-', label='train_lost')
         plt.legend(['train_loss'])
 
         fig.savefig(os.path.join(self.configer['logPath'], 'data.png'), dpi=300, facecolor='gray')
