@@ -48,9 +48,9 @@ def get_image(image_path):
 
 def get_transforms(opt):
     transform_list = []
-    if opt.mode == 'train':
-        if opt.centerCropSize:
-            transform_list.append(transforms.CenterCrop(opt.centerCropSize))
+    # if opt.mode == 'train':
+    #     if opt.centerCropSize:
+    #         transform_list.append(transforms.CenterCrop(opt.centerCropSize))
         # if opt.autoAugments:
         #     ag = AutoAugment(opt.autoAugments)
         #     transform_list.append(ag)

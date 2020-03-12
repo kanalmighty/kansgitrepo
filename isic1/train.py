@@ -51,6 +51,8 @@ train_statics_dict = {}#record overall training statics
 train_accuracy_list = []
 test_accuracy_list = []
 train_loss_list = []
+test_pred_list = []#生成测试报告
+test_label_list =[]#生成测试报告
 #image process stratgy
 # stratgy = {'blur': 'gs', 'morphology': 'erode', 'threshold': 'normal'}
 # image_processor = ImageProcessorBuilder(stratgy, args)
@@ -90,8 +92,8 @@ for EPOCH in range(args.epoch):
     train_accuracy_list.append(train_accuracy_epoch)
 
     #参数信息计入日志
-    epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
-    epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
+    # epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
+    # epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
 
     #保存模型
     pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
@@ -108,13 +110,18 @@ for EPOCH in range(args.epoch):
             y_test_arg = torch.argmax(y, dim=1)
             y_test_hat = model.network(x)
             y_hat_test_arg = torch.argmax(y_test_hat, dim=1)
-            test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg.cpu(), y_test_arg.cpu())#到这里为止
+            test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg.cpu(), y_test_arg.cpu())
+            #collect data for test metrics
+            if EPOCH == args.epoch - 1:
+                test_pred_list.append(y_test_arg.item())
+                test_label_list.append(y_hat_test_arg.item())
+
+
     test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
 
-    epoch_statics_dict['saved_model'] = pkl_name
-    epoch_statics_list.append(epoch_statics_dict)  # record epoch loss for drawing
+metrics_dict = utils.calculate_test_metrics(test_label_list, test_pred_list, args.numclass)
 visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
-train_statics_dict['training_statics'] = epoch_statics_list
-
+train_statics_dict['saved_model'] = pkl_name
+train_statics_dict['test_metrics'] = metrics_dict
 logger.set_training_data(train_statics_dict)
 logger.write_training_data()
