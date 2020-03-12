@@ -355,5 +355,5 @@ def accuracy_count(label_tensor, pred_tensor):
 
 if __name__ == '__main__':
     img2 = cv.imread("C:\\Users\\23270\\Desktop\\aa\\ISIC_0010605.jpg")
-    a  = centercrop_image(img2, 200, 200)
+    a = centercrop_image(img2, 200, 200)
     cv.imshow('a', a)
