@@ -120,8 +120,9 @@ for EPOCH in range(args.epoch):
     test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
 
 metrics_dict = utils.calculate_test_metrics(test_label_list, test_pred_list, args.numclass)
-visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
+fig = visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
 print(metrics_dict['overall report'])
+train_statics_dict['plot_figure'] = fig
 train_statics_dict['saved_model'] = pkl_name
 train_statics_dict['test_metrics'] = metrics_dict
 logger.set_training_data(train_statics_dict)
