@@ -94,7 +94,6 @@ class Visualizer:
         plt.legend(['test_acc', 'train_acc'])
         # torch.save(net.state_dict(), 'D:\\mytest\\image_downloader_gui_v1.0.5\\')
         plt.subplot(122)
-        plt.figure(figsize=(8, 4))
         plt.xlabel = 'epoch'
         plt.ylabel = 'train_loss'
         plt.axis([0, len(train_loss_list), 0, int(max(train_loss_list))])
