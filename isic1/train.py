@@ -95,8 +95,6 @@ for EPOCH in range(args.epoch):
     # epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
     # epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
 
-    #保存参数
-    pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
     #test start
     test_image_path = configer['testImagePath']
     test_label_path = configer['testLabelPath']
