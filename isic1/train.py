@@ -58,7 +58,7 @@ test_label_list =[]#生成测试报告
 # image_processor = ImageProcessorBuilder(stratgy, args)
 for EPOCH in range(args.epoch):
     #training start
-    model.train()
+    model.network.train()
     # print('current lr is ' + str(optimizer.state_dict()['param_groups'][0]['lr']))
     epoch_statics_dict = {}#record epochly training statics
     loss_per_epoch = 0#记录每个epoch,所有batch的loss总和
@@ -101,7 +101,7 @@ for EPOCH in range(args.epoch):
     test_csv = utils.get_csv_by_path_name(test_label_path)
     test_dataset = ISICDataset(test_image_path, test_csv[0], transforms)
     testdata_loader = DataLoader(test_dataset, batch_size=1)
-    model.eval()  # 模型为测试，不使用dropput等
+    model.network.eval()  # 模型为测试，不使用dropput等
     with torch.no_grad():
         for idx, (x, y) in enumerate(testdata_loader):
             x = x.to(device)
