@@ -113,12 +113,11 @@ for EPOCH in range(args.epoch):
             test_accuracy_count_epoch += utils.accuracy_count(y_hat_test_arg.cpu(), y_test_arg.cpu())
             #collect data for test metrics
             if EPOCH == args.epoch - 1:
-                test_pred_list.append(y_test_arg.item())
-                test_label_list.append(y_hat_test_arg.item())
+                test_pred_list.append(y_hat_test_arg.item())
+                test_label_list.append(y_test_arg.item())
 
 
     test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
-
 metrics_dict = utils.calculate_test_metrics(test_label_list, test_pred_list, args.numclass)
 fig = visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
 print(metrics_dict['overall report'])
