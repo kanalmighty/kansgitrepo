@@ -18,8 +18,6 @@ args = options.get_args()
 model = Model(args)
 #load model being trained previously
 model.load_model(args.date, args.time)
-for i in model.named_parameters():
-    print(i)
 image_path = configer['testImagePath']
 label_path = configer['testLabelPath']
 test_csv = utils.get_csv_by_path_name(label_path)

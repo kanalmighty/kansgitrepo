@@ -105,6 +105,7 @@ for EPOCH in range(args.epoch):
     with torch.no_grad():
         for idx, (x, y) in enumerate(testdata_loader):
             x = x.to(device)
+            print(x.shape)
             y_test_arg = torch.argmax(y, dim=1)
             y_test_hat = model.network(x)
             y_hat_test_arg = torch.argmax(y_test_hat, dim=1)
@@ -119,12 +120,7 @@ for EPOCH in range(args.epoch):
 #保存参数
 pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
 metrics_dict = utils.calculate_test_metrics(test_label_list, test_pred_list, args.numclass)
-for i in model.named_parameters():
-    print(i)
-print(test_label_list)
-print(test_pred_list)
 fig = visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
-print(metrics_dict['overall report'])
 train_statics_dict['plot_figure'] = fig
 train_statics_dict['saved_model'] = pkl_name
 train_statics_dict['test_metrics'] = metrics_dict
