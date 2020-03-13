@@ -17,5 +17,4 @@ class TrainingOptions(BaseOptions):
         self.argument_parser.add_argument('--learningRate', type=float, help='learningRate')
         self.argument_parser.add_argument('--lossfunction', type=str, help='choices including cross,softmax', choices=['cross', 'focalloss'])
         # self.argument_parser.add_argument('--centerCropSize', type=int, action='append', help='center crop size')
-        self.argument_parser.add_argument('--normalize', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
         self.initialized = False
