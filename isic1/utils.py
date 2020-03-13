@@ -59,9 +59,9 @@ def get_transforms(opt):
     # 多种组合变换有一定的先后顺序，处理PILImage的变换方法（大多数方法）
     # 都需要放在ToTensor方法之前，而处理tensor的方法（比如Normalize方法）就要放在ToTensor方法之后。
     transform_list.append(transforms.ToTensor())
-    if opt.mode == 'train':
-        if opt.normalize:
-            transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))  # input must be a tensor
+    # if opt.mode == 'train':
+    #     if opt.normalize:
+    transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))  # input must be a tensor
     return transforms.Compose(transform_list)
 
 
