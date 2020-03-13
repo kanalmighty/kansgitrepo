@@ -105,7 +105,7 @@ for EPOCH in range(args.epoch):
     with torch.no_grad():
         for idx, (x, y) in enumerate(testdata_loader):
             x = x.to(device)
-            print(x.shape)
+
             y_test_arg = torch.argmax(y, dim=1)
             y_test_hat = model.network(x)
             y_hat_test_arg = torch.argmax(y_test_hat, dim=1)

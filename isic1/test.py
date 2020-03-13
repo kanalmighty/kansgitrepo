@@ -42,6 +42,7 @@ y_hat_list = []
 for idx, (x, y) in enumerate(testdata_loader):
 
     x = x.to(device)
+    print(x.shape)
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
