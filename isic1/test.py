@@ -42,7 +42,6 @@ y_hat_list = []
 for idx, (x, y) in enumerate(testdata_loader):
 
     x = x.to(device)
-    print(x.shape)
     y_scalar = torch.argmax(y, dim=1)
     y_hat = model.network(x)
     y_hat_scalar = torch.argmax(y_hat, dim=1)
@@ -55,8 +54,6 @@ for idx, (x, y) in enumerate(testdata_loader):
     y_hat_list.append(y_hat_scalar.item())
 class_number = y.size(1)
 metrics_dict = utils.calculate_test_metrics(y_list, y_hat_list, class_number)
-print(y_list)
-print(y_hat_list)
 # error_classified_image_list = utils.get_image_name_by_number(label_path, error_classified_num_list)
 # right_classified_image_list = utils.get_image_name_by_number(label_path, right_classified_num_list)
 # metrics_dict['ERROR LIST'] = error_classified_image_list
