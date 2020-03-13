@@ -95,7 +95,7 @@ for EPOCH in range(args.epoch):
     # epoch_statics_dict['AVG LOSS'] = loss_avg_per_epoch
     # epoch_statics_dict['TRAINING ACCURACY'] = train_accuracy_epoch
 
-    #保存模型
+    #保存参数
     pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
     #test start
     test_image_path = configer['testImagePath']
@@ -118,6 +118,8 @@ for EPOCH in range(args.epoch):
 
 
     test_accuracy_list.append(test_accuracy_count_epoch / len(testdata_loader))
+#保存参数
+pkl_name = model.save_model(logger.date_string, logger.start_time_string)#save the nn every epoch
 metrics_dict = utils.calculate_test_metrics(test_label_list, test_pred_list, args.numclass)
 fig = visualizer.draw_curve(train_accuracy_list, test_accuracy_list, train_loss_list)
 print(metrics_dict['overall report'])
