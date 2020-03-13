@@ -32,7 +32,7 @@ isic = ISICDataset(image_path, test_csv[0], transforms)
 testdata_loader = DataLoader(isic, batch_size=args.batchsize)
 
 
-model.eval()#模型为测试，不使用dropput等
+model.network.eval()#模型为测试，不使用dropput等
 y_list = []
 y_hat_list = []
 # error_classified_num_list = []
