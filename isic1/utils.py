@@ -1,6 +1,8 @@
 import time
 from PIL import Image
+import sys
 import torchvision.transforms as transforms
+sys.path.append('/content/cloned-repo/isic1')
 import shutil
 import os
 import PIL
