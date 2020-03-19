@@ -20,7 +20,7 @@ class AutoAugment(object):
             ['Contrast', 0.6, 7, 'Sharpness', 0.6, 5],
             ['Color', 0.7, 7, 'TranslateX', 0.5, 8],
             ['Equalize', 0.3, 7, 'AutoContrast', 0.4, 8],
-            ['TranslateY', 0.4, 3, 'Sharpness', 0.2, 6],
+            # ['TranslateY', 0.4, 3, 'Sharpness', 0.2, 6],
             ['Brightness', 0.9, 6, 'Color', 0.2, 8],
             ['Solarize', 0.5, 2, 'Invert', 0, 0.3],
             ['Equalize', 0.2, 0, 'AutoContrast', 0.6, 0],
@@ -32,7 +32,7 @@ class AutoAugment(object):
             # ['TranslateY', 0.9, 9, 'TranslateY', 0.7, 9],
             ['AutoContrast', 0.9, 2, 'Solarize', 0.8, 3],
             ['Equalize', 0.8, 8, 'Invert', 0.1, 3],
-            ['TranslateY', 0.7, 9, 'AutoContrast', 0.9, 1],
+            # ['TranslateY', 0.7, 9, 'AutoContrast', 0.9, 1],
         ]
         self.policy_index = random.randrange(len(self.policies)) if policy_index == None else policy_index
         self.policy_detail = self.policies[self.policy_index]
