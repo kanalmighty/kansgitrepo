@@ -4,12 +4,12 @@ import scipy
 from scipy import ndimage
 from PIL import Image, ImageEnhance, ImageOps
 
-
+#TranslateY不适用单通道图
 class AutoAugment(object):
     def __init__(self, policy_index=None):
         self.policies = [
             ['Invert', 0.1, 7, 'Contrast', 0.2, 6],
-            ['Rotate', 0.7, 2, 'TranslateX', 0.3, 9],
+            # ['Rotate', 0.7, 2, 'TranslateX', 0.3, 9],
             ['Sharpness', 0.8, 1, 'Sharpness', 0.9, 3],
             # ['ShearY', 0.5, 8, 'TranslateY', 0.7, 9],
             ['AutoContrast', 0.5, 8, 'Equalize', 0.9, 2],
@@ -18,7 +18,7 @@ class AutoAugment(object):
             ['Sharpness', 0.3, 9, 'Brightness', 0.7, 9],
             ['Equalize', 0.6, 5, 'Equalize', 0.5, 1],
             ['Contrast', 0.6, 7, 'Sharpness', 0.6, 5],
-            ['Color', 0.7, 7, 'TranslateX', 0.5, 8],
+            # ['Color', 0.7, 7, 'TranslateX', 0.5, 8],
             ['Equalize', 0.3, 7, 'AutoContrast', 0.4, 8],
             # ['TranslateY', 0.4, 3, 'Sharpness', 0.2, 6],
             ['Brightness', 0.9, 6, 'Color', 0.2, 8],
