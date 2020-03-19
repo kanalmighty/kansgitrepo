@@ -11,7 +11,7 @@ class AutoAugment(object):
             ['Invert', 0.1, 7, 'Contrast', 0.2, 6],
             ['Rotate', 0.7, 2, 'TranslateX', 0.3, 9],
             ['Sharpness', 0.8, 1, 'Sharpness', 0.9, 3],
-            ['ShearY', 0.5, 8, 'TranslateY', 0.7, 9],
+            # ['ShearY', 0.5, 8, 'TranslateY', 0.7, 9],
             ['AutoContrast', 0.5, 8, 'Equalize', 0.9, 2],
             ['ShearY', 0.2, 7, 'Posterize', 0.3, 7],
             ['Color', 0.4, 3, 'Brightness', 0.6, 7],
