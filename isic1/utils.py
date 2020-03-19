@@ -323,7 +323,7 @@ def get_dict_from_json(file_name):
 def show_multiple_images(image_list, images_per_row):
     total_image_num = len(image_list)  # 总cam图片数量
     num_rows = total_image_num / images_per_row
-    plt.figure(figsize=(20, 15))
+    plt.figure(figsize=(40, 30))
     for idx, image in enumerate(image_list):
         plt.subplot(num_rows, images_per_row, idx + 1)
         plt.imshow(image)
