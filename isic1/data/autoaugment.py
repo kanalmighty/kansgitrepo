@@ -13,7 +13,7 @@ class AutoAugment(object):
             ['Sharpness', 0.8, 1, 'Sharpness', 0.9, 3],
             ['ShearY', 0.5, 8, 'TranslateY', 0.7, 9],
             ['AutoContrast', 0.5, 8, 'Equalize', 0.9, 2],
-            ['ShearY', 0.2, 7, 'Posterize', 0.3, 7],
+            # ['ShearY', 0.2, 7, 'Posterize', 0.3, 7],
             ['Color', 0.4, 3, 'Brightness', 0.6, 7],
             ['Sharpness', 0.3, 9, 'Brightness', 0.7, 9],
             ['Equalize', 0.6, 5, 'Equalize', 0.5, 1],
