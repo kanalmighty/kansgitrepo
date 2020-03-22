@@ -31,6 +31,11 @@ class DataPreProcesser():
 
     def __call__(self):
         self.check_all_paths()
+        if self.args.off:
+            image_list = utils.get_image_set(self.row_image_path)
+            for image in tqdm(image_list):
+                shutil.copy(image, os.path.join(self.training_image_path, utils.get_file_name(image)))
+            shutil.copy(self.row_label[0], os.path.join(self.configer['traininglabelPath'], utils.get_file_name(self.row_label[0])))
         if self.args.testSamples:
             self.split_dev_dataset(self.args.testSamples)
         if self.args.massCrop:
@@ -39,11 +44,7 @@ class DataPreProcesser():
             self.pad_images(self.args.padBorderSize)
         if self.args.dataBalance:
             self.extend_dataset(self.args.dataBalance)
-        if self.args.off:
-            image_list = utils.get_image_set(self.row_image_path)
-            for image in tqdm(image_list):
-                shutil.copy(image, os.path.join(self.training_image_path, utils.get_file_name(image)))
-            shutil.copy(self.row_label[0], os.path.join(self.configer['traininglabelPath'], utils.get_file_name(self.row_label[0])))
+
 
 
 
@@ -238,28 +239,36 @@ class DataPreProcesser():
     def split_dev_dataset(self, sample_number):
         print('setting aside dev data set from training data set')
         row_label_csv = utils.get_csv_by_path_name(self.configer['rowLabelPath'])
-        row_label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
+        label_dataframe = pd.read_csv(row_label_csv[0], header=0, engine='python')
         # get all class from row label csv
-        label_dataframe = row_label_dataframe.drop('UNK', axis=1)
+        label_dataframe = label_dataframe.drop('UNK', axis=1)
         class_list = label_dataframe.columns.tolist()
         test_label_dataframe = pd.DataFrame(columns=class_list)
         class_list.pop(0)
         for one_class in tqdm(class_list):
             sample_row = label_dataframe[label_dataframe[one_class].isin([1])].sample(sample_number)
             test_label_dataframe = test_label_dataframe.append(sample_row, ignore_index=True)
+            rows_index = sample_row.index
+            for row_index in rows_index:
+                label_dataframe = label_dataframe.drop(row_index, axis=0)
+        #写入text标签
         test_label_dataframe = test_label_dataframe.sort_values(by="image")
         test_label_dataframe.to_csv(os.path.join(self.configer['testLabelPath'], 'test_label.csv'), index=False)
+
+        # 写入training标签
+        label_dataframe = label_dataframe.sort_values(by="image")
+        label_dataframe.to_csv(os.path.join(self.configer['traininglabelPath'], 'train_label.csv'), index=False)
         #start to rename images
         test_file_name = test_label_dataframe['image'].values
         des_file_root = Path(self.configer['testImagePath'])
-        src_file_root = Path(self.configer['rowImagePath'])
+        src_file_root = Path(self.configer['trainingImagePath'])
         if not des_file_root.exists():
             os.mkdir(des_file_root)
         for file_name in test_file_name:
             src_file_path = os.path.join(src_file_root, file_name + '.jpg')
             des_file_path = os.path.join(des_file_root, file_name + '.jpg')
             try:
-                shutil.copy(src_file_path, des_file_path)
+                shutil.move(src_file_path, des_file_path)
             except IOError:
                 print('copy file error!')
 
