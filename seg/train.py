@@ -2,6 +2,7 @@ import datetime
 import torchvision
 import torch
 import os
+import time
 import matplotlib.pyplot as plt
 import torch.nn as nn
 
