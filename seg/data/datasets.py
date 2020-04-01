@@ -1,6 +1,7 @@
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import DataLoader
 
+from data.autoaugment import AutoAugment
 from utils import *
 import pandas as pd
 import torch
