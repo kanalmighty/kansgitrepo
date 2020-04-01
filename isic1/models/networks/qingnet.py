@@ -56,7 +56,7 @@ class GroupUpConvLayer(nn.Module):
         self.output_h = (x_h - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_w = (x_w - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
+        print('GroupUpConvLayer' + self.output_size)
         return self.layer(x)
 
 #降维卷积层，用于给encoder的feature map在跳层连接之前降维
@@ -78,7 +78,7 @@ class DimReduConvLayer(nn.Module):
         self.output_h = (x_h - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_w = (x_w - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
+        print('DimReduConvLayer ' + self.output_size)
         return self.layer(x)
 
 class GroupDownConvLayer(nn.Module):
@@ -102,7 +102,7 @@ class GroupDownConvLayer(nn.Module):
         self.output_h = math.ceil((x_h + 2 * self.padding - self.kernel_size) / self.stride)
         self.output_w = math.ceil((x_w + 2 * self.padding - self.kernel_size) / self.stride)
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
+        print('GroupDownConvLayer '+ self.output_size)
         return self.layer(x)
 
 # n次下采样的总倍数2^n
@@ -211,13 +211,14 @@ class Assembler(nn.Module):
             x_h = x.shape[2]
             #跳层连接
             if str(x_h) in output_dict.keys():
-                print('DimReduConvLayer_' + str(idx))
+
                 r_out = self.skip_layers['DimReduConvLayer_' + str(idx)](output_dict[str(x_h)])
+                print('DimReduConvLayer变换',  output_dict[str(x_h)].shape, r_out.shape)
+                print('add',r_out.shape, x.shape)
                 x = torch.add(r_out, x)
 
                 x = layer(x)
             else:
-                print('DimReduConvLayer_' + str(idx))
                 x = layer(x)
         return x
 
@@ -227,6 +228,6 @@ class Assembler(nn.Module):
 if __name__ == '__main__':
     stage_dict = {'GroupDownConvLayer': 6, 'GroupUpConvLayer': 3}#个数
     a = Assembler(stage_dict, 3, 2, 16)
-    a.get_structure()
+    # a.get_structure()
     input = torch.randn(4, 3, 512, 512)
     x = a.forward(input)

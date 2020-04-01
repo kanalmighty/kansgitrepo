@@ -9,7 +9,6 @@ import PIL
 from sys import exit
 from pathlib import Path
 import numpy as np
-from data.autoaugment import AutoAugment
 import pandas as pd
 from sklearn.metrics import confusion_matrix, precision_score, accuracy_score,recall_score, f1_score,roc_auc_score, classification_report
 import json
@@ -47,24 +46,6 @@ def get_image(image_path):
         raise IOError('not such file of ' + image_path)
     return Image.open(image_path)
 
-
-def get_transforms(opt):
-    transform_list = []
-    # if opt.mode == 'train':
-    #     if opt.centerCropSize:
-    #         transform_list.append(transforms.CenterCrop(opt.centerCropSize))
-    if opt.autoAugments:
-        ag = AutoAugment(opt.autoAugments)
-        transform_list.append(ag)
-    if opt.resize:
-        transform_list.append(transforms.Resize(opt.resize))
-    # 多种组合变换有一定的先后顺序，处理PILImage的变换方法（大多数方法）
-    # 都需要放在ToTensor方法之前，而处理tensor的方法（比如Normalize方法）就要放在ToTensor方法之后。
-    transform_list.append(transforms.ToTensor())
-    # if opt.mode == 'train':
-    #     if opt.normalize:
-    transform_list.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))  # input must be a tensor
-    return transforms.Compose(transform_list)
 
 
 def get_auto_augments(auto_augment_object):

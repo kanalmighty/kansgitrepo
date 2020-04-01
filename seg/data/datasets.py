@@ -1,16 +1,14 @@
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import DataLoader
 
-from kansgitrepo.seg.utils import get_sample
 from utils import *
 import pandas as pd
 import torch
 import os
 import cv2
 import numpy as np
-from data.dataprober import DataProber
-from options.configer import Configer
-from torchvision.transforms import transforms
+
+from utils import get_sample
 
 
 class FaceSegDateset(Dataset):

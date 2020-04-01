@@ -2,15 +2,14 @@ import torchvision
 import torch
 import matplotlib.pyplot as plt
 import torch.nn as nn
-from kansgitrepo.seg.data.datasets import FaceSegDateset
-from kansgitrepo.seg.models.networks.qingnet import *
+from data.datasets import FaceSegDateset
+from models.networks.qingnet import *
 import cv2
-
-from kansgitrepo.seg.options.train_options import TrainingOptions
+import numpy as np
+from options.train_options import TrainingOptions
 from options.configer import Configer
 from tqdm import tqdm
 from torch.utils.data import DataLoader
-from data.autoaugment import *
 configer = Configer().get_configer()#获取环境配置
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 options = TrainingOptions()
@@ -24,7 +23,7 @@ dataset = FaceSegDateset(args.mode, label_root_path, label_file, args.resize[0],
 
 trainingdata_loader = DataLoader(dataset, batch_size=args.batchSize, shuffle=True, drop_last=True)
 loss_f = torch.nn.BCELoss()
-stage_dict = {'GroupDownConvLayer': args.layerNumber, 'GroupUpConvLayer': args.layerNumber}  # 个数
+stage_dict = {'GroupDownConvLayer': args.downLayerNumber, 'GroupUpConvLayer': args.upLayerNumber}  # 个数
 net = Assembler(stage_dict, 3, 2, args.cof)
 net = net.to(device)
 accuracy_list = []
@@ -103,12 +102,13 @@ for EPOCH in tqdm(range(epoch)):
                 contours, hierarchy = cv2.findContours(test_pred, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
                 test_image_contour = cv2.drawContours(test_image, contours, -1, (0, 0, 255), 1)
-                test_image_contour = cv2.resize(test_image_contour, (w * 2, h * 2))
+                test_image_contour = cv2.resize(test_image_contour, (600, 800))
                 cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
 
 plt.figure(figsize=(8, 4))
+plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate))
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_test_acc'
 plt.axis([0, len(accuracy_list), 0, 1])
