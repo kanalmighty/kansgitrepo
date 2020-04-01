@@ -42,7 +42,7 @@ opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999
 
 start = datetime.datetime.now()
 start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
-for EPOCH in tqdm(range(epoch)):
+for EPOCH in tqdm(range(args.epoch)):
     net.train()
     accurate_count_epoch = 0
     train_loss_epoch = 0
