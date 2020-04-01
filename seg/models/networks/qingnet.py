@@ -172,7 +172,7 @@ class Assembler(nn.Module):
             raise TypeError('下采样层数必须是上采样层数的整数倍')
         upsample_factor = pow(2, downsample_layer_number/upsample_layer_number)
         #计算历次上采样过程中产生的feature map大小
-        upsample_size_list = [int(encoder_output_size)*pow(upsample_factor, i) for i in range(1, int(upsample_factor))]
+        upsample_size_list = [int(encoder_output_size)*pow(upsample_factor, i) for i in range(1, int(upsample_layer_number))]
         return upsample_size_list
 
 
