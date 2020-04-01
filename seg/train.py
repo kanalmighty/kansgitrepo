@@ -96,7 +96,7 @@ for EPOCH in tqdm(range(args.epoch)):
             # test_accuracy_count_epoch += accuracy_count(y1.squeeze().cpu(),test_pred_argmax.cpu())/(resize[0]**2)#一个batch里面正确分率的像素个数
 
             # 最后一个epoch时验证效果开始
-            if EPOCH == epoch - 1:
+            if EPOCH == args.epoch - 1:
                 test_pred = np.argmax(test_pred, axis=1)
                 test_pred = test_pred.transpose(1, 2, 0)
                 test_pred = cv2.resize(test_pred, args.originalSize, interpolation=cv2.INTER_NEAREST).astype(np.float)
@@ -130,7 +130,7 @@ plt.xlabel = 'epoch'
 plt.ylabel = 'train_loss'
 plt.axis([0, len(train_loss_list), 0, 3])
 plt.yticks(np.arange(0, 2, 0.2))
-plt.plot(range(epoch), train_loss_list, 'g-', label='train_acc')
+plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
 plt.show()
 image_save_path = configer['staticImagePath']

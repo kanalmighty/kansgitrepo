@@ -15,5 +15,4 @@ class TrainingOptions(BaseOptions):
         self.argument_parser.add_argument('--downLayerNumber', type=int, help='activate data auto augment,true or false')
         self.argument_parser.add_argument('--upLayerNumber', type=int, help='activate data auto augment,true or false')
         self.argument_parser.add_argument('--learningRate', type=float, help='learningRate')
-        self.argument_parser.add_argument('--batchSize', type=int,  help='center crop size')
         self.initialized = False
