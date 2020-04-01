@@ -203,7 +203,7 @@ class Assembler(nn.Module):
                 output_dict[str(x_h)] = x
 
             #如果下采样输出的尺寸太小了就报错
-            if int(layer.output_h) * int(layer.output_w) < 30:
+            if int(layer.output_h) * int(layer.output_w) < 9:
                 raise ValueError("输出尺寸太小了，请调整参数")
         #进行上采样及跳层连接
         for layer_name, layer in self.up_layers.items():
