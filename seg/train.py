@@ -1,5 +1,4 @@
-from datetime import time, datetime
-
+import datetime
 import torchvision
 import torch
 import os
