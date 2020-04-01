@@ -38,7 +38,7 @@ train_loss_list = []
 total_length = len(trainingdata_loader)
 opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
 # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
-
+original_size = (args.originalSize[0], args.originalSize[1])
 start = datetime.datetime.now()
 start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
 for EPOCH in tqdm(range(args.epoch)):
@@ -99,7 +99,7 @@ for EPOCH in tqdm(range(args.epoch)):
             if EPOCH == args.epoch - 1:
                 test_pred = np.argmax(test_pred, axis=1)
                 test_pred = test_pred.transpose(1, 2, 0)
-                test_pred = cv2.resize(test_pred, args.originalSize, interpolation=cv2.INTER_NEAREST).astype(np.float)
+                test_pred = cv2.resize(test_pred, original_size, interpolation=cv2.INTER_NEAREST).astype(np.float)
                 test_pred = test_pred.astype(np.uint8)
                 # test_pred = np.expand_dims(test_pred, 2).repeat(3, axis=2)
                 # test_grey_image = cv2.cvtColor(test_pred, cv2.COLOR_BGR2GRAY)

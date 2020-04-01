@@ -185,7 +185,6 @@ class Assembler(nn.Module):
         original_image_h = x.shape[2]
         output_dict = {}
         upsample_size_list = self.select_skip_fm(original_image_h)
-        print('upsample_size_list', upsample_size_list)
         if original_image_h in upsample_size_list:
             output_dict[str(original_image_h)] = x
 
