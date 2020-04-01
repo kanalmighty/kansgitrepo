@@ -93,7 +93,7 @@ class GroupDownConvLayer(nn.Module):
             nn.Conv2d(inc, inc, 3, stride, 1, groups=inc, bias=False),
             nn.BatchNorm2d(inc),
             nn.ReLU(inplace=True),
-            nn.Conv2d(inc, outc, 1, 1, 0, bias=False),
+            nn.Conv2d(inc, outc, kernel_size=1, groups=1, stride=1, padding=0),
             nn.BatchNorm2d(outc),
             nn.ReLU(inplace=True))
 
@@ -124,7 +124,7 @@ class Assembler(nn.Module):
         self.stage_dict = stages_dict
         n = stages_dict['GroupDownConvLayer']
         m = stages_dict['GroupUpConvLayer']
-        k, p, s = get_upconv_setting(pow(2,n/m))
+        k, p, s = get_upconv_setting(pow(2, n/m))
         print(k, p, s)
         down_layer_index = -1
         up_layer_index = -1

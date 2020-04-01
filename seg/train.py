@@ -24,7 +24,7 @@ dataset = FaceSegDateset(args.mode, label_root_path, label_file, args.resize[0],
 trainingdata_loader = DataLoader(dataset, batch_size=args.batchSize, shuffle=True, drop_last=True)
 loss_f = torch.nn.BCELoss()
 stage_dict = {'GroupDownConvLayer': args.downLayerNumber, 'GroupUpConvLayer': args.upLayerNumber}  # 个数
-net = Assembler(stage_dict, 3, 2, args.cof)
+net = Assembler(stage_dict, 3, args.numclass, args.cof)
 net = net.to(device)
 accuracy_list = []
 epoch = 30
