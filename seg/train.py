@@ -33,7 +33,6 @@ stage_dict = {'GroupDownConvLayer': args.downLayerNumber, 'GroupUpConvLayer': ar
 net = Assembler(stage_dict, 3, args.numclass, args.cof)
 net = net.to(device)
 accuracy_list = []
-epoch = 30
 test_accuracy_list = []
 train_loss_list = []
 total_length = len(trainingdata_loader)
