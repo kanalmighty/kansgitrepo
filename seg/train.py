@@ -121,8 +121,8 @@ plt.xlabel = 'epoch'
 plt.ylabel = 'train_test_acc'
 plt.axis([0, len(accuracy_list), 0, 1])
 plt.yticks(np.arange(0, 1, 0.1))
-plt.plot(range(epoch), test_accuracy_list, 'r-', label='test_acc')
-plt.plot(range(epoch), accuracy_list, 'b-', label='train_acc')
+plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
+plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
 plt.legend(['test_acc', 'train_acc'])
 torch.save(net.state_dict(), '/content/drive/My Drive/yousandata/segment.pth')
 plt.show()
