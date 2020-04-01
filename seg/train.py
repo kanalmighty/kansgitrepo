@@ -31,7 +31,7 @@ epoch = 30
 test_accuracy_list = []
 train_loss_list = []
 total_length = len(trainingdata_loader)
-opm = torch.optim.Adam(net.layers.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
+opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
 # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
 
 for EPOCH in tqdm(range(epoch)):
