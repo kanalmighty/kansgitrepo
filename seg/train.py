@@ -1,7 +1,12 @@
+from datetime import time, datetime
+
 import torchvision
 import torch
+import os
 import matplotlib.pyplot as plt
 import torch.nn as nn
+
+from data.datarecorder import DataRecorder
 from data.datasets import FaceSegDateset
 from models.networks.qingnet import *
 import cv2
@@ -10,12 +15,13 @@ from options.train_options import TrainingOptions
 from options.configer import Configer
 from tqdm import tqdm
 from torch.utils.data import DataLoader
+from visualizer.visualizer import Visualizer
 configer = Configer().get_configer()#获取环境配置
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 options = TrainingOptions()
-
+visualizer = Visualizer()#初始化视觉展示器
 args = options.get_args()#获取参数
-
+logger = DataRecorder()#初始化记录器
 label_root_path = configer['labelRootPath']
 label_file = configer['labelFile']
 mask_root = configer['maskImageRoot']
@@ -34,6 +40,8 @@ total_length = len(trainingdata_loader)
 opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
 # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
 
+start = datetime.datetime.now()
+start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
 for EPOCH in tqdm(range(epoch)):
     net.train()
     accurate_count_epoch = 0
@@ -106,9 +114,9 @@ for EPOCH in tqdm(range(epoch)):
                 cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
-
-plt.figure(figsize=(8, 4))
-plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate))
+end = datetime.datetime.now()
+fig = plt.figure(figsize=(8, 4))
+plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate, (end-start).seconds))
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_test_acc'
 plt.axis([0, len(accuracy_list), 0, 1])
@@ -126,3 +134,5 @@ plt.yticks(np.arange(0, 2, 0.2))
 plt.plot(range(epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
 plt.show()
+image_save_path = configer['staticImagePath']
+fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecolor='gray')

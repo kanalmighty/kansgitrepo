@@ -56,7 +56,6 @@ class GroupUpConvLayer(nn.Module):
         self.output_h = (x_h - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_w = (x_w - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
         return self.layer(x)
 
 #降维卷积层，用于给encoder的feature map在跳层连接之前降维
@@ -78,7 +77,6 @@ class DimReduConvLayer(nn.Module):
         self.output_h = (x_h - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_w = (x_w - 1) * self.stride - 2 * self.padding + self.kernel_size
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
         return self.layer(x)
 
 class GroupDownConvLayer(nn.Module):
@@ -102,7 +100,6 @@ class GroupDownConvLayer(nn.Module):
         self.output_h = math.ceil((x_h + 2 * self.padding - self.kernel_size) / self.stride)
         self.output_w = math.ceil((x_w + 2 * self.padding - self.kernel_size) / self.stride)
         self.output_size = '(' + str(self.outc) + ',' + str(self.output_h) + ',' + str(self.output_w) + ')'
-        print(self.output_size)
         return self.layer(x)
 
 # n次下采样的总倍数2^n
@@ -125,7 +122,6 @@ class Assembler(nn.Module):
         n = stages_dict['GroupDownConvLayer']
         m = stages_dict['GroupUpConvLayer']
         k, p, s = get_upconv_setting(pow(2, n/m))
-        print(k, p, s)
         down_layer_index = -1
         up_layer_index = -1
         for layers_name, layer_number in self.stage_dict.items():
@@ -211,13 +207,11 @@ class Assembler(nn.Module):
             x_h = x.shape[2]
             #跳层连接
             if str(x_h) in output_dict.keys():
-                print('DimReduConvLayer_' + str(idx))
                 r_out = self.skip_layers['DimReduConvLayer_' + str(idx)](output_dict[str(x_h)])
                 x = torch.add(r_out, x)
 
                 x = layer(x)
             else:
-                print('DimReduConvLayer_' + str(idx))
                 x = layer(x)
         return x
 
