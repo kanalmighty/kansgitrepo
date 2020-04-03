@@ -120,6 +120,7 @@ for EPOCH in tqdm(range(args.epoch)):
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
 end = datetime.datetime.now()
 fig = plt.figure(figsize=(8, 4))
+plt.subplot(121)
 plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate, (end-start).seconds))
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_test_acc'
@@ -129,14 +130,12 @@ plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
 plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
 plt.legend(['test_acc', 'train_acc'])
 torch.save(net.state_dict(), '/content/drive/My Drive/yousandata/segment.pth')
-plt.show()
-plt.figure(figsize=(8, 4))
+plt.subplot(121)
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_loss'
 plt.axis([0, len(train_loss_list), 0, 3])
 plt.yticks(np.arange(0, 2, 0.2))
 plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
-plt.show()
 image_save_path = configer['staticImagePath']
 fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecolor='gray')
