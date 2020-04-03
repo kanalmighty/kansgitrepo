@@ -130,7 +130,7 @@ plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
 plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
 plt.legend(['test_acc', 'train_acc'])
 torch.save(net.state_dict(), '/content/drive/My Drive/yousandata/segment.pth')
-plt.subplot(121)
+plt.subplot(122)
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_loss'
 plt.axis([0, len(train_loss_list), 0, 3])
