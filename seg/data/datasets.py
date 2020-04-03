@@ -8,7 +8,7 @@ import torch
 import os
 import cv2
 import numpy as np
-
+import torchvision
 from utils import get_sample
 
 
@@ -57,11 +57,13 @@ class FaceSegDateset(Dataset):
             label = np.eye(2)[label]
 
             label = label.transpose(2, 0, 1).astype(np.float)
-
             img = img.transpose(2, 0, 1).astype(np.float)
+            normalize = torchvision.transforms.Normalize((.5, .5, .5), (.5, .5, .5))
+
             img = torch.from_numpy(img)
+            img = normalize(img.float())
             label = torch.from_numpy(label)
-            return img.float(), label.float()
+            return img, label.float()
         else:
             img = cv2.imread(os.path.join(self.image_root_path, self.label_list[item][0]))
             label = cv2.imread(os.path.join(self.image_root_path, self.label_list[item][1]), 0)
@@ -74,9 +76,10 @@ class FaceSegDateset(Dataset):
             label = label.transpose(2, 0, 1).astype(np.float)
 
             img = img.transpose(2, 0, 1).astype(np.float)
-            img = torch.from_numpy(img)
+            normalize = torchvision.transforms.Normalize((.5, .5, .5), (.5, .5, .5))
+            img = normalize(img.float())
             label = torch.from_numpy(label)
-            return img.float(), label.float()
+            return img, label.float()
 
     def __len__(self):
         return len(self.label_list)
