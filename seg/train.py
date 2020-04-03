@@ -26,9 +26,10 @@ if args.resize[0] % pow(2,args.downLayerNumber) != 0:
 
 logger = DataRecorder()#初始化记录器
 label_root_path = configer['labelRootPath']
-label_file = configer['labelFile']
+train_label_file = configer['trainLabelFile']
+test_label_file = configer['testLabelFile']
 mask_root = configer['maskImageRoot']
-dataset = FaceSegDateset(args.mode, label_root_path, label_file, args.resize[0], args.resize[1])
+dataset = FaceSegDateset(args.mode, label_root_path, train_label_file, args.resize[0], args.resize[1])
 
 trainingdata_loader = DataLoader(dataset, batch_size=args.batchSize, shuffle=True, drop_last=True)
 loss_f = torch.nn.BCELoss()
@@ -78,7 +79,7 @@ for EPOCH in tqdm(range(args.epoch)):
     # transform_list_test.append(transforms.ToTensor())
     # trans_test = transforms.Compose(transform_list_test)
     test_dataset = FaceSegDateset('test', label_root_path,
-                                  label_file, args.resize[0], args.resize[1])
+                                  test_label_file, args.resize[0], args.resize[1])
 
     testdata_loader = DataLoader(test_dataset, batch_size=1, shuffle=True, drop_last=True)
     total_test_length = len(testdata_loader)
