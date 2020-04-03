@@ -54,7 +54,6 @@ for EPOCH in tqdm(range(args.epoch)):
         y = y.to(device)
 
         pred = net(x)
-        y.resize_()
         pred = torch.sigmoid(pred)
         pred_mask = pred.cpu().data.numpy().copy()
         # 以通道为维度进行softmax计算三个通道同一位置的像素的分类概率输出结果为b,c,h,w
