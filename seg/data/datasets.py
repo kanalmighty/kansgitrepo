@@ -67,8 +67,7 @@ class FaceSegDateset(Dataset):
         else:
             img = cv2.imread(os.path.join(self.image_root_path, self.label_list[item][0]))
             label = cv2.imread(os.path.join(self.image_root_path, self.label_list[item][1]), 0)
-            img = cv2.resize(img, (self.imagesize[1], self.imagesize[0]), interpolation=cv2.INTER_NEAREST).astype(
-                np.float)
+            img = cv2.resize(img, (self.imagesize[1], self.imagesize[0]), interpolation=cv2.INTER_NEAREST).astype(np.float)
             label = cv2.resize(label, (self.imagesize[1], self.imagesize[0]), interpolation=cv2.INTER_NEAREST)
             _, label = cv2.threshold(label, 1, 1, cv2.THRESH_TRUNC)
             label = np.eye(2)[label]

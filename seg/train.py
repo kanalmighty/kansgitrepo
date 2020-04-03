@@ -129,8 +129,8 @@ plt.yticks(np.arange(0, 1, 0.1))
 plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
 plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
 plt.legend(['test_acc', 'train_acc'])
-torch.save(net.state_dict(), '/content/drive/My Drive/yousandata/segment.pth')
 plt.subplot(122)
+plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate, (end-start).seconds))
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_loss'
 plt.axis([0, len(train_loss_list), 0, 3])
