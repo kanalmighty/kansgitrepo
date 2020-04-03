@@ -21,8 +21,8 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 options = TrainingOptions()
 visualizer = Visualizer()#初始化视觉展示器
 args = options.get_args()#获取参数
-if args.resize[0] % pow(2,args.downLayerNumber) != 0:
-    raise ValueError("输入尺寸必须是%d的整数倍" % pow(2,args.downLayerNumber))
+if args.resize[0] % pow(2, args.downLayerNumber) != 0:
+    raise ValueError("输入尺寸必须是%d的整数倍" % pow(2, args.downLayerNumber))
 
 logger = DataRecorder()#初始化记录器
 label_root_path = configer['labelRootPath']
@@ -104,7 +104,7 @@ for EPOCH in tqdm(range(args.epoch)):
             if EPOCH == args.epoch - 1:
                 test_pred = np.argmax(test_pred, axis=1)
                 test_pred = test_pred.transpose(1, 2, 0)
-                test_pred = cv2.resize(test_pred, original_size, interpolation=cv2.INTER_NEAREST).astype(np.float)
+                test_pred = cv2.resize(test_pred, (args.resize[0], args.resize[1]), interpolation=cv2.INTER_NEAREST).astype(np.float)
                 test_pred = test_pred.astype(np.uint8)
                 # test_pred = np.expand_dims(test_pred, 2).repeat(3, axis=2)
                 # test_grey_image = cv2.cvtColor(test_pred, cv2.COLOR_BGR2GRAY)
@@ -114,7 +114,7 @@ for EPOCH in tqdm(range(args.epoch)):
                 contours, hierarchy = cv2.findContours(test_pred, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
                 test_image_contour = cv2.drawContours(test_image, contours, -1, (0, 0, 255), 1)
-                test_image_contour = cv2.resize(test_image_contour, original_size)
+                test_image_contour = cv2.resize(test_image_contour, (original_size[1], original_size[0]))
                 cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
