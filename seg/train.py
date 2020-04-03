@@ -125,7 +125,7 @@ plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.d
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_test_acc'
 plt.axis([0, len(accuracy_list), 0, 1])
-plt.yticks(np.arange(0, 1, 0.1))
+plt.yticks(np.arange(0, 1, 0.05))
 plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
 plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
 plt.legend(['test_acc', 'train_acc'])
@@ -134,7 +134,7 @@ plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.d
 plt.xlabel = 'epoch'
 plt.ylabel = 'train_loss'
 plt.axis([0, len(train_loss_list), 0, 3])
-plt.yticks(np.arange(0, 2, 0.2))
+plt.yticks(np.arange(0, 1, 0.1))
 plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
 image_save_path = configer['staticImagePath']
