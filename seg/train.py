@@ -114,7 +114,7 @@ for EPOCH in tqdm(range(args.epoch)):
                 contours, hierarchy = cv2.findContours(test_pred, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
                 test_image_contour = cv2.drawContours(test_image, contours, -1, (0, 0, 255), 1)
-                test_image_contour = cv2.resize(test_image_contour, (original_size[1], original_size[0]))
+                test_image_contour = cv2.resize(test_image_contour, (original_size[0], original_size[1]))
                 cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
