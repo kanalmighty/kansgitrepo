@@ -21,6 +21,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 options = TrainingOptions()
 visualizer = Visualizer()#初始化视觉展示器
 args = options.get_args()#获取参数
+if args.resize[0] % pow(2,args.downLayerNumber) != 0:
+    raise ValueError("输入尺寸必须是%d的整数倍" % pow(2,args.downLayerNumber))
+
 logger = DataRecorder()#初始化记录器
 label_root_path = configer['labelRootPath']
 label_file = configer['labelFile']
@@ -38,7 +41,7 @@ train_loss_list = []
 total_length = len(trainingdata_loader)
 opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
 # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
-original_size = (args.originalSize[0], args.originalSize[1])
+original_size = (args.originalSize[1], args.originalSize[0])
 start = datetime.datetime.now()
 start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
 for EPOCH in tqdm(range(args.epoch)):
@@ -49,7 +52,9 @@ for EPOCH in tqdm(range(args.epoch)):
     for x, y in trainingdata_loader:
         x = x.to(device)
         y = y.to(device)
+
         pred = net(x)
+        y.resize_()
         pred = torch.sigmoid(pred)
         pred_mask = pred.cpu().data.numpy().copy()
         # 以通道为维度进行softmax计算三个通道同一位置的像素的分类概率输出结果为b,c,h,w
@@ -109,7 +114,7 @@ for EPOCH in tqdm(range(args.epoch)):
                 contours, hierarchy = cv2.findContours(test_pred, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
                 test_image_contour = cv2.drawContours(test_image, contours, -1, (0, 0, 255), 1)
-                test_image_contour = cv2.resize(test_image_contour, (600, 800))
+                test_image_contour = cv2.resize(test_image_contour, original_size)
                 cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
         test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
