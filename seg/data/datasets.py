@@ -76,6 +76,7 @@ class FaceSegDateset(Dataset):
             label = label.transpose(2, 0, 1).astype(np.float)
 
             img = img.transpose(2, 0, 1).astype(np.float)
+            img = torch.from_numpy(img)
             normalize = torchvision.transforms.Normalize((.5, .5, .5), (.5, .5, .5))
             img = normalize(img.float())
             label = torch.from_numpy(label)
