@@ -52,7 +52,7 @@ class DataRecorder:
         json_dict = json.dumps(self.data_dict)
         # json_dict = json.dumps(self.data_dict, indent=1)
         with open(self.log_path, 'a') as log:
-            log.write(json_dict)
+            log.write(json_dict + '\n')
         log.close()
 
     def record_checkpoint(self, checkpoint_path):
