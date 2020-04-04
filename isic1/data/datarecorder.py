@@ -17,8 +17,9 @@ class DataRecorder:
         self.date_string = time.strftime("%Y%m%d", time.localtime())
         self.start_time = time.strftime("%Y%m%d %H:%M:%S  ", time.localtime())
         self.start_time_string = time.strftime("%H_%M_%S", time.localtime())
-        self.root_path = configer['logPath']
-        self.log_path = os.path.join(self.root_path, 'seg_statics.txt')
+        # self.root_path = Path('/content/drive/My Drive/daily_report' + date_string)
+        self.root_path = Path(os.path.join(self.config_dict['logpath'], self.date_string))
+        self.log_path = os.path.join(self.root_path, self.start_time_string + '.log')
         if not self.root_path.exists():
             try:
                 os.mkdir(self.root_path)
@@ -47,7 +48,14 @@ class DataRecorder:
         self.data_dict["arguments"] = data_dict
 
     def write_training_data(self):
-
+        #save plot figure
+        figure_name = self.data_dict["arguments"]["network"] + '_' + self.start_time_string
+        self.data_dict["training_data"]["plot_figure"].savefig(os.path.join(self.root_path, figure_name + '.png'), dpi=300, facecolor='gray')
+        del self.data_dict["training_data"]["plot_figure"]
+        time_dict = {}
+        time_dict["start_time"] = self.start_time
+        time_dict["end_time"] = time.strftime("%Y%m%d %H:%M:%S  ", time.localtime())
+        self.data_dict["time_interval"] = time_dict
         json_dict = json.dumps(self.data_dict, indent=1)
         with open(self.log_path, 'a') as log:
             log.write(json_dict)
