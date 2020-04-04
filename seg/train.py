@@ -25,6 +25,7 @@ if args.resize[0] % pow(2, args.downLayerNumber) != 0:
     raise ValueError("输入尺寸必须是%d的整数倍" % pow(2, args.downLayerNumber))
 
 logger = DataRecorder()#初始化记录器
+logger.set_arguments(vars(args))
 label_root_path = configer['labelRootPath']
 train_label_file = configer['trainLabelFile']
 test_label_file = configer['testLabelFile']
@@ -44,6 +45,7 @@ opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999
 # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
 original_size = (args.originalSize[1], args.originalSize[0])
 start = datetime.datetime.now()
+train_statics_dict = {}#record overall training statics
 start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
 for EPOCH in tqdm(range(args.epoch)):
     net.train()
@@ -139,3 +141,10 @@ plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
 image_save_path = configer['staticImagePath']
 fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecolor='gray')
+train_statics_dict['max_train_accuracy'] = np.max(accuracy_list)
+train_statics_dict['min_loss'] = np.min(train_loss_list)
+train_statics_dict['max_test_accuracy'] = np.max(test_accuracy_list)
+train_statics_dict['duration_seconds'] = start_time + '.png'
+train_statics_dict['graph'] = (end-start).seconds
+logger.set_training_data(train_statics_dict)
+logger.write_training_data()

@@ -29,7 +29,7 @@ model = Model(args)#根据参数获取模型
 if args.date and args.time:
     model.load_model(args.date, args.time)
 configer = Configer().get_configer()#获取环境配置
-
+logger = DataRecorder()#初始化记录器
 # dataprober.get_data_difference()
 transforms = utils.get_transforms(args)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
