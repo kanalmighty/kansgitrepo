@@ -144,7 +144,7 @@ fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecol
 train_statics_dict['max_train_accuracy'] = round(np.max(accuracy_list), 3)
 train_statics_dict['min_loss'] = round(np.min(train_loss_list), 3)
 train_statics_dict['max_test_accuracy'] = round(np.max(test_accuracy_list), 3)
-train_statics_dict['duration_seconds'] = start_time + '.png'
-train_statics_dict['graph'] = (end-start).seconds
+train_statics_dict['graph'] = start_time + '.png'
+train_statics_dict['duration_seconds'] = (end-start).seconds
 logger.set_training_data(train_statics_dict)
 logger.write_training_data()
