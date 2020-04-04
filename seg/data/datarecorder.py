@@ -49,7 +49,6 @@ class DataRecorder:
 
     def write_training_data(self):
         #save plot figure
-        self.data_dict['args'] = self.data_dict["arguments"]
         json_dict = json.dumps(self.data_dict, indent=1)
         with open(self.log_path, 'a') as log:
             log.write(json_dict)
