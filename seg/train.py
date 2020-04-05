@@ -141,9 +141,9 @@ plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
 plt.legend(['train_loss'])
 image_save_path = configer['staticImagePath']
 fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecolor='gray')
-train_statics_dict['max_train_accuracy'] = round(np.max(accuracy_list), 3)
+train_statics_dict['max_train_accuracy'] = round(np.mean(accuracy_list), 3)
 train_statics_dict['min_loss'] = round(np.min(train_loss_list), 3)
-train_statics_dict['max_test_accuracy'] = round(np.max(test_accuracy_list), 3)
+train_statics_dict['max_test_accuracy'] = round(np.mean(test_accuracy_list), 3)
 train_statics_dict['graph'] = start_time + '.png'
 train_statics_dict['duration_seconds'] = (end-start).seconds
 logger.set_training_data(train_statics_dict)
