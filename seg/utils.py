@@ -341,6 +341,12 @@ def get_sample(file_name):
     return sample_list
 
 
+def check_acc_rate(acc_list, threshhold, epoch_left):
+    rate = acc_list[-1]/acc_list[-2]
+    if acc_list[-1]*((1 + rate) ^ epoch_left) < threshhold:
+        return False
+    else:
+        return True
 
 
 if __name__ == '__main__':
