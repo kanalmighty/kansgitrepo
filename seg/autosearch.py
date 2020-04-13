@@ -2,6 +2,7 @@ import argparse
 import datetime
 import torchvision
 import torch
+import pdb
 import os
 import time
 import matplotlib.pyplot as plt
@@ -130,6 +131,7 @@ def train(args):
                     cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
             test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
+        pdb.set_trace()
         print(EPOCH)
         is_promising = True
         # 第二个epoch开始计算acc增长率
