@@ -130,7 +130,9 @@ def train(args):
                     cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
             test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
-            is_promising = utils.check_acc_rate(test_accuracy_list, args.testAccThreshold, args.epoch - EPOCH)
+            is_promising = True
+            if EPOCH > 1:
+                is_promising = utils.check_acc_rate(test_accuracy_list, args.testAccThreshold, args.epoch - EPOCH)
             if is_promising is not True:
                 return False
     end = datetime.datetime.now()
