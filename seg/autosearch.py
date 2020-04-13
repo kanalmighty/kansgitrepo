@@ -185,10 +185,14 @@ def auto_search():
                 args.cof = c
                 args.downLayerNumber = du[0]
                 args.upLayerNumber = du[1]
-                if train(args) is False:
-                    print("参数组合%s达不到指定阈值,丢弃" % vars(args))
-                else:
-                    print("参数组合%s完成训练" % vars(args))
+                try:
+                    res = train(args)
+                    if res is False:
+                        print("参数组合%s达不到指定阈值,丢弃" % vars(args))
+                    else:
+                        print("参数组合%s完成训练" % vars(args))
+                except RuntimeError as e:
+                    print("参数组合%s完成训练失败，原因:%s" % (vars(args), e))
 
 if __name__ == '__main__':
     auto_search()
