@@ -178,7 +178,7 @@ def auto_search():
                 args.resize = [r, r]
                 args.cof = c
                 args.downLayerNumber = du[0]
-                args.GroupUpConvLayer = du[1]
+                args.upLayerNumber = du[1]
                 if train(args) is False:
                     print("参数组合%s达不到指定阈值,丢弃" % vars(args))
                 else:
