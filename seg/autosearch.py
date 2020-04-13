@@ -133,6 +133,7 @@ def train(args):
         is_promising = True
         # 第二个epoch开始计算acc增长率
         if EPOCH > 1:
+            print(EPOCH)
             is_promising = utils.check_acc_rate(test_accuracy_list, args.testAccThreshold, args.epoch - EPOCH)
         if is_promising is not True:
             return False
