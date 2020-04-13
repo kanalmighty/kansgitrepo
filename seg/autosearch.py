@@ -191,7 +191,7 @@ def auto_search():
                         print("参数组合%s达不到指定阈值,丢弃" % vars(args))
                     else:
                         print("参数组合%s完成训练" % vars(args))
-                except RuntimeError as e:
+                except (RuntimeError,TypeError,ValueError) as e:
                     print("参数组合%s完成训练失败，原因:%s" % (vars(args), e))
 
 if __name__ == '__main__':
