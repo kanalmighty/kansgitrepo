@@ -173,8 +173,8 @@ def train(args):
 def auto_search():
     args = options.get_args()#获取参数
     resize_list = configer['resize'].split(';')
-    resize_list = list(map(int,resize_list))
-    cof_list = configer['resize'].split(';')
+    resize_list = list(map(int, resize_list))
+    cof_list = configer['cof'].split(';')
     cof_list = list(map(int, cof_list))
     d_u_lay_number = configer['down_up_conv'].split(';')
     d_u_lay_number =[tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number]
