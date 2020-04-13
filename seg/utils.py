@@ -1,3 +1,4 @@
+import pdb
 import time
 from PIL import Image
 import sys
@@ -342,6 +343,7 @@ def get_sample(file_name):
 
 
 def check_acc_rate(acc_list, threshhold, epoch_left):
+    pdb.set_trace()
     rate = acc_list[-1]/acc_list[-2]
     print(rate, acc_list[-1] * (pow((1 + rate), epoch_left)))
     if acc_list[-1] * (pow((1 + rate), epoch_left)) < threshhold:
