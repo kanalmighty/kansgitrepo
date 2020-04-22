@@ -32,21 +32,31 @@ visualizer = Visualizer()#初始化视觉展示器
 
 def train(args):
 
-    if args.resize[0] % pow(2, args.downLayerNumber) != 0:
+    if args.resize % pow(2, args.downLayerNumber) != 0:
         raise ValueError("输入尺寸必须是%d的整数倍" % pow(2, args.downLayerNumber))
 
     logger = DataRecorder()#初始化记录器
     logger.set_arguments(vars(args))
+    #获取参数配置
+    original_size = configer['original_size'].split(',')
+
+    original_size = list(map(int, original_size))
+    # original_size = tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in original_size
+    mode = configer['mode']
+    batch_size = int(configer['batch_size'])
+    num_class = int(configer['num_class'])
     label_root_path = configer['labelRootPath']
     train_label_file = configer['trainLabelFile']
     test_label_file = configer['testLabelFile']
     mask_root = configer['maskImageRoot']
-    dataset = FaceSegDateset(args.mode, label_root_path, train_label_file, args.resize[0], args.resize[1])
+    model_save_path = configer['checkPointPath']
 
-    trainingdata_loader = DataLoader(dataset, batch_size=args.batchSize, shuffle=True, drop_last=True)
+    dataset = FaceSegDateset(mode, label_root_path, train_label_file, args.resize, args.resize)
+
+    trainingdata_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=True)
     loss_f = torch.nn.BCELoss()
     stage_dict = {'GroupDownConvLayer': args.downLayerNumber, 'GroupUpConvLayer': args.upLayerNumber}  # 个数
-    net = Assembler(stage_dict, 3, args.numclass, args.cof)
+    net = Assembler(stage_dict, 3, num_class, args.cof)
     net = net.to(device)
     accuracy_list = []
     test_accuracy_list = []
@@ -54,11 +64,11 @@ def train(args):
     total_length = len(trainingdata_loader)
     opm = torch.optim.Adam(net.parameters(), lr=args.learningRate, betas=(0.9, 0.999), eps=1e-8)
     # opm = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9,weight_decay=0.005)
-    original_size = (args.originalSize[1], args.originalSize[0])
     start = datetime.datetime.now()
+    model_static_dict = {}
     train_statics_dict = {}#record overall training statics
     start_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
-    for EPOCH in tqdm(range(args.epoch)):
+    for EPOCH in tqdm(range(int(args.epoch))):
         net.train()
         accurate_count_epoch = 0
         train_loss_epoch = 0
@@ -92,7 +102,7 @@ def train(args):
         # transform_list_test.append(transforms.ToTensor())
         # trans_test = transforms.Compose(transform_list_test)
         test_dataset = FaceSegDateset('test', label_root_path,
-                                      test_label_file, args.resize[0], args.resize[1])
+                                      test_label_file, args.resize, args.resize)
 
         testdata_loader = DataLoader(test_dataset, batch_size=1, shuffle=True, drop_last=True)
         total_test_length = len(testdata_loader)
@@ -117,7 +127,7 @@ def train(args):
                 if EPOCH == args.epoch - 1:
                     test_pred = np.argmax(test_pred, axis=1)
                     test_pred = test_pred.transpose(1, 2, 0)
-                    test_pred = cv2.resize(test_pred, (args.resize[0], args.resize[1]), interpolation=cv2.INTER_NEAREST).astype(np.float)
+                    test_pred = cv2.resize(test_pred, (args.resize, args.resize), interpolation=cv2.INTER_NEAREST).astype(np.float)
                     test_pred = test_pred.astype(np.uint8)
                     # test_pred = np.expand_dims(test_pred, 2).repeat(3, axis=2)
                     # test_grey_image = cv2.cvtColor(test_pred, cv2.COLOR_BGR2GRAY)
@@ -130,15 +140,28 @@ def train(args):
                     test_image_contour = cv2.resize(test_image_contour, (original_size[0], original_size[1]))
                     cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
 
+                    #保存模型开始选择最优模型
+                    key = args.resize + '_' + args.cof + '_' + args.down_up_conv + args.upLayerNumber
+                    torch.save(os.path.join(model_save_path, key + '.pth'))
+                    static_dict = sorted(vars(args))
+                    static_dict.popitem('epoch')
+                    static_dict.popitem('testAccThreshold')
+                    static_dict['test_acc'] = test_accuracy_list
+                    model_static_dict[key] = static_dict
+
+
             test_accuracy_list.append(test_accuracy_count_epoch / (total_test_length))
 
         # 第二个epoch开始计算acc增长率
-        is_promising = True
 
         if EPOCH >= 1:
             is_promising = utils.check_acc_rate(test_accuracy_list, args.testAccThreshold, args.epoch - EPOCH)
-        if is_promising is not True:
-            return False
+            if is_promising is not True:
+                return False
+
+
+
+
     end = datetime.datetime.now()
     fig = plt.figure(figsize=(8, 4))
     plt.subplot(121)
@@ -167,21 +190,42 @@ def train(args):
     train_statics_dict['duration_seconds'] = (end-start).seconds
     logger.set_training_data(train_statics_dict)
     logger.write_training_data()
-    return True
+    return model_static_dict
+
+
+def set_args_final_train(args, primer_args):
+    args_list = {'resize', 'cof', 'downLayerNumber', 'upLayerNumber'}
+    least_relevent_arg_set = set(primer_args.keys()).difference(args_list)  # 看看最优参数列表中没有哪几个参数
+    for least_relevent_arg in least_relevent_arg_set:
+        if least_relevent_arg == 'cof':
+            args.cof =  sorted(list(map(int,configer['cof'].split(';'))))[0]
+        elif least_relevent_arg == 'resize':
+            args.resize = sorted(list(map(int, configer['resize'].split(';'))))[0]
+        elif least_relevent_arg == 'downLayerNumber':
+            d_u_lay_number = configer['down_up_conv'].split(';')
+            args.downLayerNumber = sorted([tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number])[0]
+        elif least_relevent_arg == 'upLayerNumber':
+            d_u_lay_number = configer['down_up_conv'].split(';')
+            args.upLayerNumber = sorted([tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number])[1]
+    return args
+
 
 
 def auto_search():
     args = options.get_args()#获取参数
     resize_list = configer['resize'].split(';')
+    epoch = int(configer['epoch'])
     resize_list = list(map(int, resize_list))
     cof_list = configer['cof'].split(';')
     cof_list = list(map(int, cof_list))
     d_u_lay_number = configer['down_up_conv'].split(';')
-    d_u_lay_number =[tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number]
+    d_u_lay_number = [tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number]
+    epoch = epoch / 2
+    res_list = []
     for r in resize_list:
         for c in cof_list:
             for du in d_u_lay_number:
-                args.resize = [r, r]
+                args.resize = r
                 args.cof = c
                 args.downLayerNumber = du[0]
                 args.upLayerNumber = du[1]
@@ -190,9 +234,27 @@ def auto_search():
                     if res is False:
                         print("参数组合%s达不到指定阈值,丢弃" % vars(args))
                     else:
-                        print("参数组合%s完成训练" % vars(args))
-                except (RuntimeError,TypeError,ValueError) as e:
+                        print("参数组合%s完成预训练，训练结束后进行模型评估" % vars(args))
+                        res_list.append(res)
+                except (RuntimeError) as e:
                     print("参数组合%s完成训练失败，原因:%s" % (vars(args), e))
+    # 调用关联规则挖掘方法,获取最优参数组合
+    primer_list = utils.get_feq_set(res_list)
+    dict_map = map(utils.sort_arg_dict, primer_list)
+    #预设定的参数列表
+
+    for primer_args in dict_map:
+        args = set_args_final_train(args, primer_args)
+
+        try:
+            res_final = train(args)
+            if res_final is False:
+                print("参数组合%s达不到指定阈值,丢弃" % vars(args))
+            else:
+                print("参数组合%s完成最好评估" % vars(args))
+        except (RuntimeError, TypeError, ValueError) as e:
+            print("参数组合%s完成训练失败，原因:%s" % (vars(args), e))
+
 
 if __name__ == '__main__':
     auto_search()

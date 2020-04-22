@@ -6,7 +6,8 @@ import torchvision.transforms as transforms
 sys.path.append('/content/cloned-repo/isic1')
 import shutil
 import os
-import PIL
+from algorithm.transactionencoder import TransactionEncoder
+from algorithm.apriori import apriori
 from sys import exit
 from pathlib import Path
 import numpy as np
@@ -16,6 +17,7 @@ import json
 import urllib.request
 import matplotlib.pyplot as plt
 import cv2 as cv
+import copy
 import torch
 import glob
 IMG_EXTENSIONS = [
@@ -349,9 +351,76 @@ def check_acc_rate(acc_list, threshhold, epoch_left):
         return False
     else:
         return True
+#输入numpy数组，计算每列的熵
+def calc_ent(x):
+    """
+        calculate shanno ent of x
+    """
+    entropy_list = []
+    for i in range(x.shape[1]):
+        col = x[:, i]
+        x_value_list = set([col[j] for j in range(col.shape[0])])
+        ent = 0.0
+        for x_value in x_value_list:
+            p = float(x[x == x_value].shape[0]) / x.shape[0]
+            logp = np.log2(p)
+            ent -= p * logp
+        entropy_list.append(ent)
+    return np.array(entropy_list)
 
+def change_dict_value(dict_data):
+    for k,v in dict_data.items():
+        dict_data[k] = k + '_' + str(v)
+    return dict_data
+
+
+def get_feq_set(data_dict):
+    #先把字典转为list
+    data_list = list(data_dict.values())
+
+    data_list_for_entro = copy.deepcopy(data_list)
+    data_list_number = [list(item.values()) for item in data_list_for_entro]
+    k_v_list = []
+
+    data_list_numpy = np.array(data_list_number)
+    entr = calc_ent(data_list_numpy)
+    least_inrelevent_arg_idx = np.argmax(entr)
+    for item_dict in data_list:
+        k_v_list.append(list(change_dict_value(item_dict).values()))
+    k_v_list = np.array(k_v_list)
+    k_v_list = np.delete(k_v_list, least_inrelevent_arg_idx, axis=1)
+    # col_min = np.min(data_list, axis=0)
+    # col_max = np.max(data_list, axis=0)
+    # nor_vector = (data_list_numpy - col_min)/(col_max - col_min)
+    # data_list_tensor = torch.from_numpy(nor_vector)
+    # data_list_softmax = torch.softmax(data_list_tensor, dim=0)
+    # data_list_softmax = data_list_softmax.numpy()
+    # 进行 one-hot 编码
+    te = TransactionEncoder()
+    te_ary = te.fit(k_v_list).transform(k_v_list)
+    df = pd.DataFrame(te_ary, columns=te.columns_)
+    # 利用 Apriori 找出频繁项集
+    freq = apriori(df, min_support=0.5, use_colnames=True, min_items=2)
+    freq = freq.sort_values(by='support', ascending=False)
+    freq = freq.drop('support', axis=1).values.squeeze().tolist()
+    return freq
+
+
+def sort_arg_dict(freq_set):
+    args_dict = {}
+    for k_v in freq_set:
+        args_dict[k_v.split('_')[0]] = int(k_v.split('_')[1])
+    return args_dict
 
 if __name__ == '__main__':
-    img2 = cv.imread("C:\\Users\\23270\\Desktop\\aa\\ISIC_0010605.jpg")
-    a = centercrop_image(img2, 200, 200)
-    cv.imshow('a', a)
+    dict_data = {'224_16_4_0.0001':{'resize': 224, 'cof': 16, 'downLayerNumber': 2, 'upLayerNumber': 2},\
+                 '224_16_6_0.003': {'resize': 256, 'cof': 32, 'downLayerNumber': 3,'upLayerNumber': 3},\
+                 '224_64_6_0.03': {'resize': 320, 'cof': 64, 'downLayerNumber': 5,'upLayerNumber': 5},
+                 '224_128_6_0.03': { 'resize': 320, 'cof': 128, 'downLayerNumber': 5,'upLayerNumber': 5},\
+                 '224_64_6_0.03': { 'resize': 224, 'cof': 256, 'downLayerNumber': 5,'upLayerNumber': 5},\
+                 '224_64_6_0.03': { 'resize': 320, 'cof': 64, 'downLayerNumber': 5,'upLayerNumber': 5}}
+
+    a = get_feq_set(dict_data)
+    b = map(sort_arg_dict,a)
+    for i in b:
+        print(i)

@@ -9,12 +9,9 @@ class BaseOptions():
 
     def initialize(self):    
         # experiment specificss
-        self.argument_parser.add_argument('--numclass', type=int, help='the number of classes of the input')
-        self.argument_parser.add_argument('--resize', action='append', type=int, help='the size(w,h) of images if you want a resize')
-        self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18,densenet161', choices=['mobileNetV1'])
+        # self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18,densenet161', choices=['mobileNetV1'])
         self.argument_parser.add_argument('--epoch', type=int, default=10, help='number of epoch you want to iterate')
         self.argument_parser.add_argument('--testAccThreshold', type=float, default=0.8, help='test accuracy threshold')
-        self.argument_parser.add_argument('--mode', type=str,  help='test accuracy threshold')
 
 
 
