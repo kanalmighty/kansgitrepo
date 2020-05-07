@@ -47,6 +47,7 @@ def train(args):
     num_class = int(configer['num_class'])
     label_root_path = configer['labelRootPath']
     train_label_file = configer['trainLabelFile']
+    threshold = configer['threshold']
     test_label_file = configer['testLabelFile']
     mask_root = configer['maskImageRoot']
     model_save_path = configer['checkPointPath']
@@ -91,7 +92,7 @@ def train(args):
             # accurate_count_epoch += accuracy_count(y_mask,pred_mask)/(resize[0]**2*batchSize)#一个batch里面正确分率的像素个数比率
             opm.zero_grad()
             train_loss_epoch += loss.item()
-            loss.backward()
+            loss.to(device).backward()
             opm.step()
         train_loss_list.append(train_loss_epoch / total_length)
         accuracy_list.append(accurate_count_epoch / (total_length))
@@ -138,15 +139,17 @@ def train(args):
 
                     test_image_contour = cv2.drawContours(test_image, contours, -1, (0, 0, 255), 1)
                     test_image_contour = cv2.resize(test_image_contour, (original_size[0], original_size[1]))
-                    cv2.imwrite(mask_root + str(idx) + '.jpg', test_image_contour)
+                    mask_result_path = os.path.join(mask_root, start_time)
+                    utils.make_directory(mask_result_path)
+                    cv2.imwrite(os.path.join(mask_result_path, str(idx) + '.jpg'), test_image_contour)
 
                     #保存模型开始选择最优模型
-                    key = args.resize + '_' + args.cof + '_' + args.down_up_conv + args.upLayerNumber
-                    torch.save(os.path.join(model_save_path, key + '.pth'))
-                    static_dict = sorted(vars(args))
-                    static_dict.popitem('epoch')
-                    static_dict.popitem('testAccThreshold')
-                    static_dict['test_acc'] = test_accuracy_list
+                    key = str(args.resize) + '_' + str(args.cof) + '_' + str(args.downLayerNumber) + str(args.upLayerNumber)
+                    # torch.save(net.state_dict(), os.path.join(model_save_path, key + '.pth'))
+                    static_dict = vars(args).copy()
+                    static_dict.pop('epoch')
+                    static_dict.pop('learningRate')
+                    # static_dict['test_acc'] = test_accuracy_list
                     model_static_dict[key] = static_dict
 
 
@@ -155,7 +158,7 @@ def train(args):
         # 第二个epoch开始计算acc增长率
 
         if EPOCH >= 1:
-            is_promising = utils.check_acc_rate(test_accuracy_list, args.testAccThreshold, args.epoch - EPOCH)
+            is_promising = utils.check_acc_rate(test_accuracy_list, threshold, args.epoch - EPOCH)
             if is_promising is not True:
                 return False
 
@@ -170,8 +173,8 @@ def train(args):
     plt.ylabel = 'train_test_acc'
     plt.axis([0, len(accuracy_list), 0, 1])
     plt.yticks(np.arange(0, 1, 0.05))
-    plt.plot(range(args.epoch), test_accuracy_list, 'r-', label='test_acc')
-    plt.plot(range(args.epoch), accuracy_list, 'b-', label='train_acc')
+    plt.plot(range(int(args.epoch)), test_accuracy_list, 'r-', label='test_acc')
+    plt.plot(range(int(args.epoch)), accuracy_list, 'b-', label='train_acc')
     plt.legend(['test_acc', 'train_acc'])
     plt.subplot(122)
     plt.title('down : %s, up :%s,size : %s, cof: %s, lr: %s, duration: %s' % (args.downLayerNumber, args.upLayerNumber, args.resize, args.cof, args.learningRate, (end-start).seconds))
@@ -179,7 +182,7 @@ def train(args):
     plt.ylabel = 'train_loss'
     plt.axis([0, len(train_loss_list), 0, 3])
     plt.yticks(np.arange(0, 1, 0.1))
-    plt.plot(range(args.epoch), train_loss_list, 'g-', label='train_acc')
+    plt.plot(range(int(args.epoch)), train_loss_list, 'g-', label='train_acc')
     plt.legend(['train_loss'])
     image_save_path = configer['staticImagePath']
     fig.savefig(os.path.join(image_save_path, start_time + '.png'), dpi=300, facecolor='gray')
@@ -198,7 +201,7 @@ def set_args_final_train(args, primer_args):
     least_relevent_arg_set = set(primer_args.keys()).difference(args_list)  # 看看最优参数列表中没有哪几个参数
     for least_relevent_arg in least_relevent_arg_set:
         if least_relevent_arg == 'cof':
-            args.cof =  sorted(list(map(int,configer['cof'].split(';'))))[0]
+            args.cof = sorted(list(map(int,configer['cof'].split(';'))))[0]
         elif least_relevent_arg == 'resize':
             args.resize = sorted(list(map(int, configer['resize'].split(';'))))[0]
         elif least_relevent_arg == 'downLayerNumber':
@@ -209,7 +212,10 @@ def set_args_final_train(args, primer_args):
             args.upLayerNumber = sorted([tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number])[1]
     return args
 
-
+# resize = 256; 320; 384
+# cof = 16; 32; 64; 128
+# down_up_conv = 2, 2; 3, 3; 4, 4; 5, 5; 6, 6
+# original_size = 800,600
 
 def auto_search():
     args = options.get_args()#获取参数
@@ -218,10 +224,11 @@ def auto_search():
     resize_list = list(map(int, resize_list))
     cof_list = configer['cof'].split(';')
     cof_list = list(map(int, cof_list))
+    args.threshold = float(configer['epoch'])
     d_u_lay_number = configer['down_up_conv'].split(';')
     d_u_lay_number = [tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number]
-    epoch = epoch / 2
-    res_list = []
+    args.epoch = epoch / 2
+    res_dict= {}
     for r in resize_list:
         for c in cof_list:
             for du in d_u_lay_number:
@@ -235,11 +242,11 @@ def auto_search():
                         print("参数组合%s达不到指定阈值,丢弃" % vars(args))
                     else:
                         print("参数组合%s完成预训练，训练结束后进行模型评估" % vars(args))
-                        res_list.append(res)
+                        res_dict.update(res)
                 except (RuntimeError) as e:
                     print("参数组合%s完成训练失败，原因:%s" % (vars(args), e))
     # 调用关联规则挖掘方法,获取最优参数组合
-    primer_list = utils.get_feq_set(res_list)
+    primer_list = utils.get_feq_set(res_dict)
     dict_map = map(utils.sort_arg_dict, primer_list)
     #预设定的参数列表
 

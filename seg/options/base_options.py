@@ -10,8 +10,7 @@ class BaseOptions():
     def initialize(self):    
         # experiment specificss
         # self.argument_parser.add_argument('--network', type=str, help='choices including vgg16,vgg19,alexnet,inception,resnet18,densenet161', choices=['mobileNetV1'])
-        self.argument_parser.add_argument('--epoch', type=int, default=10, help='number of epoch you want to iterate')
-        self.argument_parser.add_argument('--testAccThreshold', type=float, default=0.8, help='test accuracy threshold')
+        # self.argument_parser.add_argument('--testAccThreshold', type=float, default=0.8, help='test accuracy threshold')
 
 
 

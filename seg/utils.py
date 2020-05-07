@@ -347,7 +347,7 @@ def get_sample(file_name):
 def check_acc_rate(acc_list, threshhold, epoch_left):
 
     rate = acc_list[-1]/acc_list[-2] - 1
-    if acc_list[-1] * (pow((1 + rate), epoch_left)) < threshhold:
+    if acc_list[-1] * (pow((1 + rate), epoch_left)) < float(threshhold):
         return False
     else:
         return True
@@ -359,7 +359,7 @@ def calc_ent(x):
     entropy_list = []
     for i in range(x.shape[1]):
         col = x[:, i]
-        x_value_list = set([col[j] for j in range(col.shape[0])])
+        x_value_list = [col[j] for j in range(col.shape[0])]
         ent = 0.0
         for x_value in x_value_list:
             p = float(x[x == x_value].shape[0]) / x.shape[0]
@@ -372,7 +372,6 @@ def change_dict_value(dict_data):
     for k,v in dict_data.items():
         dict_data[k] = k + '_' + str(v)
     return dict_data
-
 
 def get_feq_set(data_dict):
     #先把字典转为list
@@ -409,7 +408,7 @@ def get_feq_set(data_dict):
 def sort_arg_dict(freq_set):
     args_dict = {}
     for k_v in freq_set:
-        args_dict[k_v.split('_')[0]] = int(k_v.split('_')[1])
+        args_dict[k_v.split('_')[0]] = float(k_v.split('_')[1])
     return args_dict
 
 if __name__ == '__main__':
