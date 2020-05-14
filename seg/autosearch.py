@@ -224,7 +224,6 @@ def auto_search():
     resize_list = list(map(int, resize_list))
     cof_list = configer['cof'].split(';')
     cof_list = list(map(int, cof_list))
-    args.threshold = float(configer['epoch'])
     d_u_lay_number = configer['down_up_conv'].split(';')
     d_u_lay_number = [tuple((int(str.split(',')[0]), int(str.split(',')[1]))) for str in d_u_lay_number]
     args.epoch = epoch / 2
@@ -249,7 +248,7 @@ def auto_search():
     primer_list = utils.get_feq_set(res_dict)
     dict_map = map(utils.sort_arg_dict, primer_list)
     #预设定的参数列表
-
+    print("完成参数组合筛选",dict_map)
     for primer_args in dict_map:
         args = set_args_final_train(args, primer_args)
 
