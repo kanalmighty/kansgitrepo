@@ -202,7 +202,7 @@ if __name__ == "__main__":
 
     if True:
         lr = 1e-4
-        Batch_size = 16
+        Batch_size = 8
         Freeze_Epoch = 25
         Unfreeze_Epoch = 50
 
