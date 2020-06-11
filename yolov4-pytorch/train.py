@@ -90,7 +90,7 @@ def fit_ont_epoch(net,yolo_losses,epoch,epoch_size,epoch_size_val,gen,genval,Epo
     print('Total Loss: %.4f || Val Loss: %.4f ' % (total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
     print('Saving state, iter:', str(epoch+1))
-    torch.save(model.state_dict(), '%s.pth'%('yolo'))
+    torch.save(os.path.join('/content/drive/My Drive/', '%s.pth'%('yolo')))
 
     # torch.save(model.state_dict(), 'logs/Epoch%d-Total_Loss%.4f-Val_Loss%.4f.pth'%((epoch+1),total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
@@ -129,10 +129,10 @@ if __name__ == "__main__":
 
     # 创建模型
     model = YoloBody(len(anchors[0]),num_classes)
-    model_path = '%s.pth'%('yolo')
+    model_path = '/content/drive/My Drive/yolo.pth'
     # 加快模型训练的效率
     print('Loading weights into state dict...')
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model_dict = model.state_dict()
     pretrained_dict = torch.load(model_path, map_location=device)
     pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) ==  np.shape(v)}
@@ -142,9 +142,9 @@ if __name__ == "__main__":
 
     net = model.train()
 
-    # if Cuda:
-    #     net = torch.nn.DataParallel(model)
-    #     cudnn.benchmark = True
+    if Cuda:
+        net = torch.nn.DataParallel(model)
+        cudnn.benchmark = True
     net = net.to(device)
 
     # 建立loss函数
