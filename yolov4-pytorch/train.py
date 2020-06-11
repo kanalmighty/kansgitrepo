@@ -90,7 +90,9 @@ def fit_ont_epoch(net,yolo_losses,epoch,epoch_size,epoch_size_val,gen,genval,Epo
     print('Total Loss: %.4f || Val Loss: %.4f ' % (total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
     print('Saving state, iter:', str(epoch+1))
-    torch.save(model.state_dict(), 'logs/Epoch%d-Total_Loss%.4f-Val_Loss%.4f.pth'%((epoch+1),total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
+    torch.save(model.state_dict(), '%s.pth'%('yolo'))
+
+    # torch.save(model.state_dict(), 'logs/Epoch%d-Total_Loss%.4f-Val_Loss%.4f.pth'%((epoch+1),total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
 
 
@@ -100,7 +102,7 @@ if __name__ == "__main__":
     #   显存比较小可以使用416x416
     #   显存比较大可以使用608x608
     #-------------------------------#
-    input_shape = (416,416)
+    input_shape = (608,608)
     #-------------------------------#
     #   tricks的使用设置
     #-------------------------------#
@@ -127,7 +129,7 @@ if __name__ == "__main__":
 
     # 创建模型
     model = YoloBody(len(anchors[0]),num_classes)
-    model_path = "D:\\PyCharmSpace\\yolov4-pytorch\\logs\\Epoch50-Total_Loss36.6935-Val_Loss19.8076.pth"
+    model_path = '%s.pth'%('yolo')
     # 加快模型训练的效率
     print('Loading weights into state dict...')
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
@@ -200,7 +202,7 @@ if __name__ == "__main__":
 
     if True:
         lr = 1e-4
-        Batch_size = 2
+        Batch_size = 32
         Freeze_Epoch = 25
         Unfreeze_Epoch = 50
 
