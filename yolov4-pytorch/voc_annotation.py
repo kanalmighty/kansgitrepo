@@ -7,10 +7,10 @@ wd = getcwd()
 classes = ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
 
 def convert_annotation(year, image_id, list_file):
-    in_file = open('/content/VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
+    in_file = open('/content/cloned-repo/VOCdevkit/VOC%s/Annotations/%s.xml'%(year, image_id))
     tree=ET.parse(in_file)
     root = tree.getroot()
-    list_file.write('/content/VOCdevkit/VOC2007/JPEGImages/%s.jpg'%(image_id))
+    list_file.write('/content/cloned-repo/VOCdevkit/VOC2007/JPEGImages/%s.jpg'%(image_id))
     for obj in root.iter('object'):
         difficult = obj.find('difficult').text
         cls = obj.find('name').text
