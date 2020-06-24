@@ -196,7 +196,7 @@ def bbox_iou(box1, box2, x1y1x2y2=True):
 
     return iou
 
-
+#prediction一张图片的所有预测框数据
 def non_max_suppression(prediction, num_classes, conf_thres=0.5, nms_thres=0.4):
     # 求左上角和右下角
     box_corner = prediction.new(prediction.shape)
@@ -209,6 +209,7 @@ def non_max_suppression(prediction, num_classes, conf_thres=0.5, nms_thres=0.4):
     output = [None for _ in range(len(prediction))]
     for image_i, image_pred in enumerate(prediction):
         # 利用置信度进行第一轮筛选
+        #过滤掉置信度低于阈值的框
         conf_mask = (image_pred[:, 4] >= conf_thres).squeeze()
         image_pred = image_pred[conf_mask]
 
@@ -229,20 +230,25 @@ def non_max_suppression(prediction, num_classes, conf_thres=0.5, nms_thres=0.4):
 
         for c in unique_labels:
             # 获得某一类初步筛选后全部的预测结果
+            # 获取预测为同一类的预测框
             detections_class = detections[detections[:, -1] == c]
             # 按照存在物体的置信度排序
             _, conf_sort_index = torch.sort(detections_class[:, 4], descending=True)
             detections_class = detections_class[conf_sort_index]
             # 进行非极大抑制
+            #根据置信度排序以后的预测框
             max_detections = []
             while detections_class.size(0):
                 # 取出这一类置信度最高的，一步一步往下判断，判断重合程度是否大于nms_thres，如果是则去除掉
+                # 取一个置信度最大的预测框放入集合
                 max_detections.append(detections_class[0].unsqueeze(0))
                 if len(detections_class) == 1:
                     break
+                # 取一个集合中最新的预测框和剩余的进行iou比较
                 ious = bbox_iou(max_detections[-1], detections_class[1:])
+                #去掉同类别detections_class中比较结果大于阈值的预测框
                 detections_class = detections_class[1:][ious < nms_thres]
-            # 堆叠
+            # 堆叠.list转为tensor
             max_detections = torch.cat(max_detections).data
             # Add max detections to outputs
             output[image_i] = max_detections if output[image_i] is None else torch.cat(

@@ -13,7 +13,6 @@ from utils.utils import bbox_iou, merge_bboxes
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 from nets.yolo_training import Generator
 
-
 class YoloDataset(Dataset):
     def __init__(self, train_lines, image_size, mosaic=True):
         super(YoloDataset, self).__init__()

@@ -14,10 +14,14 @@ from torch.utils.data import DataLoader
 from utils.dataloader import yolo_dataset_collate, YoloDataset
 from nets.yolo_training import YOLOLoss,Generator
 from nets.yolo4 import YoloBody
+from cfg import *
 
+cfg = get_cfg()
 #---------------------------------------------------#
 #   获得类和先验框
 #---------------------------------------------------#
+
+
 def get_classes(classes_path):
     '''loads the classes'''
     with open(classes_path) as f:
@@ -89,19 +93,21 @@ def fit_ont_epoch(net,yolo_losses,epoch,epoch_size,epoch_size_val,gen,genval,Epo
     print('Total Loss: %.4f || Val Loss: %.4f ' % (total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
     print('Saving state, iter:', str(epoch+1))
-    torch.save(model.state_dict(), os.path.join('/content/drive/My Drive/', 'yolo.pth'))
+    torch.save(model.state_dict(), cfg.model_path)
 
     # torch.save(model.state_dict(), 'logs/Epoch%d-Total_Loss%.4f-Val_Loss%.4f.pth'%((epoch+1),total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
 
 
 
 if __name__ == "__main__":
+
+    print(cfg)
     #-------------------------------#
     #   输入的shape大小
     #   显存比较小可以使用416x416
     #   显存比较大可以使用608x608
     #-------------------------------#
-    input_shape = (608,608)
+    input_shape = (cfg.width,cfg.height)
     #-------------------------------#
     #   tricks的使用设置
     #-------------------------------#
@@ -110,7 +116,6 @@ if __name__ == "__main__":
     # 用于设定是否使用cuda
     Cuda = True
     smoooth_label = 0
-
     #-------------------------------#
     #   Dataloder的使用
     #-------------------------------#
@@ -120,15 +125,16 @@ if __name__ == "__main__":
     #-------------------------------#
     #   获得先验框和类
     #-------------------------------#
-    anchors_path = '/content/cloned-repo/yolov4-pytorch/model_data/yolo_anchors.txt'
-    classes_path = '/content/cloned-repo/yolov4-pytorch/model_data/voc_classes.txt'   
+
+    anchors_path = os.path.join(cfg.model_data_path, 'yolo_anchors.txt')
+    classes_path = os.path.join(cfg.model_data_path, 'voc_classes.txt')
     class_names = get_classes(classes_path)
     anchors = get_anchors(anchors_path)
     num_classes = len(class_names)
 
     # 创建模型
     model = YoloBody(len(anchors[0]),num_classes)
-    model_path = '/content/drive/My Drive/yolo.pth'
+    model_path = cfg.model_path
     # 加快模型训练的效率
     print('Loading weights into state dict...')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -164,9 +170,9 @@ if __name__ == "__main__":
     
     if True:
         lr = 1e-3
-        Batch_size = 6
-        Init_Epoch = 0
-        Freeze_Epoch = 0
+        Batch_size = cfg.partial_train_batch
+        Init_Epoch = cfg.init_epoch
+        Freeze_Epoch = cfg.freeze_epoch
         
         optimizer = optim.Adam(net.parameters(),lr,weight_decay=5e-4)
         if Cosine_lr:
@@ -201,9 +207,9 @@ if __name__ == "__main__":
 
     if True:
         lr = 1e-4
-        Batch_size = 2
-        Freeze_Epoch = 25
-        Unfreeze_Epoch = 50
+        Batch_size = cfg.whole_train_batch
+        Freeze_Epoch = cfg.freeze_epoch
+        Unfreeze_Epoch = cfg.unfreeze_epoch
 
         optimizer = optim.Adam(net.parameters(),lr,weight_decay=5e-4)
         if Cosine_lr:
