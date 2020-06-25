@@ -103,7 +103,7 @@ if __name__ == '__main__':
     step = len(train_data_set)/args.batchSize
     test_step = len(test_data_set) / 32
     loss_f = nn.CrossEntropyLoss()
-    for Epoch in range(60 - start_epoch):
+    for Epoch in range(start_epoch, 60):
         print("start training at epoch %d" % Epoch)
         net.train()
         epoch_train_accuracy = 0
@@ -112,8 +112,8 @@ if __name__ == '__main__':
         for image, label in train_dl:
             pred = net(image)
             label = label.long().to(device)
-            batch_mean_accurcy = (torch.argmax(pred, dim=1) == label).sum()/args.batchSize
-            epoch_train_accuracy += batch_mean_accurcy
+            batch_mean_accurcy = (torch.argmax(pred, dim=1) == label).float().sum()/args.batchSize
+            epoch_train_accuracy += batch_mean_accurcy.item()
             batch_mean_loss = loss_f(pred, label)
             epoch_loss += batch_mean_loss.item()
             batch_mean_loss.backward()
@@ -124,8 +124,8 @@ if __name__ == '__main__':
             for test_image, test_label in test_dl:
                 test_pred = net(test_image)
                 test_label = test_label.long().to(device)
-                test_mean_accurcy = (torch.argmax(test_pred, dim=1) == test_label).sum() / 32
-                epoch_test_accuracy += test_mean_accurcy
+                test_mean_accurcy = (torch.argmax(test_pred, dim=1) == test_label).float().sum() / 32
+                epoch_test_accuracy += test_mean_accurcy.item()
 
         print('avarage test accuracy %f' % (epoch_test_accuracy / test_step))
 
