@@ -96,11 +96,11 @@ if __name__ == '__main__':
 
     net.train()
     optimizer = optim.Adam(net.parameters(), args.lr, weight_decay=5e-4)
-    step = len(train_dl)/args.batchSize
-    test_step = len(test_dl) / 32
+    step = len(train_data_set)/args.batchSize
+    test_step = len(test_data_set) / 32
     loss_f = nn.CrossEntropyLoss()
     for Epoch in range(60 - start_epoch):
-        print("start training at epoch %d" % start_epoch)
+        print("start training at epoch %d" % Epoch)
         net.train()
         epoch_train_accuracy = 0
         epoch_test_accuracy = 0
