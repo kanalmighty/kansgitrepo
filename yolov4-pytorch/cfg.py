@@ -23,7 +23,7 @@ def get_cfg():
         Cfg.unfreeze_epoch = 50
         Cfg.width = 608
         Cfg.height = 608
-        Cfg.train_label_path = os.path.join('/content/drive/My Drive/','2007_train.txt')
+        Cfg.train_label_path = os.path.join('/content/drive/My Drive/','2007_trainval.txt')
         Cfg.train_label_path = os.path.join('/content/drive/My Drive/', '2007_test.txt')
         Cfg.image_path = 'D:\\datasets\\voc\\VOCtrainval_06-Nov-2007\\VOCdevkit\\VOC2007\\JPEGImages'
         Cfg.model_path = os.path.join('/content/drive/My Drive/', 'yolo.pth')
@@ -37,12 +37,12 @@ def get_cfg():
         Cfg.unfreeze_epoch = 50
         Cfg.width = 608
         Cfg.height = 608
-        Cfg.train_label_path = 'D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\2007_train.txt'
-        Cfg.test_label_path = 'D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\2007_test.txt'
+        Cfg.train_label_path = 'D:\\PyCharmSpace\\kansgitrepo\\yolov4-pytorch\\2007_trainval.txt'
+        Cfg.test_label_path = 'D:\\PyCharmSpace\\kansgitrepo\\yolov4-pytorch\\2007_test.txt'
         Cfg.label_path = 'D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\2007_train.txt'
         Cfg.image_path = 'D:\\datasets\\voc\\VOCtrainval_06-Nov-2007\\VOCdevkit\\VOC2007\\JPEGImages'
-        Cfg.model_path = os.path.join('D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\logs', 'yolo.pth')
-        Cfg.prune_model_path = os.path.join('D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\logs', 'prune.pth')
+        Cfg.model_path = os.path.join('D:\\datasets\\saved_model', 'yolo.pth')
+        Cfg.prune_model_path = os.path.join('D:\\datasets\\saved_model', 'prune.pth')
         Cfg.model_data_path = 'D:\\PyCharmSpace\\kan\\kansgitrepo\\yolov4-pytorch\\model_data'
 
     return Cfg

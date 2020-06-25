@@ -1,4 +1,5 @@
 import argparse
+import shutil
 
 import cv2
 from torch import optim
@@ -60,7 +61,8 @@ class CSPdarknetGA(CSPDarkNet):
         return out
 
 
-
+def save_checkpoint(state, filename='checkpoint.pth.tar'):
+    torch.save(state, filename)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PyTorch Slimming CIFAR prune')
@@ -73,32 +75,68 @@ if __name__ == '__main__':
     args = parser.parse_args()
     cfg = get_cfg()
     net = CSPdarknetGA()
-    data_set = VocDataset(cfg.train_label_path)
-    dl = DataLoader(data_set, batch_size=args.batchSize, drop_last=True)
+    train_data_set = VocDataset(cfg.train_label_path)
+    test_data_set = VocDataset(cfg.test_label_path)
+    train_dl = DataLoader(train_data_set, batch_size=args.batchSize, drop_last=True)
+    test_dl = DataLoader(test_data_set, batch_size=32, drop_last=True)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     net = net.to(device)
+    optimizer = optim.Adam(net.parameters(), args.lr, weight_decay=5e-4)
+    if os.path.isfile(cfg.prune_model_path):
+        print("=> loading checkpoint '{}'".format(cfg.prune_model_path))
+        checkpoint = torch.load(cfg.prune_model_path)
+        start_epoch = checkpoint['epoch']
+        net.load_state_dict(checkpoint['state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
+        print("=> loaded checkpoint '{}' (epoch {}) train_acc: {:f} test_acc: {:f}"
+              .format(cfg.prune_model_path, checkpoint['epoch'], checkpoint['train_accuracy'], checkpoint['test_accuracy']))
+    else:
+        print("=> no checkpoint found at '{}'".format(cfg.prune_model_path))
+        start_epoch = 0
+
     net.train()
     optimizer = optim.Adam(net.parameters(), args.lr, weight_decay=5e-4)
-    step = len(dl)/args.batchSize
+    step = len(train_dl)/args.batchSize
+    test_step = len(test_dl) / 32
     loss_f = nn.CrossEntropyLoss()
-    for Epoch in range(60):
-        epoch_accuracy = 0
+    for Epoch in range(60 - start_epoch):
+        print("start training at epoch %d" % start_epoch)
+        net.train()
+        epoch_train_accuracy = 0
+        epoch_test_accuracy = 0
         epoch_loss = 0
-        for image, label in dl:
+        for image, label in train_dl:
             pred = net(image)
             label = label.long().to(device)
             batch_mean_accurcy = (torch.argmax(pred, dim=1) == label).sum()/args.batchSize
-            epoch_accuracy += batch_mean_accurcy
+            epoch_train_accuracy += batch_mean_accurcy
             batch_mean_loss = loss_f(pred, label)
             epoch_loss += batch_mean_loss.item()
             batch_mean_loss.backward()
             optimizer.step()
-        print('epoch %d end,avarage accuracy %d,avarage loss %d'%(Epoch,epoch_accuracy/step,epoch_loss/step))
-        # a = cv2.imread('D:\\datasets\\voc\\VOCtrainval_06-Nov-2007\\VOCdevkit\\VOC2007\\JPEGImages\\002448.jpg')
-    # cv2.imshow('a',a)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()  # cv2.destroyWindow(wname)
+        print('epoch %d end,avarage train accuracy %d,avarage loss %d' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
+        print('start evaluate')
+        with torch.no_grad():
+            for test_image, test_label in test_dl:
+                test_pred = net(test_image)
+                test_label = test_label.long().to(device)
+                test_mean_accurcy = (torch.argmax(test_pred, dim=1) == test_label).sum() / 32
+                epoch_test_accuracy += test_mean_accurcy
 
+        print('avarage test accuracy %d' % (epoch_test_accuracy / test_step))
+
+
+
+
+        print('saving model state')
+
+        save_checkpoint({
+            'epoch': Epoch,
+            'state_dict': net.state_dict(),
+            'optimizer': optimizer.state_dict(),
+            'train_accuracy': epoch_train_accuracy / step,
+            'test_accuracy': epoch_test_accuracy / test_step,
+        },cfg.prune_model_path)
 
 
 
