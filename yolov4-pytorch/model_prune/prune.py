@@ -118,7 +118,7 @@ if __name__ == '__main__':
             epoch_loss += batch_mean_loss.item()
             batch_mean_loss.backward()
             optimizer.step()
-        print('epoch %d end,avarage train accuracy %d,avarage loss %d' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
+        print('epoch %d end,avarage train accuracy %f,avarage loss %f' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
         print('start evaluate')
         with torch.no_grad():
             for test_image, test_label in test_dl:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                 test_mean_accurcy = (torch.argmax(test_pred, dim=1) == test_label).sum() / 32
                 epoch_test_accuracy += test_mean_accurcy
 
-        print('avarage test accuracy %d' % (epoch_test_accuracy / test_step))
+        print('avarage test accuracy %f' % (epoch_test_accuracy / test_step))
 
 
 
