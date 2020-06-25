@@ -75,6 +75,8 @@ if __name__ == '__main__':
     parser.add_argument('--batchSize', type=int, default=64)
     parser.add_argument('--percent', type=float, default=0.5,
                         help='scale sparse rate (default: 0.5)')
+    parser.add_argument('--epoch', type=float, default=120,
+                        help='scale sparse rate (default: 0.5)')
 
     args = parser.parse_args()
     cfg = get_cfg()
@@ -89,7 +91,7 @@ if __name__ == '__main__':
     if os.path.isfile(cfg.prune_model_path):
         print("=> loading checkpoint '{}'".format(cfg.prune_model_path))
         checkpoint = torch.load(cfg.prune_model_path)
-        start_epoch = checkpoint['epoch']
+        start_epoch = checkpoint['epoch'] + 1
         net.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
         print("=> loaded checkpoint '{}' (epoch {}) train_acc: {:f} test_acc: {:f}"
@@ -103,7 +105,7 @@ if __name__ == '__main__':
     step = len(train_data_set)/args.batchSize
     test_step = len(test_data_set) / 32
     loss_f = nn.CrossEntropyLoss()
-    for Epoch in range(start_epoch, 60):
+    for Epoch in range(start_epoch, args.epoch):
         print("start training at epoch %d" % Epoch)
         net.train()
         epoch_train_accuracy = 0
