@@ -75,7 +75,7 @@ if __name__ == '__main__':
     parser.add_argument('--batchSize', type=int, default=64)
     parser.add_argument('--percent', type=float, default=0.5,
                         help='scale sparse rate (default: 0.5)')
-    parser.add_argument('--epoch', type=float, default=120,
+    parser.add_argument('--epoch', type=int, default=120,
                         help='scale sparse rate (default: 0.5)')
 
     args = parser.parse_args()
