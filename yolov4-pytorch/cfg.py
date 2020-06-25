@@ -24,7 +24,7 @@ def get_cfg():
         Cfg.width = 608
         Cfg.height = 608
         Cfg.train_label_path = os.path.join('/content/drive/My Drive/','2007_trainval.txt')
-        Cfg.train_label_path = os.path.join('/content/drive/My Drive/', '2007_test.txt')
+        Cfg.test_label_path = os.path.join('/content/drive/My Drive/', '2007_test.txt')
         Cfg.image_path = 'D:\\datasets\\voc\\VOCtrainval_06-Nov-2007\\VOCdevkit\\VOC2007\\JPEGImages'
         Cfg.model_path = os.path.join('/content/drive/My Drive/', 'yolo.pth')
         Cfg.prune_model_path = os.path.join('/content/drive/My Drive/', 'prune.pth')
