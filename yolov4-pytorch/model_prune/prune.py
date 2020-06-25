@@ -7,11 +7,13 @@ from torchsummary import summary
 # from nets.CSPdarknet import  *
 # from torchsummary import summary
 # net = darknet53(pretrained=False)
+import sys
 # summary(net.cuda(), input_size=(3, 608, 608))
 from torch.utils.data.dataset import Dataset
+sys.path.append('/content/cloned-repo/yolo4-pytorch')
 from cfg import *
 import random
-sys.path.append('/content/cloned-repo/yolo4-pytorch')
+
 from nets.CSPdarknet import *
 from model_prune.utils import *
 from torch.utils.data import DataLoader
