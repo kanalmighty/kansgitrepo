@@ -10,7 +10,8 @@ from torchsummary import summary
 import sys
 # summary(net.cuda(), input_size=(3, 608, 608))
 from torch.utils.data.dataset import Dataset
-sys.path.append('/content/cloned-repo/yolo4-pytorch')
+
+sys.path.append('/content/cloned-repo/yolov4-pytorch')
 from cfg import *
 import random
 
