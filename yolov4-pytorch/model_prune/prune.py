@@ -11,6 +11,7 @@ from torchsummary import summary
 from torch.utils.data.dataset import Dataset
 from cfg import *
 import random
+sys.path.append('/content/cloned-repo/yolo4-pytorch')
 from nets.CSPdarknet import *
 from model_prune.utils import *
 from torch.utils.data import DataLoader
