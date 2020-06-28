@@ -123,7 +123,7 @@ if __name__ == '__main__':
             #给bn层的gamma系统加上L1正则化先
             for m in net.modules():
                 if isinstance(m, nn.BatchNorm2d):
-                    m.weight.grad.data.add_(args.s * torch.sign(m.weight.data))  # L1
+                    m.weight.grad.data.add_(args.percent * torch.sign(m.weight.data))  # L1
             optimizer.step()
         print('epoch %d end,avarage train accuracy %f,avarage loss %f' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
         print('start evaluate')
