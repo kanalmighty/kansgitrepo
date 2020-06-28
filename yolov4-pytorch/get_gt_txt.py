@@ -17,7 +17,7 @@ if not os.path.exists("./input/ground-truth"):
 
 for image_id in image_ids:
     with open("./input/ground-truth/"+image_id+".txt", "w") as new_f:
-        root = ET.parse("VOCdevkit/VOC2007/Annotations/"+image_id+".xml").getroot()
+        root = ET.parse("D:\\datasets\\voc\\VOCtest_06-Nov-2007\\VOCdevkit\\VOC2007\\Annotations\\"+image_id+".xml").getroot()
         for obj in root.findall('object'):
             if obj.find('difficult')!=None:
                 difficult = obj.find('difficult').text

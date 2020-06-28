@@ -65,6 +65,7 @@ class CSPdarknetGA(CSPDarkNet):
         return out
 
 
+
 def save_checkpoint(state, filename='checkpoint.pth.tar'):
     torch.save(state, filename)
 
@@ -119,6 +120,10 @@ if __name__ == '__main__':
             batch_mean_loss = loss_f(pred, label)
             epoch_loss += batch_mean_loss.item()
             batch_mean_loss.backward()
+            #给bn层的gamma系统加上L1正则化先
+            for m in net.modules():
+                if isinstance(m, nn.BatchNorm2d):
+                    m.weight.grad.data.add_(args.s * torch.sign(m.weight.data))  # L1
             optimizer.step()
         print('epoch %d end,avarage train accuracy %f,avarage loss %f' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
         print('start evaluate')

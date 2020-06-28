@@ -84,7 +84,7 @@ if not os.path.exists("./input/images-optional"):
 
 
 for image_id in image_ids:
-    image_path = "./VOCdevkit/VOC2007/JPEGImages/"+image_id+".jpg"
+    image_path = "D:\\datasets\\voc\\VOCtest_06-Nov-2007\\VOCdevkit\\VOC2007\\JPEGImages\\"+image_id+".jpg"
     image = Image.open(image_path)
     # 开启后在之后计算mAP可以可视化
     # image.save("./input/images-optional/"+image_id+".jpg")
