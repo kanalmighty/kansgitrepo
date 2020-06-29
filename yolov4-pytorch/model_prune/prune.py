@@ -121,9 +121,15 @@ if __name__ == '__main__':
             epoch_loss += batch_mean_loss.item()
             batch_mean_loss.backward()
             #给bn层的gamma系统加上L1正则化先
-            for m in net.modules():
-                if isinstance(m, nn.BatchNorm2d):
-                    m.weight.grad.data.add_(args.percent * torch.sign(m.weight.data))  # L1
+            # for m in net.modules():
+            #     if isinstance(m, nn.BatchNorm2d):
+            #         m.weight.grad.data.add_(args.percent * torch.sign(m.weight.data))  # L1
+            #network smling只更新非resblock层里面的bn
+            for name, layer in net.named_modules():
+                if len(name.split('.')) == 7:
+                    for i in layer.modules():
+                        if isinstance(i, nn.BatchNorm2d):
+                            i.weight.grad.data.add_(args.percent * torch.sign(i.weight.data))
             optimizer.step()
         print('epoch %d end,avarage train accuracy %f,avarage loss %f' % (Epoch, epoch_train_accuracy / step, epoch_loss/ step))
         print('start evaluate')

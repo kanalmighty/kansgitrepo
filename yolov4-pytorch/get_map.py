@@ -503,12 +503,15 @@ lamr_dictionary = {}
 with open(results_files_path + "/results.txt", 'w') as results_file:
     results_file.write("# AP and precision/recall per class\n")
     count_true_positives = {}
+    #所有类别中取一类，找到该类的所有预测框数据，取一个预测框数据找到对应的真值框数据，遍历真值框中同类别的的bbox与取出的预测框计算iou，获取最大的iou
+    #与阈值做比较
     for class_index, class_name in enumerate(gt_classes):
         count_true_positives[class_name] = 0
         """
          Load detection-results of that class
         """
         dr_file = TEMP_FILES_PATH + "/" + class_name + "_dr.json"
+        #dr_data存放所有被预测有某一类的的预测数据，比如预测为飞机的 [{'confidence': '0.9992', 'file_id': '007985', 'bbox': '9 -16 489 304'}
         dr_data = json.load(open(dr_file))
 
         """
@@ -544,11 +547,13 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
             # assign detection-results to ground truth object if any
             # open ground-truth with that file_id
             gt_file = TEMP_FILES_PATH + "/" + file_id + "_ground_truth.json"
+            #ground_truth_data放的是 dr_data中一条记录中的file_id对应的图片的真值数据
             ground_truth_data = json.load(open(gt_file))
             ovmax = -1
             gt_match = -1
             # load detected object bounding-box
             bb = [ float(x) for x in detection["bbox"].split() ]
+            #挨个取出gt数据中的bbox与预测出来的数据挨个比较，获取与预测框iou最大的那个真值框数据
             for obj in ground_truth_data:
                 # look for a class_name match
                 if obj["class_name"] == class_name:
@@ -574,6 +579,7 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
                 if class_name in specific_iou_classes:
                     index = specific_iou_classes.index(class_name)
                     min_overlap = float(iou_list[index])
+            #如果与给定的预测框iou最大的真值框的iou大于阈值
             if ovmax >= min_overlap:
                 if "difficult" not in gt_match:
                         if not bool(gt_match["used"]):
