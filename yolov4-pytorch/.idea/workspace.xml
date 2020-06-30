@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4e7eba44-e881-403f-8623-cd9c5dab4295" name="Default Changelist" comment="ww">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VOCdevkit/VOC2007/ImageSets/Main/val.txt" beforeDir="false" afterPath="$PROJECT_DIR$/VOCdevkit/VOC2007/ImageSets/Main/val.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model_prune/prune.py" beforeDir="false" afterPath="$PROJECT_DIR$/model_prune/prune.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,22 +13,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/get_dr_txt.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1216">
-              <caret line="87" column="34" selection-start-line="86" selection-start-column="18" selection-end-line="87" selection-end-column="34" />
-              <folding>
-                <element signature="e#144#154#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/get_map.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1253">
-              <caret line="498" selection-start-line="498" selection-end-line="498" />
+            <state relative-caret-position="329">
+              <caret line="516" column="11" selection-start-line="516" selection-start-column="11" selection-end-line="516" selection-end-column="11" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -38,20 +24,32 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/model_prune/prune.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="129" column="29" lean-forward="true" selection-start-line="129" selection-start-column="29" selection-end-line="129" selection-end-column="29" />
+            <state relative-caret-position="293">
+              <caret line="130" column="57" lean-forward="true" selection-start-line="130" selection-start-column="57" selection-end-line="130" selection-end-column="57" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="224">
+              <caret line="14" column="16" lean-forward="true" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="49" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nets/CSPdarknet.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="51" selection-start-line="51" selection-end-line="51" />
+            <state relative-caret-position="280">
+              <caret line="31" column="30" lean-forward="true" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="30" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -132,6 +130,7 @@
       <find>eval()</find>
       <find>File not found</find>
       <find>MINOVERLAP</find>
+      <find>percent</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -151,7 +150,6 @@
         <option value="$PROJECT_DIR$/nets/CSPdarknet.py" />
         <option value="$PROJECT_DIR$/yolo.py" />
         <option value="$PROJECT_DIR$/utils/utils.py" />
-        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/model_prune.py" />
         <option value="$PROJECT_DIR$/model_prune/model_prune.py" />
         <option value="$PROJECT_DIR$/model_prune/utils.py" />
@@ -162,6 +160,7 @@
         <option value="$PROJECT_DIR$/VOCdevkit/VOC2007/voc2yolo4.py" />
         <option value="$PROJECT_DIR$/get_gt_txt.py" />
         <option value="$PROJECT_DIR$/get_map.py" />
+        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/model_prune/prune.py" />
       </list>
     </option>
@@ -178,7 +177,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -194,38 +192,13 @@
             <path>
               <item name="yolov4-pytorch" type="b2602c69:ProjectViewProjectNode" />
               <item name="yolov4-pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="nets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="yolov4-pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="yolov4-pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="VOCdevkit" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="yolov4-pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="yolov4-pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="VOCdevkit" type="462c0819:PsiDirectoryNode" />
-              <item name="VOC2007" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="yolov4-pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="yolov4-pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="VOCdevkit" type="462c0819:PsiDirectoryNode" />
-              <item name="VOC2007" type="462c0819:PsiDirectoryNode" />
-              <item name="ImageSets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="yolov4-pytorch" type="b2602c69:ProjectViewProjectNode" />
-              <item name="yolov4-pytorch" type="462c0819:PsiDirectoryNode" />
-              <item name="VOCdevkit" type="462c0819:PsiDirectoryNode" />
-              <item name="VOC2007" type="462c0819:PsiDirectoryNode" />
-              <item name="ImageSets" type="462c0819:PsiDirectoryNode" />
-              <item name="Main" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -257,7 +230,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.prune">
+  <component name="RunManager" selected="Python.test">
     <configuration name="get_dr_txt" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="yolov4-pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -342,6 +315,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python">
+      <module name="yolov4-pytorch" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="voc2yolo4" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="yolov4-pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -363,30 +357,9 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="voc_annotation" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="yolov4-pytorch" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/voc_annotation.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <list>
+      <item itemvalue="Python.test" />
       <item itemvalue="Python.prune" />
-      <item itemvalue="Python.voc_annotation" />
       <item itemvalue="Python.voc2yolo4" />
       <item itemvalue="Python.get_gt_txt" />
       <item itemvalue="Python.get_dr_txt" />
@@ -398,7 +371,6 @@
         <item itemvalue="Python.get_gt_txt" />
         <item itemvalue="Python.get_dr_txt" />
         <item itemvalue="Python.voc2yolo4" />
-        <item itemvalue="Python.voc_annotation" />
       </list>
     </recent_temporary>
   </component>
@@ -497,7 +469,21 @@
       <option name="project" value="LOCAL" />
       <updated>1593305960996</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="ww">
+      <created>1593306430187</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1593306430187</updated>
+    </task>
+    <task id="LOCAL-00014" summary="ww">
+      <created>1593441784914</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1593441784914</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TodoView">
@@ -511,13 +497,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48820755" side_tool="true" visible="true" weight="0.2985469" />
       <window_info id="Structure" order="1" sideWeight="0.5117925" side_tool="true" weight="0.22523117" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4993395" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49339497" visible="true" weight="0.3753541" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49339497" weight="0.41784704" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4953765" weight="0.42917848" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -605,7 +592,7 @@
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model_prune/prune.py</url>
-          <line>127</line>
+          <line>133</line>
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint suspend="THREAD" type="python-line">
@@ -625,13 +612,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/get_map.py</url>
-          <line>492</line>
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/get_map.py</url>
-          <line>498</line>
-          <option name="timeStamp" value="104" />
+          <line>568</line>
+          <option name="timeStamp" value="107" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -696,7 +678,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../kansgitrepo/pytorch-YOLOv4/requirements.txt" />
     <entry file="file://$PROJECT_DIR$/../kansgitrepo/isic1/utils.py" />
     <entry file="file://$PROJECT_DIR$/../pytorch-YOLOv4/train.py" />
     <entry file="file://$PROJECT_DIR$/../kansgitrepo/pytorch-YOLOv4/dataset.py" />
@@ -732,13 +713,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="16" column="41" selection-start-line="16" selection-start-column="41" selection-end-line="16" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="258" column="37" selection-start-line="258" selection-start-column="37" selection-end-line="258" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -836,16 +810,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/2007_train.txt" />
     <entry file="file://$PROJECT_DIR$/2007_val.txt" />
-    <entry file="file://$PROJECT_DIR$/model_prune/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="13" column="51" lean-forward="true" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cfg.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="359">
@@ -893,9 +857,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://D:/softwarehome/anaconda/Lib/codecs.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="117">
@@ -933,10 +894,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.temp_files/aeroplane_dr.json">
+    <entry file="file://$PROJECT_DIR$/.temp_files/009963_ground_truth.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/.temp_files/009963_ground_truth.json">
+    <entry file="file://$PROJECT_DIR$/2007_test.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="57" selection-start-line="11" selection-start-column="57" selection-end-line="11" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/VOCdevkit/VOC2007/ImageSets/Main/val.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.temp_files/000003_ground_truth.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.temp_files/aeroplane_dr.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/get_dr_txt.py">
@@ -946,6 +920,23 @@
           <folding>
             <element signature="e#144#154#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model_prune/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="55">
+          <caret line="13" column="51" selection-start-line="13" selection-start-column="51" selection-end-line="13" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-537">
+          <caret line="258" column="37" selection-start-line="258" selection-start-column="37" selection-end-line="258" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -975,40 +966,40 @@
     <entry file="file://$PROJECT_DIR$/VOCdevkit/VOC2007/ImageSets/Main/trainval.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/nets/CSPdarknet.py">
+    <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
+        <state relative-caret-position="224">
+          <caret line="14" column="16" lean-forward="true" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="49" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/model_prune/prune.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="130" column="57" lean-forward="true" selection-start-line="130" selection-start-column="57" selection-end-line="130" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/get_map.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1253">
-          <caret line="498" selection-start-line="498" selection-end-line="498" />
+        <state relative-caret-position="329">
+          <caret line="516" column="11" selection-start-line="516" selection-start-column="11" selection-end-line="516" selection-end-column="11" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/2007_test.txt">
+    <entry file="file://$PROJECT_DIR$/nets/CSPdarknet.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="11" column="57" selection-start-line="11" selection-start-column="57" selection-end-line="11" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/VOCdevkit/VOC2007/ImageSets/Main/val.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model_prune/prune.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="129" column="29" lean-forward="true" selection-start-line="129" selection-start-column="29" selection-end-line="129" selection-end-column="29" />
+        <state relative-caret-position="280">
+          <caret line="31" column="30" lean-forward="true" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

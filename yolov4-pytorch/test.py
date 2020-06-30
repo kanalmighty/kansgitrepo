@@ -10,10 +10,11 @@ if __name__ == "__main__":
     model = CSPDarkNet([1, 2, 8, 8, 4])
     # print(model)
     for name, layer in model.named_modules():
-        if len(name.split('.')) == 7:
-            for i in layer.modules():
-                if isinstance(i, nn.BatchNorm2d):
-                    print(i)
+        print(name)
+        # if len(name.split('.')) == 7:
+        #     for i in layer.modules():
+        #         if isinstance(i, nn.BatchNorm2d):
+        #             print(i)
     # for m in model.modules():
     #     if isinstance(m, nn.BatchNorm2d):
     #         print(m)

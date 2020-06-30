@@ -126,7 +126,7 @@ if __name__ == '__main__':
             #         m.weight.grad.data.add_(args.percent * torch.sign(m.weight.data))  # L1
             #network smling只更新非resblock层里面的bn
             for name, layer in net.named_modules():
-                if len(name.split('.')) == 7:
+                if len(name.split('.')) < 7:
                     for i in layer.modules():
                         if isinstance(i, nn.BatchNorm2d):
                             i.weight.grad.data.add_(args.percent * torch.sign(i.weight.data))
