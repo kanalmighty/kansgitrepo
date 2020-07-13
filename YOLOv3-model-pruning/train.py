@@ -7,7 +7,8 @@ from utils.datasets import *
 from utils.parse_config import *
 from utils.prune_utils import *
 from test import evaluate
-
+import sys
+sys.path.append('/content/cloned-repo/YOLOv3-model-pruning/')
 # 调试用的模块，reload用于代码热重载
 from importlib import reload
 import debug_utils

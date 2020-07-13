@@ -1,4 +1,4 @@
 classes= 1
-train=data/train.txt
-valid=data/valid.txt
+train=/content/cloned-repo/YOLOv3-model-pruning/data/train.txt
+valid=/content/cloned-repo/YOLOv3-model-pruning/data/valid.txt
 names=/content/cloned-repo/YOLOv3-model-pruning/data/oxfordhand.names
