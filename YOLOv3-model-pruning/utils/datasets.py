@@ -6,7 +6,8 @@ import numpy as np
 from PIL import Image
 import torch
 import torch.nn.functional as F
-
+import sys
+sys.path.append('/content/cloned-repo/YOLOv3-model-pruning/')
 from utils.augmentations import augment
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
