@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     generate_dir("train", "/content/cloned-repo/YOLOv3-model-pruning/data/hand_dataset/training_dataset/training_data") # 第一个参数表示生成的文件夹的名称
     generate_dir("test", "/content/cloned-repo/YOLOv3-model-pruning/data/hand_dataset/test_dataset/test_data")
-    generate_dir("validation", "/content/cloned-repo/YOLOv3-model-pruning/data/hand_dataset/validatio_dataset/validation_data")
+    generate_dir("validation", "/content/cloned-repo/YOLOv3-model-pruning/data/hand_dataset/validation_dataset/validation_data")
 
     create_txt((os.path.join(created_images_dir, 'train'),          # 将train和validation文件夹下的图片合并成train
                 os.path.join(created_images_dir, 'validation')),
