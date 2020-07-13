@@ -26,7 +26,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, default=100, help="number of epochs")
     parser.add_argument("--batch_size", type=int, default=8, help="size of each image batch")
-    parser.add_argument("--model_def", type=str, default="config/yolov3-hand.cfg", help="path to model definition file")
+    parser.add_argument("--model_def", type=str, default="/content/cloned-repo/YOLOv3-model-pruning/config/yolov3-hand.cfg", help="path to model definition file")
     parser.add_argument("--data_config", type=str, default="/content/cloned-repo/YOLOv3-model-pruning/config/oxfordhand.data", help="path to data config file")
     # parser.add_argument("--pretrained_weights", type=str, default="weights/darknet53.conv.74",
     parser.add_argument("--pretrained_weights", '-pre', type=str,
