@@ -15,6 +15,7 @@ from utils.dataloader import yolo_dataset_collate, YoloDataset
 from nets.yolo_training import YOLOLoss,Generator
 from nets.yolo4 import YoloBody
 from cfg import *
+from utils.utils import caluate_class_ap
 
 cfg = get_cfg()
 #---------------------------------------------------#
@@ -37,6 +38,10 @@ def get_anchors(anchors_path):
     return np.array(anchors).reshape([-1,3,2])[::-1,:,:]
 
 def fit_ont_epoch(net,yolo_losses,epoch,epoch_size,epoch_size_val,gen,genval,Epoch,cuda):
+    #定义epoch级别的ap字典
+    epoch_class_ap_dict =  {'0': [0,0],'1': [0,0],'2': [0,0],'3': [0,0],'4': [0,0],'5': [0,0],'6': [0,0],'7': [0,0],'8': [0,0],
+                         '9': [0,0],'10': [0,0],'11': [0,0],'12': [0,0],'12': [0,0],'13': [0,0],'14': [0,0],'15': [0,0]
+                         ,'16': [0,0],'17': [0,0],'18': [0,0],'19': [0,0]}
     total_loss = 0
     val_loss = 0
     start_time = time.time()
@@ -86,8 +91,15 @@ def fit_ont_epoch(net,yolo_losses,epoch,epoch_size,epoch_size_val,gen,genval,Epo
             for i in range(3):
                 loss_item = yolo_losses[i](outputs[i], targets_val)
                 losses.append(loss_item[0])
+                for batch_class, batch_ps in loss_item[4].items():
+                    epoch_class_ap_dict[batch_class][0] += batch_ps[0]
+                    epoch_class_ap_dict[batch_class][1] += batch_ps[1]
+
             loss = sum(losses)
             val_loss += loss
+    for cls, ps in epoch_class_ap_dict.items():
+            print('class %s precsition: %f,recall: %f' % (cls, ps[0]/(ps[0] + ps[1]), ps[0]/(ps[0] + len(targets))))
+
     print('Finish Validation')
     print('\nEpoch:'+ str(epoch+1) + '/' + str(Epoch))
     print('Total Loss: %.4f || Val Loss: %.4f ' % (total_loss/(epoch_size+1),val_loss/(epoch_size_val+1)))
@@ -121,7 +133,7 @@ if __name__ == "__main__":
     #-------------------------------#
     Use_Data_Loader = True
 
-    annotation_path = '2007_train.txt'
+    annotation_path = '2007_trainval.txt'
     #-------------------------------#
     #   获得先验框和类
     #-------------------------------#
@@ -136,14 +148,20 @@ if __name__ == "__main__":
     model = YoloBody(len(anchors[0]),num_classes)
     model_path = cfg.model_path
     # 加快模型训练的效率
-    print('Loading weights into state dict...')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model_dict = model.state_dict()
-    pretrained_dict = torch.load(model_path, map_location=device)
-    pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) ==  np.shape(v)}
-    model_dict.update(pretrained_dict)
-    model.load_state_dict(model_dict)
-    print('Finished!')
+    if os.path.isfile(model_path):
+        print('Loading weights into state dict...')
+
+        model_dict = model.state_dict()
+        pretrained_dict = torch.load(model_path, map_location=device)
+        pretrained_dict = {k: v for k, v in pretrained_dict.items() if np.shape(model_dict[k]) == np.shape(v)}
+        model_dict.update(pretrained_dict)
+        model.load_state_dict(model_dict)
+        print('Finished!')
+    else:
+        print("=> no checkpoint found at '{}'".format(model_path))
+
+
 
     net = model.train()
 

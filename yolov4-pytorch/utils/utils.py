@@ -10,6 +10,10 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 
+from model_prune.prune import CSPdarknetGA
+from nets.CSPdarknet import CSPDarkNet
+
+
 class DecodeBox(nn.Module):
     def __init__(self, anchors, num_classes, img_size):
         super(DecodeBox, self).__init__()
@@ -333,3 +337,71 @@ def merge_bboxes(bboxes, cutx, cuty):
             tmp_box.append(box[-1])
             merge_bbox.append(tmp_box)
     return merge_bbox
+
+
+ # gt_cls (bs, int(self.num_anchors / 3), in_h, in_w) 根据真值数据标注中那个网格中存在物体,第二维的索引是与真值框iou最大的anchor的序号
+ # gt_box （bs, int(self.num_anchors/3), in_h, in_w, 4) 标注当前尺度下真值框的中心坐标，h,w,第二维的索引是与真值框iou最大的anchor的序号
+ # gt_cls （bs, int(self.num_anchors/3), in_h, in_w, num_classes)根据真值数据注存在物体的网格中的物体分类,第二维的索引是与真值框iou最大的anchor的序号
+ # prediction[...4]是置信度,0,3是中心,x,y,w,h
+def get_batch_positive(prediction, pred_cls,gt_mask, gt_box, gt_cls, cf_thre = 0.5):
+    #缩减数据方便调试
+    # prediction = prediction[:,:,0:2, 0:2,:]
+    # gt_cls = gt_cls[:,:,0:2, 0:2,:]
+    # gt_box = gt_box[:,:,0:2, 0:2,:]
+    # gt_mask = gt_mask[:,:,0:2, 0:2]
+    # pred_cls = pred_cls[:,:,0:2, 0:2,:]
+    batch_metric_dict = {'0': [0,0],'1': [0,0],'2': [0,0],'3': [0,0],'4': [0,0],'5': [0,0],'6': [0,0],'7': [0,0],'8': [0,0],
+                         '9': [0,0],'10': [0,0],'11': [0,0],'12': [0,0],'12': [0,0],'13': [0,0],'14': [0,0],'15': [0,0]
+                         ,'16': [0,0],'17': [0,0],'18': [0,0],'19': [0,0]}
+    if torch.cuda.is_available():
+        prediction, pred_cls, gt_mask, gt_box, gt_cls = prediction.cuda(), pred_cls.cuda(), gt_mask.cuda(), gt_box.cuda(), gt_cls.cuda()
+#因为预测置信度多少的数据哪里比较？get_map492行
+    prediction[..., 4] = nn.functional.softmax(prediction[..., 4])
+    #prediction置信度大于阈值的mask,用mask过滤掉置信度不满足条件的真值/预测数据
+    cf_mask = prediction[..., 4] > cf_thre
+    prediction_cf_thre= prediction[cf_mask]
+    gt_box_cf_thre = gt_box[cf_mask]
+    gt_cls_cf_thre = gt_cls[cf_mask]
+    #gt_cls_cf_thre获取不全位0的真值框分类向量
+    valid_gt_cls_mask = torch.sum(gt_cls_cf_thre, 1) > 0
+
+
+    if valid_gt_cls_mask.sum() > 0:
+        gt_cls_positive = gt_cls_cf_thre[valid_gt_cls_mask]
+        cls_positive = torch.argmax(gt_cls_positive, 1)
+        gt_box_positive = gt_box_cf_thre[valid_gt_cls_mask]
+        prediction_box_positive = prediction_cf_thre[valid_gt_cls_mask][...,0:4]
+        p_g_iou = bbox_iou(gt_box_positive,prediction_box_positive)
+        p_g_iou[p_g_iou >= 0.5] = 1
+        p_g_iou[p_g_iou < 0.5] = -1
+        for idx, cls in enumerate(cls_positive):
+            if p_g_iou[idx] > 0:
+                batch_metric_dict[str(cls.item())][0] = batch_metric_dict[str(cls.item())][0] + 1
+            else:
+                batch_metric_dict[str(cls.item())][1] = batch_metric_dict[str(cls.item())][1] + 1
+
+    return batch_metric_dict
+
+def tail_model_backbone(source_model_name, target_model_name,state_dict_path,device):
+    target_model = eval(target_model_name)()
+    # source_model = eval(source_model)()
+    target_model_pretrained_dict = torch.load('D:\\datasets\\saved_model\\prune_baseline.pth', map_location=device)['state_dict']
+    source_model_pretrained_dict = torch.load(state_dict_path, map_location=device)['state_dict'] \
+                        if 'state_dict' in torch.load(state_dict_path, map_location=device).keys() \
+                        else torch.load(state_dict_path, map_location=device)
+    if target_model_name == 'CSPdarknetGA':
+        source_model_pretrained_dict = {'.'.join(k.split('.') [1:]) : v for k, v in source_model_pretrained_dict.items() if 'backbone' in k}
+    shared_layer_ac_dict = {k: v for k, v in source_model_pretrained_dict.items() if k in target_model.state_dict().keys()}
+    target_model_pretrained_dict.update(shared_layer_ac_dict)
+
+    target_model.load_state_dict(target_model_pretrained_dict)
+
+
+    # print(target_model)
+    return target_model
+
+
+
+if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    tail_model_backbone('CSPdarknetGA','CSPDarkNet', 'D:\\datasets\\saved_model\\prune.pth', device)

@@ -11,13 +11,15 @@ import sys
 # summary(net.cuda(), input_size=(3, 608, 608))
 from torch.utils.data.dataset import Dataset
 
+
 sys.path.append('/content/cloned-repo/yolov4-pytorch')
 from cfg import *
 import random
 
 from nets.CSPdarknet import *
-from model_prune.utils import *
+from model_prune.prune_utils import *
 from torch.utils.data import DataLoader
+from utils.utils import *
 
 
 
@@ -54,7 +56,6 @@ class CSPdarknetGA(CSPDarkNet):
         self.conv256 = nn.Conv2d(256, 20, 1)
         self.conv1024 = nn.Conv2d(1024, 20, 1)
 
-
     def forward(self, x):
         #out5 1024/5,out3 256/19,out4 512/10
         out3, out4 ,out5 = super(CSPdarknetGA, self).forward(x)
@@ -76,7 +77,7 @@ if __name__ == '__main__':
     parser.add_argument('--batchSize', type=int, default=64)
     parser.add_argument('--percent', type=float, default=0.5,
                         help='scale sparse rate (default: 0.5)')
-    parser.add_argument('--epoch', type=int, default=120,
+    parser.add_argument('--epoch', type=int, default=1200,
                         help='scale sparse rate (default: 0.5)')
 
     args = parser.parse_args()
@@ -97,6 +98,9 @@ if __name__ == '__main__':
         optimizer.load_state_dict(checkpoint['optimizer'])
         print("=> loaded checkpoint '{}' (epoch {}) train_acc: {:f} test_acc: {:f}"
               .format(cfg.prune_model_path, checkpoint['epoch'], checkpoint['train_accuracy'], checkpoint['test_accuracy']))
+        #加载网上下载的预训练backbone
+        target_backbone = tail_model_backbone(source_model_name='CSPDarkNet', target_model_name='CSPdarknetGA', state_dict_path='D:\\datasets\\saved_model\\yolo4_voc_weights.pth', device=device)
+        net.load_state_dict(target_backbone.state_dict())
     else:
         print("=> no checkpoint found at '{}'".format(cfg.prune_model_path))
         start_epoch = 0

@@ -94,7 +94,7 @@ class Resblock_body(nn.Module):
         return x
 
 class CSPDarkNet(nn.Module):
-    def __init__(self, layers):
+    def __init__(self, layers=[1, 2, 8, 8, 4]):
         super(CSPDarkNet, self).__init__()
         self.inplanes = 32
         self.conv1 = BasicConv(3, self.inplanes, kernel_size=3, stride=1)

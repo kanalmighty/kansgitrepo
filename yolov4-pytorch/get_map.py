@@ -22,6 +22,10 @@ parser.add_argument('-q', '--quiet', help="minimalistic console output.", action
 parser.add_argument('-i', '--ignore', nargs='+', type=str, help="ignore a list of classes.")
 # argparse receiving list of classes with specific IoU (e.g., python main.py --set-class-iou person 0.7)
 parser.add_argument('--set-class-iou', nargs='+', type=str, help="set IoU for a specific class.")
+#pr = tp/(tp+fp),recall = tp/(tp+fn)
+#confidence阈值会对精度和召唤率产生影响，
+#阈值低，则有更多的检测结果参与于真值的iou计算，可能会检测更多的目标，增加tp的数量，也增加fp的数量,fn(正样本没有检测出)不变,从而提高recall，减少pr
+# 而较高的阈值会减少tp的数量,增加fn(正样本没有检测出)的数量，fp（负样本检测成正样本）一般不变,从而提升pr，减少recall
 args = parser.parse_args()
 
 '''
@@ -460,7 +464,7 @@ if specific_iou_flagged:
 # get a list with the detection-results files
 dr_files_list = glob.glob(DR_PATH + '/*.txt')
 dr_files_list.sort()
-
+#把预测结果的txt文件汇总成每个类的dr.json
 for class_index, class_name in enumerate(gt_classes):
     bounding_boxes = []
     for txt_file in dr_files_list:
@@ -489,6 +493,7 @@ for class_index, class_name in enumerate(gt_classes):
                 bounding_boxes.append({"confidence":confidence, "file_id":file_id, "bbox":bbox})
                 #print(bounding_boxes)
     # sort detection-results by decreasing confidence
+    #按照置信度排过序了
     bounding_boxes.sort(key=lambda x:float(x['confidence']), reverse=True)
     with open(TEMP_FILES_PATH + "/" + class_name + "_dr.json", 'w') as outfile:
         json.dump(bounding_boxes, outfile)
@@ -505,6 +510,7 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
     count_true_positives = {}
     #所有类别中取一类，找到该类的所有预测框数据，取一个预测框数据找到对应的真值框数据，遍历真值框中同类别的的bbox与取出的预测框计算iou，获取最大的iou
     #与阈值做比较
+    # 算法当类别对上就使p，iou够大是tp，否则fp
     for class_index, class_name in enumerate(gt_classes):
         count_true_positives[class_name] = 0
         """
@@ -520,6 +526,7 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
         nd = len(dr_data)
         tp = [0] * nd # creates an array of zeros of size nd
         fp = [0] * nd
+        #dr_data存放所有被预测有某一类的的预测数据中的一条
         for idx, detection in enumerate(dr_data):
             file_id = detection["file_id"]
             if show_animation:
@@ -583,7 +590,7 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
             if ovmax >= min_overlap:
                 if "difficult" not in gt_match:
                         if not bool(gt_match["used"]):
-                            # true positive
+                            # true positive +1，并把真值数据中这个数据的状态标有已经匹配到了预测框，下次就不能再用了
                             tp[idx] = 1
                             gt_match["used"] = True
                             count_true_positives[class_name] += 1
@@ -599,6 +606,7 @@ with open(results_files_path + "/results.txt", 'w') as results_file:
                                 status = "REPEATED MATCH!"
             else:
                 # false positive
+                #idx里面存放是的类预测数据的索引，也就是第几条类预测数据
                 fp[idx] = 1
                 if ovmax > 0:
                     status = "INSUFFICIENT OVERLAP"

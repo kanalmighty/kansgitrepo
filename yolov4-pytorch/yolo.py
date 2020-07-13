@@ -10,12 +10,12 @@ from nets.yolo4 import YoloBody
 import torch.backends.cudnn as cudnn
 from PIL import Image,ImageFont, ImageDraw
 from torch.autograd import Variable
-from utils.utils import non_max_suppression, bbox_iou, DecodeBox,letterbox_image,yolo_correct_boxes
+from utils.utils import non_max_suppression, bbox_iou, DecodeBox,letterbox_image,yolo_correct_boxes,tail_model_backbone
 
 class YOLO(object):
     _defaults = {
         # "model_path": 'D:\\PyCharmSpace\\yolov4-pytorch\\logs\\Epoch50-Total_Loss36.6935-Val_Loss19.8076.pth',
-        "model_path": 'D:\\BaiduNetdiskDownload\\yolo4_voc_weights.pth',
+        "model_path": 'D:\\datasets\\saved_model\\yolo4_voc_weights.pth',
         "anchors_path": 'model_data/yolo_anchors.txt',
         "classes_path": 'model_data/voc_classes.txt',
         "model_image_size" : (416, 416, 3),
@@ -70,7 +70,9 @@ class YOLO(object):
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         state_dict = torch.load(self.model_path, map_location=device)
         self.net.load_state_dict(state_dict)
-        
+        #替换训练好的backbone
+        target_backbone = tail_model_backbone(source_model='CSPdarknetGA',target_model='CSPDarkNet', state_dict_path='D:\\datasets\\saved_model\\prune_baseline.pth', device=device)
+        self.net.backbone.load_state_dict(target_backbone.state_dict())
         if self.cuda:
             os.environ["CUDA_VISIBLE_DEVICES"] = '0'
             self.net = nn.DataParallel(self.net)

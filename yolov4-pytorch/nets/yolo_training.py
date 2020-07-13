@@ -7,7 +7,7 @@ import math
 import torch.nn.functional as F
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
 from PIL import Image
-from utils.utils import bbox_iou, merge_bboxes
+from utils.utils import bbox_iou, merge_bboxes, get_batch_positive
 
 def jaccard(_box_a, _box_b):
     b1_x1, b1_x2 = _box_a[:, 0] - _box_a[:, 2] / 2, _box_a[:, 0] + _box_a[:, 2] / 2
@@ -151,10 +151,16 @@ class YOLOLoss(nn.Module):
         pred_cls = torch.sigmoid(prediction[..., 5:])  # Cls pred.
 
         # 找到哪些先验框内部包含物体
+        # box_loss_scale_x放入的是归一化以后的真值框的w,h
+        # mask (bs, int(self.num_anchors / 3), in_h, in_w) 根据真值数据标注中那个网格中存在物体,第二维的索引是与真值框iou最大的anchor的序号
+        # noobj_mask (bs, int(self.num_anchors / 3), in_h, in_w) 根据真值标注原始图片中那个网格中不存在物体,第二维的索引是与真值框iou最大的anchor的序号
+        # t_box （bs, int(self.num_anchors/3), in_h, in_w, 4) 标注当前尺度下真值框的中心坐标，h,w,第二维的索引是与真值框iou最大的anchor的序号
+        # tcls （bs, int(self.num_anchors/3), in_h, in_w, num_classes)根据真值数据注存在物体的网格中的物体分类,第二维的索引是与真值框iou最大的anchor的序号
+        # tconf （bs, int(self.num_anchors/3), in_h, in_w, num_classes)根据真值数据注存在物体的网格中的物体存在置信度 ,第二维的索引是与真值框iou最大的anchor的序号
         mask, noobj_mask, t_box, tconf, tcls, box_loss_scale_x, box_loss_scale_y = self.get_target(targets, scaled_anchors,in_w, in_h,self.ignore_threshold)
-
+        ##对于每一幅图，计算其中所有真实框与预测框的IOU，如果某些预测框和真实框的重合程度大于0.5，则忽略。
         noobj_mask, pred_boxes_for_ciou = self.get_ignore(prediction, targets, scaled_anchors, in_w, in_h, noobj_mask)
-
+        batch_metric_dict = get_batch_positive(prediction, pred_cls, mask, t_box, tcls)
         if self.cuda:
             mask, noobj_mask = mask.cuda(), noobj_mask.cuda()
             box_loss_scale_x, box_loss_scale_y= box_loss_scale_x.cuda(), box_loss_scale_y.cuda()
@@ -174,12 +180,15 @@ class YOLOLoss(nn.Module):
         loss_cls = torch.sum(BCELoss(pred_cls[mask == 1], smooth_labels(tcls[mask == 1],self.label_smooth,self.num_classes))/bs)
         # print(loss_loc,loss_conf,loss_cls)
         loss = loss_conf * self.lambda_conf + loss_cls * self.lambda_cls + loss_loc * self.lambda_loc
-        return loss, loss_conf.item(), loss_cls.item(), loss_loc.item()
+        return loss, loss_conf.item(), loss_cls.item(), loss_loc.item(), batch_metric_dict
 
+    # target是一个batch中的所有真值框数据，anchors是经过缩放的anchorw,h
     def get_target(self, target, anchors, in_w, in_h, ignore_threshold):
         # 计算一共有多少张图片
         bs = len(target)
         # 获得先验框
+        # self.feature_length分辨为原尺寸，32，16，8倍小采样以后的尺寸
+        # anchor_index当前feature map尺寸对应self.feature_length的索引值，如32倍下采样对应0，1，2
         anchor_index = [[0,1,2],[3,4,5],[6,7,8]][self.feature_length.index(in_w)]
         subtract_index = [0,3,6][self.feature_length.index(in_w)]
         # 创建全是0或者全是1的阵列
@@ -197,10 +206,11 @@ class YOLOLoss(nn.Module):
         box_loss_scale_x = torch.zeros(bs, int(self.num_anchors/3), in_h, in_w, requires_grad=False)
         box_loss_scale_y = torch.zeros(bs, int(self.num_anchors/3), in_h, in_w, requires_grad=False)
         for b in range(bs):
+            # target[b].shape[0]一张图片中有几个真值框
             for t in range(target[b].shape[0]):
                 # 计算出在特征层上的点位
                 #target经过归一化的真值框的中心坐标和w,h
-                #转为当前尺寸在的坐标
+                #真值框的中心坐标和长宽转为当前尺寸在的坐标
                 gx = target[b][t, 0] * in_w
                 gy = target[b][t, 1] * in_h
                 
@@ -211,26 +221,31 @@ class YOLOLoss(nn.Module):
                 gi = int(gx)
                 gj = int(gy)
 
-                # 计算真实框的位置
+
                 gt_box = torch.FloatTensor(np.array([0, 0, gw, gh])).unsqueeze(0)
                 
                 # 计算出所有先验框的位置
                 anchor_shapes = torch.FloatTensor(np.concatenate((np.zeros((self.num_anchors, 2)),
                                                                   np.array(anchors)), 1))
                 # 计算重合程度
+                # 存放一个真值框和9个anchor的iou
                 anch_ious = bbox_iou(gt_box, anchor_shapes)
                
                 # Find the best matching anchor box
                 best_n = np.argmax(anch_ious)
-                if best_n not in anchor_index:
+                if best_n not in anchor_index:#第一轮是0，1，2，如果iou最大的真值框不在当前尺寸对应的三个真值框中,就换下一个真值框
                     continue
                 # Masks
+                #in_h,in_w是输入feature map的尺寸，如果iou最大的框在尺寸对应的三个真值框中且，真值框中心所在网格编号小于feature map的尺寸，则该真值框标为有物体
+                #gj，gi，真值框中心所在网格坐标
                 if (gj < in_h) and (gi < in_w):
                     best_n = best_n - subtract_index
                     # 判定哪些先验框内部真实的存在物体
+                    # 无物体掩码对应网格标记为0
                     noobj_mask[b, best_n, gj, gi] = 0
+                    # 有物体掩码对应网格标记为0
                     mask[b, best_n, gj, gi] = 1
-                    # 计算先验框中心调整参数
+                    # 计算先验框中心调整参数和
                     tx[b, best_n, gj, gi] = gx
                     ty[b, best_n, gj, gi] = gy
                     # 计算先验框宽高调整参数
@@ -251,8 +266,16 @@ class YOLOLoss(nn.Module):
         t_box[...,1] = ty
         t_box[...,2] = tw
         t_box[...,3] = th
+        # 返回的是一个batch的所有标注好的真值框数据
+        #mask (bs, int(self.num_anchors / 3), in_h, in_w) 根据真值数据标注中那个网格中存在物体
+        #noobj_mask (bs, int(self.num_anchors / 3), in_h, in_w) 根据真值标注原始图片中那个网格中不存在物体
+        # t_box （bs, int(self.num_anchors/3), in_h, in_w, 4) 标注当前尺度下真值框的中心坐标，h,w
+        # tcls （bs, int(self.num_anchors/3), in_h, in_w, num_classes)根据真值数据注存在物体的网格中的物体分类
+        # tconf （bs, int(self.num_anchors/3), in_h, in_w, num_classes)根据真值数据注存在物体的网格中的物体存在置信度
         return mask, noobj_mask, t_box, tconf, tcls, box_loss_scale_x, box_loss_scale_y
 
+    # get_ignore用于预测的物体的网格中的一个anchor为0，其余偶都是1
+    # 3、对于每一幅图，计算其中所有真实框与预测框的IOU，如果某些预测框和真实框的重合程度大于0.5，则忽略。
     def get_ignore(self,prediction,target,scaled_anchors,in_w, in_h,noobj_mask):
         bs = len(target)
         anchor_index = [[0,1,2],[3,4,5],[6,7,8]][self.feature_length.index(in_w)]
@@ -266,8 +289,8 @@ class YOLOLoss(nn.Module):
 
         FloatTensor = torch.cuda.FloatTensor if x.is_cuda else torch.FloatTensor
         LongTensor = torch.cuda.LongTensor if x.is_cuda else torch.LongTensor
-
         # 生成网格，先验框中心，网格左上角
+        # grid_x[0,1,2,....],形状b,3,13,13
         grid_x = torch.linspace(0, in_w - 1, in_w).repeat(in_w, 1).repeat(
             int(bs*self.num_anchors/3), 1, 1).view(x.shape).type(FloatTensor)
         grid_y = torch.linspace(0, in_h - 1, in_h).repeat(in_h, 1).t().repeat(
@@ -287,19 +310,26 @@ class YOLOLoss(nn.Module):
         pred_boxes[..., 2] = torch.exp(w) * anchor_w
         pred_boxes[..., 3] = torch.exp(h) * anchor_h
         for i in range(bs):
+            # 从一个batch的predboxes中选出一个图片的predbox
             pred_boxes_for_ignore = pred_boxes[i]
             pred_boxes_for_ignore = pred_boxes_for_ignore.view(-1, 4)
+            # target是一个batch中的所有真值框数据
             if len(target[i]) > 0:
                 gx = target[i][:, 0:1] * in_w
                 gy = target[i][:, 1:2] * in_h
                 gw = target[i][:, 2:3] * in_w
                 gh = target[i][:, 3:4] * in_h
+                # gt_box形状（真值框个数，4）
                 gt_box = torch.FloatTensor(np.concatenate([gx, gy, gw, gh],-1)).type(FloatTensor)
 
                 anch_ious = jaccard(gt_box, pred_boxes_for_ignore)
+                # anch_ious是当前图片的n个真值框于预测结果中的m个预测框的iou，(n,m)
                 for t in range(target[i].shape[0]):
+                    # 变为3,13,13
                     anch_iou = anch_ious[t].view(pred_boxes[i].size()[:3])
+                    # noobj_mask用于标记anchor，其中用于预测物体的那个anchor的位置是0，(b.3,13,13)
                     noobj_mask[i][anch_iou>self.ignore_threshold] = 0
+                    # noobj_mask[i]中真值框和预测框iou大于阈值的位置标记为0
         return noobj_mask, pred_boxes
 
 
